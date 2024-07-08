@@ -8,6 +8,10 @@
 *.sln.docstates
 *.VC.db
 
+# Idea
+**/.idea
+**/cmake-build-debug
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
