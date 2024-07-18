@@ -1,55 +1,48 @@
 #include <fstream>
 #include <iostream>
 
+using namespace std;
+
 struct Input
 {
-  std::string in_file, out_file, search_string, replace_string;
+  string inFile, outFile, searchString, replaceString;
 };
 
-void parse_input(const char *argv[], Input &input)
+void ParseInput(const char *argv[], Input &input)
 {
-  input.in_file = argv[1];
-  input.out_file = argv[2];
-  input.search_string = argv[3];
-  input.replace_string = argv[4];
+  input.inFile = argv[1];
+  input.outFile = argv[2];
+  input.searchString = argv[3];
+  input.replaceString = argv[4];
 }
 
-std::optional<std::ifstream> setup_file(const std::string &filename)
+bool Replace(
+  const std::string &inFilename, const std::string &outFilename,
+  const std::string &searchStr, const std::string &replaceStr)
 {
-  std::ifstream file(filename);
-  if (!file.is_open())
-    return std::nullopt;
-
-  return file;
-}
-
-bool replace(
-  const std::string &in_filename, const std::string &out_filename,
-  const std::string &search_str, const std::string &replace_str)
-{
-  std::ifstream in_file(in_filename);
-  if (!in_file.is_open())
+  std::ifstream inFile(inFilename);
+  if (!inFile.is_open())
   {
     std::cerr << "Ошибка при открытии входного файла\n";
     return false;
   }
-  std::ofstream out_file(out_filename);
+  std::ofstream outFile(outFilename);
 
   size_t pos = 0;
   std::string line;
-  while (!in_file.eof())
+  while (!inFile.eof())
   {
-    getline(in_file, line);
-    while (pos = line.find(search_str, pos), pos != std::string::npos)
+    getline(inFile, line);
+    while (pos = line.find(searchStr, pos), pos != std::string::npos)
     {
-      line.replace(pos, search_str.length(), replace_str);
-      pos += replace_str.length();
+      line.replace(pos, searchStr.length(), replaceStr);
+      pos += replaceStr.length();
     }
-    out_file << line;
+    outFile << line;
   }
 
-  in_file.close();
-  out_file.close();
+  inFile.close();
+  outFile.close();
   return true;
 }
 
@@ -64,9 +57,9 @@ int main(const int argc, const char *argv[])
     return 1;
   }
 
-  parse_input(argv, input);
+  ParseInput(argv, input);
 
-  if (!replace(input.in_file, input.out_file, input.search_string, input.replace_string))
+  if (!Replace(input.inFile, input.outFile, input.searchString, input.replaceString))
   {
     return 1;
   }
