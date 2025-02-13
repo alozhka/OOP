@@ -1,11 +1,12 @@
 #include <fstream>
 #include <iostream>
 
-using namespace std;
+constexpr ushort ARGS_AMOUNT = 5;
+const std::string HELP_IDENTIFIER = "-h";
 
 struct Input
 {
-  string inFile, outFile, searchString, replaceString;
+  std::string inFile, outFile, searchString, replaceString;
 };
 
 void ParseInput(const char *argv[], Input &input)
@@ -14,6 +15,12 @@ void ParseInput(const char *argv[], Input &input)
   input.outFile = argv[2];
   input.searchString = argv[3];
   input.replaceString = argv[4];
+}
+
+void ParseInputFromStdIn(Input &input)
+{
+  std::cin >> input.searchString;
+  std::cin >> input.replaceString;
 }
 
 bool Replace(
@@ -46,22 +53,33 @@ bool Replace(
   return true;
 }
 
+
 int main(const int argc, const char *argv[])
 {
   setlocale(LC_ALL, "rus");
   Input input;
 
-  if (argc < 5)
+  if (argc == 1)
   {
-    std::cout << "Недостаточно аргументов\n";
-    return 1;
-  }
-
-  ParseInput(argv, input);
-
-  if (!Replace(input.inFile, input.outFile, input.searchString, input.replaceString))
+    ParseInputFromStdIn(input);
+    Replace(input.searchString, input.replaceString);
+  } else
   {
-    return 1;
+    if (argv[1] == HELP_IDENTIFIER)
+    {
+      std::cout << "Usage\n";
+      return 0;
+    }
+    if (argc < 5)
+    {
+      std::cout << "ERROR\n";
+      return 1;
+    }
+    ParseInput(argv, input);
+    if (!Replace(input.inFile, input.outFile, input.searchString, input.replaceString))
+    {
+      return 1;
+    }
   }
   return 0;
 }
