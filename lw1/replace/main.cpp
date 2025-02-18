@@ -24,16 +24,28 @@ bool TryParseInputFromStdIn(Input &input)
   return !!(std::cin >> input.signleLine);
 }
 
-std::string ReplaceSingleLine(std::string line, const std::string &searchStr, const std::string &replaceStr)
+std::string ReplaceSingleLine(const std::string& line, const std::string &searchStr, const std::string &replaceStr)
 {
   size_t pos = 0;
-  while (pos = line.find(searchStr, pos), pos != std::string::npos)
-  {
-    line.replace(pos, searchStr.length(), replaceStr);
-    pos += replaceStr.length();
-  }
+  std::string result;
 
-  return line;
+  while (pos < line.length())
+  {
+    const size_t foundPos = line.find(searchStr, pos);
+    if (foundPos < line.length())
+    {
+      result.append(line, pos, foundPos - pos);
+      result.append(replaceStr);
+      pos = foundPos + searchStr.length();
+    }
+    else
+    {
+      result.append(line, pos);
+      pos = std::string::npos;
+    }
+  }
+  return result;
+
 }
 
 bool TryReplaceInFile(
