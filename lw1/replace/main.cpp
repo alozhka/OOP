@@ -6,7 +6,7 @@ const std::string HELP_IDENTIFIER = "-h";
 
 struct Input
 {
-  std::string inFile, outFile, searchString, replaceString, signleLine;
+  std::string inFile, outFile, searchString, replaceString, text;
 };
 
 void ParseInputFromCommandLine(const char *argv[], Input &input)
@@ -19,33 +19,36 @@ void ParseInputFromCommandLine(const char *argv[], Input &input)
 
 bool TryParseInputFromStdIn(Input &input)
 {
-  std::cin >> input.searchString;
-  std::cin >> input.replaceString;
-  return !!(std::cin >> input.signleLine);
+  std::getline(std::cin, input.searchString);
+  std::getline(std::cin, input.replaceString);
+  return static_cast<bool>(std::getline(std::cin, input.text));
 }
 
-std::string ReplaceSingleLine(const std::string& line, const std::string &searchStr, const std::string &replaceStr)
+std::string ReplaceSingleLine(const std::string &line, const std::string &searchStr, const std::string &replaceStr)
 {
   size_t pos = 0;
   std::string result;
 
-  while (pos < line.length())
+  if (searchStr.empty())
+  {
+    return line;
+  }
+
+  while (pos < line.size())
   {
     const size_t foundPos = line.find(searchStr, pos);
-    if (foundPos < line.length())
+    if (foundPos < line.size())
     {
       result.append(line, pos, foundPos - pos);
       result.append(replaceStr);
-      pos = foundPos + searchStr.length();
-    }
-    else
+      pos = foundPos + searchStr.size();
+    } else
     {
       result.append(line, pos);
       pos = std::string::npos;
     }
   }
   return result;
-
 }
 
 bool TryReplaceInFile(
@@ -97,7 +100,7 @@ int main(const int argc, const char *argv[])
       std::cout << "ERROR\n";
       return 0;
     }
-    std::cout << ReplaceSingleLine(input.signleLine, input.searchString, input.replaceString) << std::endl;
+    std::cout << ReplaceSingleLine(input.text, input.searchString, input.replaceString) << std::endl;
   } else
   {
     if (argv[1] == HELP_IDENTIFIER)
