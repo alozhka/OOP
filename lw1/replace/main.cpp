@@ -1,12 +1,14 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 constexpr ushort ARGS_AMOUNT = 5;
 const std::string HELP_IDENTIFIER = "-h";
 
 struct Input
 {
-  std::string inFile, outFile, searchString, replaceString, text;
+  std::string inFile, outFile, searchString, replaceString;
+  std::vector<std::string> text;
 };
 
 void ParseInputFromCommandLine(const char *argv[], Input &input)
@@ -19,9 +21,22 @@ void ParseInputFromCommandLine(const char *argv[], Input &input)
 
 bool TryParseInputFromStdIn(Input &input)
 {
-  std::getline(std::cin, input.searchString);
-  std::getline(std::cin, input.replaceString);
-  return static_cast<bool>(std::getline(std::cin, input.text));
+  if (!std::getline(std::cin, input.searchString))
+  {
+    return false;
+  }
+  if (!std::getline(std::cin, input.replaceString))
+  {
+    return false;
+  }
+
+  std::string temp;
+  while (std::getline(std::cin, temp))
+  {
+    input.text.push_back(temp);
+  }
+
+  return true;
 }
 
 std::string ReplaceSingleLine(const std::string &line, const std::string &searchStr, const std::string &replaceStr)
@@ -100,7 +115,10 @@ int main(const int argc, const char *argv[])
       std::cout << "ERROR\n";
       return 0;
     }
-    std::cout << ReplaceSingleLine(input.text, input.searchString, input.replaceString) << std::endl;
+    for (const std::string& line : input.text)
+    {
+      std::cout << ReplaceSingleLine(line, input.searchString, input.replaceString) << std::endl;
+    }
   } else
   {
     if (argv[1] == HELP_IDENTIFIER)
