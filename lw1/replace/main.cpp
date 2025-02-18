@@ -21,8 +21,7 @@ bool TryParseInputFromStdIn(Input &input)
 {
   std::cin >> input.searchString;
   std::cin >> input.replaceString;
-  std::cin >> input.signleLine;
-  return !std::cin.eof();
+  return !!(std::cin >> input.signleLine);
 }
 
 std::string ReplaceSingleLine(std::string line, const std::string &searchStr, const std::string &replaceStr)
@@ -50,11 +49,14 @@ bool TryReplaceInFile(
     return false;
   }
   std::ofstream outFile(outFilename);
+  if (!outFile.is_open())
+  {
+    return false;
+  }
 
   std::string line;
-  while (!inFile.eof())
+  while (!getline(inFile, line))
   {
-    getline(inFile, line);
     std::string replacedLine = ReplaceSingleLine(line, searchStr, replaceStr);
     outFile << replacedLine;
   }
@@ -65,6 +67,12 @@ bool TryReplaceInFile(
 }
 
 
+void PrintHelp()
+{
+  std::cout << "Usage: replace <input_file> <output_file> <search_string> <replace_string>\n";
+}
+
+
 int main(const int argc, const char *argv[])
 {
   setlocale(LC_ALL, "rus");
@@ -72,14 +80,13 @@ int main(const int argc, const char *argv[])
 
   if (argc == 1)
   {
-    if(!TryParseInputFromStdIn(input))
+    if (!TryParseInputFromStdIn(input))
     {
       std::cout << "ERROR\n";
       return 0;
     }
-    std::cout << ReplaceSingleLine(input.signleLine, input.searchString, input.replaceString);
-  }
-  else
+    std::cout << ReplaceSingleLine(input.signleLine, input.searchString, input.replaceString) << std::endl;
+  } else
   {
     if (argv[1] == HELP_IDENTIFIER)
     {
