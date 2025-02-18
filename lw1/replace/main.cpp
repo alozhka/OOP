@@ -31,10 +31,14 @@ bool TryParseInputFromStdIn(Input &input)
   }
 
   std::string temp;
-  while (std::getline(std::cin, temp))
+  if (!std::getline(std::cin, temp))
+  {
+    return false;
+  }
+  do
   {
     input.text.push_back(temp);
-  }
+  } while (std::getline(std::cin, temp));
 
   return true;
 }
@@ -115,7 +119,7 @@ int main(const int argc, const char *argv[])
       std::cout << "ERROR\n";
       return 0;
     }
-    for (const std::string& line : input.text)
+    for (const std::string &line: input.text)
     {
       std::cout << ReplaceSingleLine(line, input.searchString, input.replaceString) << std::endl;
     }
