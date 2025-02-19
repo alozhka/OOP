@@ -70,11 +70,22 @@ std::string ReplaceSingleLine(const std::string &line, const std::string &search
   return result;
 }
 
+void ReplaceInStream(
+	std::istream &input, std::ostream &output,
+	const std::string &searchStr, const std::string &replaceStr
+)
+{
+	std::string line;
+	while (getline(input, line))
+	{
+		std::string replacedLine = ReplaceSingleLine(line, searchStr, replaceStr);
+		output << replacedLine;
+	}
+}
+
 bool TryReplaceInFile(
-  const std::string &inFilename,
-  const std::string &outFilename,
-  const std::string &searchStr,
-  const std::string &replaceStr
+  const std::string &inFilename, const std::string &outFilename,
+  const std::string &searchStr, const std::string &replaceStr
 )
 {
   std::ifstream inFile(inFilename);
@@ -88,12 +99,7 @@ bool TryReplaceInFile(
     return false;
   }
 
-  std::string line;
-  while (getline(inFile, line))
-  {
-    std::string replacedLine = ReplaceSingleLine(line, searchStr, replaceStr);
-    outFile << replacedLine;
-  }
+  ReplaceInStream(inFile, outFile, searchStr, replaceStr);
 
   inFile.close();
   outFile.close();
@@ -127,7 +133,7 @@ int main(const int argc, const char *argv[])
   {
     if (argv[1] == HELP_IDENTIFIER)
     {
-      std::cout << "Usage: replace <input_file> <output_file> <search_string> <replace_string>\n";
+      PrintHelp();
       return 0;
     }
     if (argc < ARGS_AMOUNT)
