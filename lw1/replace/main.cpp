@@ -89,7 +89,7 @@ bool TryReplaceInFile(
   }
 
   std::string line;
-  while (!getline(inFile, line))
+  while (getline(inFile, line))
   {
     std::string replacedLine = ReplaceSingleLine(line, searchStr, replaceStr);
     outFile << replacedLine;
