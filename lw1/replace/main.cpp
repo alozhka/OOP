@@ -8,7 +8,6 @@ const std::string HELP_IDENTIFIER = "-h";
 struct Input
 {
   std::string inFile, outFile, searchString, replaceString;
-  std::vector<std::string> text;
 };
 
 void ParseInputFromCommandLine(const char *argv[], Input &input)
@@ -30,17 +29,7 @@ bool TryParseInputFromStdIn(Input &input)
     return false;
   }
 
-  std::string temp;
-  if (!std::getline(std::cin, temp))
-  {
-    return false;
-  }
-  do
-  {
-    input.text.push_back(temp);
-  } while (std::getline(std::cin, temp));
-
-  return true;
+  return !std::cin.eof();
 }
 
 std::string ReplaceSingleLine(const std::string &line, const std::string &searchStr, const std::string &replaceStr)
@@ -79,7 +68,7 @@ void ReplaceInStream(
 	while (getline(input, line))
 	{
 		std::string replacedLine = ReplaceSingleLine(line, searchStr, replaceStr);
-		output << replacedLine;
+		output << replacedLine << std::endl;
 	}
 }
 
@@ -112,42 +101,53 @@ void PrintHelp()
   std::cout << "Usage: replace <input_file> <output_file> <search_string> <replace_string>\n";
 }
 
+void ReplaceFromStdin()
+{
+	Input input;
+
+	if (!TryParseInputFromStdIn(input))
+	{
+		std::cout << "ERROR\n";
+		return;
+	}
+	ReplaceInStream(std::cin, std::cout, input.searchString, input.replaceString);
+}
+
+bool TryReplaceFromFile(const char *argv[])
+{
+  Input input;
+
+  ParseInputFromCommandLine(argv, input);
+  if (!TryReplaceInFile(input.inFile, input.outFile, input.searchString, input.replaceString))
+  {
+    std::cout << "ERROR\n";
+    return false;
+  }
+
+  return true;
+}
 
 int main(const int argc, const char *argv[])
 {
   setlocale(LC_ALL, "rus");
-  Input input;
 
   if (argc == 1)
   {
-    if (!TryParseInputFromStdIn(input))
-    {
-      std::cout << "ERROR\n";
-      return 0;
-    }
-    for (const std::string &line: input.text)
-    {
-      std::cout << ReplaceSingleLine(line, input.searchString, input.replaceString) << std::endl;
-    }
-  } else
-  {
-    if (argv[1] == HELP_IDENTIFIER)
-    {
-      PrintHelp();
-      return 0;
-    }
-    if (argc < ARGS_AMOUNT)
-    {
-      std::cout << "ERROR\n";
-      return 1;
-    }
-    ParseInputFromCommandLine(argv, input);
-    if (!TryReplaceInFile(input.inFile, input.outFile, input.searchString, input.replaceString))
-    {
-      std::cout << "ERROR\n";
-      return 1;
-    }
+  	ReplaceFromStdin();
+  	return 0;
   }
 
-  return 0;
+  if (argv[1] == HELP_IDENTIFIER)
+  {
+    PrintHelp();
+    return 0;
+  }
+
+  if (argc < ARGS_AMOUNT)
+  {
+    std::cout << "ERROR\n";
+    return 1;
+  }
+
+  return !TryReplaceFromFile(argv);
 }
