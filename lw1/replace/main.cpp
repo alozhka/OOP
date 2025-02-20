@@ -32,7 +32,7 @@ bool TryParseInputFromStdIn(Input &input)
   return !std::cin.eof();
 }
 
-std::string ReplaceSingleLine(const std::string &line, const std::string &searchStr, const std::string &replaceStr)
+std::string CopyStringWithReplacement(const std::string &line, const std::string &searchStr, const std::string &replaceStr)
 {
   size_t pos = 0;
   std::string result;
@@ -59,7 +59,7 @@ std::string ReplaceSingleLine(const std::string &line, const std::string &search
   return result;
 }
 
-void ReplaceInStream(
+void CopyStreamWithReplacement(
 	std::istream &input, std::ostream &output,
 	const std::string &searchStr, const std::string &replaceStr
 )
@@ -67,12 +67,12 @@ void ReplaceInStream(
 	std::string line;
 	while (getline(input, line))
 	{
-		std::string replacedLine = ReplaceSingleLine(line, searchStr, replaceStr);
+		std::string replacedLine = CopyStringWithReplacement(line, searchStr, replaceStr);
 		output << replacedLine << std::endl;
 	}
 }
 
-bool TryReplaceInFile(
+bool TryCopyFileWithReplacement(
   const std::string &inFilename, const std::string &outFilename,
   const std::string &searchStr, const std::string &replaceStr
 )
@@ -88,7 +88,7 @@ bool TryReplaceInFile(
     return false;
   }
 
-  ReplaceInStream(inFile, outFile, searchStr, replaceStr);
+  CopyStreamWithReplacement(inFile, outFile, searchStr, replaceStr);
 
   inFile.close();
   outFile.close();
@@ -110,7 +110,7 @@ void ReplaceFromStdin()
 		std::cout << "ERROR\n";
 		return;
 	}
-	ReplaceInStream(std::cin, std::cout, input.searchString, input.replaceString);
+	CopyStreamWithReplacement(std::cin, std::cout, input.searchString, input.replaceString);
 }
 
 bool TryReplaceFromFile(const char *argv[])
@@ -118,7 +118,7 @@ bool TryReplaceFromFile(const char *argv[])
   Input input;
 
   ParseInputFromCommandLine(argv, input);
-  if (!TryReplaceInFile(input.inFile, input.outFile, input.searchString, input.replaceString))
+  if (!TryCopyFileWithReplacement(input.inFile, input.outFile, input.searchString, input.replaceString))
   {
     std::cout << "ERROR\n";
     return false;
