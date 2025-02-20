@@ -33,13 +33,13 @@ bool TryParseInputFromStdIn(Input& input)
 
 std::string CopyStringWithReplacement(const std::string& line, const std::string& searchStr, const std::string& replaceStr)
 {
+	size_t pos = 0;
+	std::string result;
+
 	if (searchStr.empty())
 	{
 		return line;
 	}
-
-	size_t pos = 0;
-	std::string result;
 
 	while (pos < line.size())
 	{
@@ -71,6 +71,28 @@ void CopyStreamWithReplacement(
 	}
 }
 
+bool TryCopyFileWithReplacement(
+	const std::string& inFilename, const std::string& outFilename,
+	const std::string& searchStr, const std::string& replaceStr)
+{
+	std::ifstream inFile(inFilename);
+	if (!inFile.is_open())
+	{
+		return false;
+	}
+	std::ofstream outFile(outFilename);
+	if (!outFile.is_open())
+	{
+		return false;
+	}
+
+	CopyStreamWithReplacement(inFile, outFile, searchStr, replaceStr);
+
+	inFile.close();
+	outFile.close();
+	return true;
+}
+
 void PrintHelp()
 {
 	std::cout << "Usage: replace <input_file> <output_file> <search_string> <replace_string>\n";
@@ -91,23 +113,13 @@ void ReplaceFromStdin()
 bool TryReplaceFromFile(const char* argv[])
 {
 	Input input;
+
 	ParseInputFromCommandLine(argv, input);
-
-	std::ifstream inFile(input.inFile);
-	if (!inFile.is_open())
+	if (!TryCopyFileWithReplacement(input.inFile, input.outFile, input.searchString, input.replaceString))
 	{
+		std::cout << "ERROR\n";
 		return false;
 	}
-	std::ofstream outFile(input.outFile);
-	if (!outFile.is_open())
-	{
-		return false;
-	}
-
-	CopyStreamWithReplacement(inFile, outFile, input.searchString, input.replaceString);
-
-	inFile.close();
-	outFile.close();
 
 	return true;
 }
@@ -134,11 +146,5 @@ int main(const int argc, const char* argv[])
 		return 1;
 	}
 
-	if (!TryReplaceFromFile(argv))
-	{
-		std::cout << "ERROR\n";
-		return 1;
-	}
-
-	return 0;
+	return !TryReplaceFromFile(argv);
 }
