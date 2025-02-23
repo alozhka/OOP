@@ -21,7 +21,7 @@ int main()
 	{
 		Args args;
 		ParseArgs(args);
-		int number = StringToInt(args.str, args.sourceRadix);
+		const int number = StringToInt(args.str, args.sourceRadix);
 		std::cout << IntToString(number, args.destinationRadix) << std::endl;
 	}
 	catch (const std::exception &e)

@@ -16,7 +16,7 @@ int CharToInt(char ch)
 		return ch - 'a' + 10;
 	}
 
-	throw std::invalid_argument("The number must be in the segments [0, 10] and [A, Z]");
+	throw std::invalid_argument("The digit must be in the segments [0, 10] and [A, Z]");
 }
 
 void ThrowIfReachesOverflow(const bool isNegative, const int result, const int radix, const int number)
@@ -25,14 +25,14 @@ void ThrowIfReachesOverflow(const bool isNegative, const int result, const int r
 	{
 		if (-result < (std::numeric_limits<int>::min() + number) / radix)
 		{
-			throw std::overflow_error("Reached low overflow");
+			throw std::overflow_error("Reached overflow");
 		}
 	}
 	else
 	{
 		if (result > (std::numeric_limits<int>::max() - number) / radix)
 		{
-			throw std::overflow_error("Reached top overflow");
+			throw std::overflow_error("Reached overflow");
 		}
 	}
 }
@@ -67,12 +67,52 @@ int StringToInt(const std::string& str, int radix)
 	return isNegative ? -result : result;
 }
 
-std::string IntToString(int n, int radix)
+char IntToChar(int i)
+{
+	if (0 <= i && i <= 9)
+	{
+		return '0' + i;
+	}
+
+	if (10 <= i && i <= 35)
+	{
+		return 'A' + i - 10;
+	}
+
+	throw std::invalid_argument("Integer has to be in range from 0 to 35");
+}
+
+std::string IntToString(int n, const int radix)
 {
 	if (radix < 2 || radix > 36)
 	{
 		throw std::invalid_argument("The base of the number system should be in the range from 2 to 36");
 	}
+	if (n == 0)
+	{
+		return "0";
+	}
 
-	throw std::invalid_argument("Not implemented");
+	std::string result;
+	bool isNegative = false;
+
+	if (n < 0)
+	{
+		isNegative = true;
+		n = -n;
+	}
+
+	while (n > 0)
+	{
+		result.push_back(IntToChar(n % radix));
+		n /= radix;
+	}
+
+	if (isNegative)
+	{
+		result.push_back('-');
+	}
+
+	std::reverse(result.begin(), result.end());
+	return result;
 }
