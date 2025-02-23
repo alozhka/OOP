@@ -22,7 +22,7 @@ void ParseArgs(const int argc, char* argv[], Args& args)
 {
 	if (argc < 4)
 	{
-		throw std::invalid_argument("Less arguments provided."
+		throw std::invalid_argument("Less arguments provided.\n"
 									"Usage: radix.exe <source notation> <destination notation> <value>");
 	}
 	args.sourceRadix = DigitStringToInt(argv[1]);
