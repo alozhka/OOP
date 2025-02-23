@@ -1,5 +1,5 @@
-#include <iostream>
 #include "lib/converter.cpp"
+#include <iostream>
 
 struct Args
 {
@@ -8,25 +8,41 @@ struct Args
 	std::string str;
 };
 
-void ParseArgs(Args& args)
+int DigitStringToInt(const std::string& s)
 {
-	std::cin >> args.sourceRadix;
-	std::cin >> args.destinationRadix;
-	std::cin >> args.str;
+	if (!std::all_of(s.begin(), s.end(), isdigit))
+	{
+		throw std::invalid_argument("Base must be decimal number");
+	}
+
+	return std::atoi(s.c_str());
 }
 
-int main()
+void ParseArgs(const int argc, char* argv[], Args& args)
+{
+	if (argc < 4)
+	{
+		throw std::invalid_argument("Less arguments provided."
+									"Usage: radix.exe <source notation> <destination notation> <value>");
+	}
+	args.sourceRadix = DigitStringToInt(argv[1]);
+	args.destinationRadix = DigitStringToInt(argv[2]);
+	args.str = argv[3];
+}
+
+int main(const int argc, char* argv[])
 {
 	try
 	{
 		Args args;
-		ParseArgs(args);
+		ParseArgs(argc, argv, args);
 		const int number = StringToInt(args.str, args.sourceRadix);
 		std::cout << IntToString(number, args.destinationRadix) << std::endl;
 	}
-	catch (const std::exception &e)
+	catch (const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
+		return 1;
 	}
 	return 0;
 }
