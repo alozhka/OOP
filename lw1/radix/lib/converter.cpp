@@ -19,6 +19,21 @@ int CharToInt(char ch)
 	throw std::invalid_argument("The digit must be in the segments [0, 10] and [A, Z]");
 }
 
+char IntToChar(const int i)
+{
+	if (0 <= i && i <= 9)
+	{
+		return '0' + i;
+	}
+
+	if (10 <= i && i <= 35)
+	{
+		return 'A' + i - 10;
+	}
+
+	throw std::invalid_argument("Integer has to be in range from 0 to 35");
+}
+
 void ThrowIfReachesOverflow(const bool isNegative, const int result, const int radix, const int number)
 {
 	if (isNegative)
@@ -37,11 +52,11 @@ void ThrowIfReachesOverflow(const bool isNegative, const int result, const int r
 	}
 }
 
-int StringToInt(const std::string& str, int radix)
+int StringToInt(const std::string& str, const int radix)
 {
 	if (radix < 2 || radix > 36)
 	{
-		throw std::invalid_argument("The base of the number system should be in the range from 2 to 36");
+		throw std::invalid_argument("The radix should be in the range from 2 to 36");
 	}
 	bool isNegative = false;
 	size_t i = 0;
@@ -58,28 +73,13 @@ int StringToInt(const std::string& str, int radix)
 		int decimalDigit = CharToInt(str[i]);
 		if (decimalDigit >= radix)
 		{
-			throw std::runtime_error(std::format("The number must be with base {}, got {}", radix, decimalDigit));
+			throw std::runtime_error(std::format("The number must be with base {}, got {}", radix, IntToChar(decimalDigit)));
 		}
 		ThrowIfReachesOverflow(isNegative, result, radix, decimalDigit);
 		result = result * radix + decimalDigit;
 	}
 
 	return isNegative ? -result : result;
-}
-
-char IntToChar(int i)
-{
-	if (0 <= i && i <= 9)
-	{
-		return '0' + i;
-	}
-
-	if (10 <= i && i <= 35)
-	{
-		return 'A' + i - 10;
-	}
-
-	throw std::invalid_argument("Integer has to be in range from 0 to 35");
 }
 
 std::string IntToString(int n, const int radix)
@@ -99,12 +99,16 @@ std::string IntToString(int n, const int radix)
 	if (n < 0)
 	{
 		isNegative = true;
-		n = -n;
 	}
 
-	while (n > 0)
+	while (n != 0)
 	{
-		result.push_back(IntToChar(n % radix));
+		int i = n % radix;
+		if (isNegative)
+		{
+			i = -i;
+		}
+		result.push_back(IntToChar(i));
 		n /= radix;
 	}
 
