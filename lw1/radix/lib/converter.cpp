@@ -1,7 +1,7 @@
 #include <format>
 #include <stdexcept>
 
-int CharToInt(char ch)
+int CharToInt(const char ch)
 {
 	if ('0' <= ch && ch <= '9')
 	{
