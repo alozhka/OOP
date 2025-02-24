@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 
+const std::string HELP_IDENTIFIER = "-h";
+
 struct Args
 {
 	matrix given_matrix;
@@ -12,7 +14,7 @@ matrix ReadFromFile(const std::string& filename)
 	std::ifstream in(filename);
 	if (!in.is_open())
 	{
-		throw std::invalid_argument("Cannot open input file");
+		throw std::invalid_argument("Cannot open input file: " + filename);
 	}
 	matrix m;
 
@@ -51,17 +53,34 @@ void PrintHelp()
 
 int main(const int argc, char* argv[])
 {
-	if (argc == 2)
+	Args args;
+
+	if (argc == 1)
 	{
-		PrintHelp();
-		return 0;
+		try
+		{
+			args.given_matrix = ReadMatrixFromStdIn();
+		}
+		catch (const std::exception&)
+		{
+			std::cout << "ERROR\n";
+			return 0;
+		}
+	}
+	else
+	{
+		if (argv[1] == HELP_IDENTIFIER)
+		{
+			PrintHelp();
+			return 0;
+		}
+		args.given_matrix = ReadFromFile(argv[1]);
 	}
 
 	try
 	{
-		Args args;
-		ParseArgs(args, argc, argv);
-		std::cout << "Parsed" << std::endl;
+		const matrix matrix = args.given_matrix;
+		PrintMatrix(std::cout, matrix);
 	}
 	catch (const std::exception& e)
 	{
