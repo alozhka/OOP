@@ -53,7 +53,7 @@ void PrintHelp()
 
 int main(const int argc, char* argv[])
 {
-	Args args;
+	Args args{};
 
 	if (argc == 1)
 	{
@@ -79,8 +79,8 @@ int main(const int argc, char* argv[])
 
 	try
 	{
-		const matrix matrix = args.given_matrix;
-		PrintMatrix(std::cout, matrix);
+		const matrix invertedMatrix = InvertMatrix(args.given_matrix);
+		PrintMatrix(std::cout, invertedMatrix);
 	}
 	catch (const std::exception& e)
 	{
