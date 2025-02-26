@@ -34,7 +34,17 @@ matrix ReadFromFile(const std::string& filename)
 
 matrix ReadMatrixFromStdIn()
 {
-	throw std::invalid_argument("Not implemented");
+	matrix m;
+
+	for (size_t i = 0; i < 3; i++)
+	{
+		for (size_t j = 0; j < 3; j++)
+		{
+			std::cin >> m[i][j];
+		}
+	}
+
+	return m;
 }
 
 void ParseArgs(Args& args, const int argc, char* argv[])

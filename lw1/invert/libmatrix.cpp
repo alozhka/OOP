@@ -119,4 +119,5 @@ void PrintMatrix(std::ostream& out, const matrix& m)
 	{
 		out << row[0] << "\t" << row[1] << "\t" << row[2] << std::endl;
 	}
+	out.unsetf(std::ios::fixed);
 }
