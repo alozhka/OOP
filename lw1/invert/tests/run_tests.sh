@@ -41,7 +41,12 @@ fi
 # Формат матрицы должен быть 3х3
 OUTPUT=$($PROGRAM invalid_format/4x3matrix.txt)
 if [ "$OUTPUT" != "Invalid matrix format" ]; then
-  echo "Converting invalid matrix format test failed. Got $OUTPUT"
+  echo "1. Converting invalid matrix format test failed. Got $OUTPUT"
+  exit 1
+fi
+OUTPUT=$($PROGRAM invalid_format/2x4matrix.txt)
+if [ "$OUTPUT" != "Invalid matrix format" ]; then
+  echo "2. Converting invalid matrix format test failed. Got $OUTPUT"
   exit 1
 fi
 
