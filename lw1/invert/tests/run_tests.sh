@@ -57,5 +57,12 @@ if [ "$OUTPUT" != "Invalid matrix" ]; then
   exit 1
 fi
 
+# Не открывается входной файл
+OUTPUT=$($PROGRAM file/not/exists)
+if [ "$OUTPUT" != "Cannot open input file: file/not/exists" ]; then
+  echo "Input file not exists test failed. Got $OUTPUT"
+  exit 1
+fi
+
 echo "All tests finished correctly."
 exit 0

@@ -84,8 +84,6 @@ void PrintHelp()
 
 int main(const int argc, char* argv[])
 {
-	Args args{};
-
 	if (argc == 2 && argv[1] == HELP_IDENTIFIER)
 	{
 		PrintHelp();
@@ -94,6 +92,7 @@ int main(const int argc, char* argv[])
 
 	try
 	{
+		Args args{};
 		ParseArgs(args, argc, argv);
 		const matrix invertedMatrix = InvertMatrix(args.given_matrix);
 		PrintMatrix(std::cout, invertedMatrix);
