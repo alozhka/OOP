@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-echo
 
 PROGRAM=$1
 OUTPUT_FILE="/tmp/output.txt"
@@ -39,12 +38,19 @@ if [ "$OUTPUT" != "Not-invertible" ]; then
   exit 1
 fi
 
+# Формат матрицы должен быть 3х3
+OUTPUT=$($PROGRAM invalid_format/4x3matrix.txt)
+if [ "$OUTPUT" != "Invalid matrix format" ]; then
+  echo "Converting invalid matrix format test failed. Got $OUTPUT"
+  exit 1
+fi
+
 # Матрица должна иметь только числа
-OUTPUT=$($PROGRAM invalid_format/input.txt)
+OUTPUT=$($PROGRAM invalid_format/not_only_numbers.txt)
 if [ "$OUTPUT" != "Invalid matrix" ]; then
   echo "Converting invalid matrix test failed. Got $OUTPUT"
   exit 1
 fi
 
-printf "\nAll tests finished correctly.\n\n"
+echo "All tests finished correctly."
 exit 0
