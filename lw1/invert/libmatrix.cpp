@@ -17,6 +17,9 @@ double Determinant(const minor_matrix& m)
 	return m[0][0] * m[1][1] - m[1][0] * m[0][1];
 }
 
+/**
+ * Находит минор матрицы для указанной ячейки
+ */
 minor_matrix MinorMatrix(const matrix& m, const size_t row, const size_t col)
 {
 	minor_matrix result;
@@ -114,10 +117,6 @@ void PrintMatrix(std::ostream& out, const matrix& m)
 	out << std::fixed << std::setprecision(3);
 	for (const std::array<double, 3>& row : m)
 	{
-		for (const double cell : row)
-		{
-			out << cell << "\t";
-		}
-		out << std::endl;
+		out << row[0] << "\t" << row[1] << "\t" << row[2] << std::endl;
 	}
 }

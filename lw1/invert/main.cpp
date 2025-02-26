@@ -22,8 +22,10 @@ matrix ReadFromFile(const std::string& filename)
 	{
 		for (size_t j = 0; j < 3; j++)
 		{
-			// TODO: проверка на неправильный формат матрицы
-			in >> m[i][j];
+			if (!(in >> m[i][j]))
+			{
+				throw std::invalid_argument("Invalid matrix");
+			}
 		}
 	}
 
@@ -37,7 +39,7 @@ matrix ReadMatrixFromStdIn()
 
 void ParseArgs(Args& args, const int argc, char* argv[])
 {
-	if (argc == 0)
+	if (argc == 1)
 	{
 		args.given_matrix = ReadMatrixFromStdIn();
 		return;
@@ -55,30 +57,15 @@ int main(const int argc, char* argv[])
 {
 	Args args{};
 
-	if (argc == 1)
+	if (argc == 2 && argv[1] == HELP_IDENTIFIER)
 	{
-		try
-		{
-			args.given_matrix = ReadMatrixFromStdIn();
-		}
-		catch (const std::exception&)
-		{
-			std::cout << "ERROR\n";
-			return 0;
-		}
-	}
-	else
-	{
-		if (argv[1] == HELP_IDENTIFIER)
-		{
-			PrintHelp();
-			return 0;
-		}
-		args.given_matrix = ReadFromFile(argv[1]);
+		PrintHelp();
+		return 0;
 	}
 
 	try
 	{
+		ParseArgs(args, argc, argv);
 		const matrix invertedMatrix = InvertMatrix(args.given_matrix);
 		PrintMatrix(std::cout, invertedMatrix);
 	}
