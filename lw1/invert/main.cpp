@@ -11,18 +11,6 @@ struct Args
 	matrix given_matrix;
 };
 
-bool IsNumber(const std::string& str)
-{
-	for (char const& c : str)
-	{
-		if (!isdigit(c) && c != '.' && c != '-')
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
 matrix ReadMatrix(std::istream& in)
 {
 	matrix m;
@@ -80,6 +68,8 @@ void ParseArgs(Args& args, const int argc, char* argv[])
 		throw std::invalid_argument("Cannot open input file: " + filename);
 	}
 	args.given_matrix = ReadMatrix(in);
+
+	in.close();
 }
 
 void PrintHelp()
