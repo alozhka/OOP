@@ -1,7 +1,6 @@
 #include <format>
 #include <stdexcept>
 
-// перенести числа в константы, вынести проверку на radix в отдельную функцию
 constexpr char CHAR_0 = '0';
 constexpr char CHAR_9 = '9';
 constexpr char CHAR_UPPER_A = 'A';
