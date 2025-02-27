@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 const std::string HELP_IDENTIFIER = "-h";
 
@@ -24,40 +25,44 @@ bool IsNumber(const std::string& str)
 
 matrix ReadMatrix(std::istream& in)
 {
-	std::vector<std::vector<double>> m;
-	std::string line;
+	matrix m;
+	size_t row = 0;
 
-	while (getline(in, line))
+	for (std::string line; getline(in, line); row++)
 	{
 		std::istringstream ss(line);
-		std::string token;
-		std::vector<double> row;
+		size_t col = 0;
 
-		while (ss >> token)
+		if (row >= 3)
 		{
-			if (!IsNumber(token))
-			{
-				throw std::invalid_argument("Invalid matrix");
-			}
-			row.push_back(std::stod(token));
+			throw std::invalid_argument("Invalid matrix format");
 		}
 
-		m.push_back(row);
-	}
+		for (double n; ss >> n; col++)
+		{
+			if (col >= 3)
+			{
+				throw std::invalid_argument("Invalid matrix format");
+			}
 
-	if (m.size() != 3)
-	{
-		throw std::invalid_argument("Invalid matrix format");
-	}
-	for (const std::vector<double>& row : m)
-	{
-		if (row.size() != 3)
+			m[row][col] = n;
+		}
+
+		if (!ss.eof() && col != 3)
+		{
+			throw std::invalid_argument("Invalid matrix");
+		}
+		if (col < 2)
 		{
 			throw std::invalid_argument("Invalid matrix format");
 		}
 	}
 
-	return matrix{ { { m[0][0], m[0][1], m[0][2] }, { m[1][0], m[1][1], m[1][2] }, { m[2][0], m[2][1], m[2][2] } } };
+	if (row < 2)
+	{
+		throw std::invalid_argument("Invalid matrix format");
+	}
+	return m;
 }
 
 void ParseArgs(Args& args, const int argc, char* argv[])
