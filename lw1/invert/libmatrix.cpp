@@ -114,10 +114,14 @@ matrix InvertMatrix(const matrix& matrix)
 
 void PrintMatrix(std::ostream& out, const matrix& m)
 {
+	const std::streamsize old_precision = out.precision();
 	out << std::fixed << std::setprecision(3);
+
 	for (const std::array<double, 3>& row : m)
 	{
 		out << row[0] << "\t" << row[1] << "\t" << row[2] << std::endl;
 	}
+
 	out.unsetf(std::ios::fixed);
+	out.precision(old_precision);
 }

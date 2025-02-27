@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <vector>
 
 const std::string HELP_IDENTIFIER = "-h";
 
@@ -15,22 +14,22 @@ matrix ReadMatrix(std::istream& in)
 {
 	matrix m;
 	size_t row = 0;
+	std::invalid_argument invalidMatrixFormat("Invalid matrix format");
 
 	for (std::string line; getline(in, line); row++)
 	{
 		std::istringstream ss(line);
 		size_t col = 0;
-
 		if (row >= 3)
 		{
-			throw std::invalid_argument("Invalid matrix format");
+			throw invalidMatrixFormat;
 		}
 
 		for (double n; ss >> n; col++)
 		{
 			if (col >= 3)
 			{
-				throw std::invalid_argument("Invalid matrix format");
+				throw invalidMatrixFormat;
 			}
 
 			m[row][col] = n;
@@ -42,13 +41,13 @@ matrix ReadMatrix(std::istream& in)
 		}
 		if (col < 2)
 		{
-			throw std::invalid_argument("Invalid matrix format");
+			throw invalidMatrixFormat;
 		}
 	}
 
 	if (row < 2)
 	{
-		throw std::invalid_argument("Invalid matrix format");
+		throw invalidMatrixFormat;
 	}
 	return m;
 }
