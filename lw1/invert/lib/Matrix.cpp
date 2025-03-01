@@ -1,18 +1,16 @@
-#include <array>
+#include "LibMatrix.h"
 #include <iomanip>
-#include <ostream>
 
-using matrix = std::array<std::array<double, 3>, 3>;
-using minor_matrix = std::array<std::array<double, 2>, 2>;
+using MinorMatrix = std::array<std::array<double, 2>, 2>;
 
-double Determinant(const matrix& m)
+double Determinant(const Matrix& m)
 {
 	return m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2])
 		- m[0][1] * (m[1][0] * m[2][2] - m[2][0] * m[1][2])
 		+ m[0][2] * (m[1][0] * m[2][1] - m[2][0] * m[1][1]);
 }
 
-double Determinant(const minor_matrix& m)
+double Determinant(const MinorMatrix& m)
 {
 	return m[0][0] * m[1][1] - m[1][0] * m[0][1];
 }
@@ -20,9 +18,9 @@ double Determinant(const minor_matrix& m)
 /**
  * Находит минор матрицы для указанной ячейки
  */
-minor_matrix MinorMatrix(const matrix& m, const size_t row, const size_t col)
+MinorMatrix FindMinorMatrix(const Matrix& m, const size_t row, const size_t col)
 {
-	minor_matrix result;
+	MinorMatrix result;
 
 	for (size_t r = 0, i = 0; i < 3; i++)
 	{
@@ -50,15 +48,15 @@ minor_matrix MinorMatrix(const matrix& m, const size_t row, const size_t col)
 /**
  * Вычисляет матрицу алгебраических дополнений
  */
-matrix CofactorMatrix(const matrix& m)
+Matrix CofactorMatrix(const Matrix& m)
 {
-	matrix result;
+	Matrix result;
 
 	for (size_t i = 0; i < 3; i++)
 	{
 		for (size_t j = 0; j < 3; j++)
 		{
-			const minor_matrix minor = MinorMatrix(m, i, j);
+			const MinorMatrix minor = FindMinorMatrix(m, i, j);
 			const double determinant = Determinant(minor);
 
 			result[i][j] = ((i + j) % 2 == 0 ? 1 : -1) * determinant;
@@ -68,9 +66,9 @@ matrix CofactorMatrix(const matrix& m)
 	return result;
 }
 
-matrix TransposeMatrix(const matrix& m)
+Matrix TransposeMatrix(const Matrix& m)
 {
-	matrix result;
+	Matrix result;
 
 	for (size_t i = 0; i < 3; i++)
 	{
@@ -83,9 +81,9 @@ matrix TransposeMatrix(const matrix& m)
 	return result;
 }
 
-matrix DivideMatrix(const matrix& m, const double divider)
+Matrix DivideMatrix(const Matrix& m, const double divider)
 {
-	matrix result;
+	Matrix result;
 
 	for (size_t i = 0; i < 3; i++)
 	{
@@ -98,7 +96,7 @@ matrix DivideMatrix(const matrix& m, const double divider)
 	return result;
 }
 
-matrix InvertMatrix(const matrix& matrix)
+Matrix InvertMatrix(const Matrix& matrix)
 {
 	const double determinant = Determinant(matrix);
 	if (determinant == 0)
@@ -106,13 +104,13 @@ matrix InvertMatrix(const matrix& matrix)
 		throw std::invalid_argument("Not-invertible");
 	}
 
-	const ::matrix cofactorMatrix = CofactorMatrix(matrix);
-	const ::matrix adjMatrix = TransposeMatrix(cofactorMatrix);
+	const Matrix cofactorMatrix = CofactorMatrix(matrix);
+	const Matrix adjMatrix = TransposeMatrix(cofactorMatrix);
 
 	return DivideMatrix(adjMatrix, determinant);
 }
 
-void PrintMatrix(std::ostream& out, const matrix& m)
+void PrintMatrix(std::ostream& out, const Matrix& m)
 {
 	const std::streamsize old_precision = out.precision();
 	out << std::fixed << std::setprecision(3);

@@ -56,6 +56,11 @@ if [ "$OUTPUT" != "Invalid matrix" ]; then
   echo "Converting invalid matrix test failed. Got $OUTPUT"
   exit 1
 fi
+OUTPUT=$($PROGRAM invalid_format/not_only_numbers1.txt)
+if [ "$OUTPUT" != "Invalid matrix" ]; then
+  echo "Converting invalid matrix test failed. Got $OUTPUT"
+  exit 1
+fi
 
 # Не открывается входной файл
 OUTPUT=$($PROGRAM file/not/exists)

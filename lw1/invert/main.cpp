@@ -1,18 +1,19 @@
-#include "libmatrix.cpp"
+#include "lib/LibMatrix.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
+// поправить парсинг (пр. 10a)
 const std::string HELP_IDENTIFIER = "-h";
 
 struct Args
 {
-	matrix given_matrix;
+	std::string input_file;
 };
 
-matrix ReadMatrix(std::istream& in)
+Matrix ReadMatrix(std::istream& in)
 {
-	matrix m;
+	Matrix m;
 	size_t row = 0;
 	std::invalid_argument invalidMatrixFormat("Invalid matrix format");
 
@@ -52,22 +53,22 @@ matrix ReadMatrix(std::istream& in)
 	return m;
 }
 
-void ParseArgs(Args& args, const int argc, char* argv[])
+Args ParseArgs(char* argv[])
 {
-	if (argc == 1)
-	{
-		args.given_matrix = ReadMatrix(std::cin);
-		return;
-	}
+	Args args{};
+	args.input_file = argv[1];
 
-	const std::string filename = argv[1];
+	return args;
+}
+
+void ReadMatrixFromFile(Matrix& m, const std::string& filename)
+{
 	std::ifstream in(filename);
 	if (!in.is_open())
 	{
 		throw std::invalid_argument("Cannot open input file: " + filename);
 	}
-	args.given_matrix = ReadMatrix(in);
-
+	m = ReadMatrix(in);
 	in.close();
 }
 
@@ -84,11 +85,20 @@ int main(const int argc, char* argv[])
 		return 0;
 	}
 
+	Matrix matrix;
+	if (argc == 1)
+	{
+		matrix = ReadMatrix(std::cin);
+	}
+	else
+	{
+		const Args args = ParseArgs(argv);
+		ReadMatrixFromFile(matrix, args.input_file);
+	}
+
 	try
 	{
-		Args args{};
-		ParseArgs(args, argc, argv);
-		const matrix invertedMatrix = InvertMatrix(args.given_matrix);
+		const Matrix invertedMatrix = InvertMatrix(matrix);
 		PrintMatrix(std::cout, invertedMatrix);
 	}
 	catch (const std::exception& e)
