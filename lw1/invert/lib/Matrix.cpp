@@ -1,4 +1,4 @@
-#include "LibMatrix.h"
+#include "Matrix.h"
 #include <iomanip>
 
 using MinorMatrix = std::array<std::array<double, 2>, 2>;
