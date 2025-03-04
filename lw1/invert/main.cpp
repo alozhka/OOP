@@ -5,11 +5,25 @@
 
 // поправить парсинг (пр. 10a)
 const std::string HELP_IDENTIFIER = "-h";
+constexpr char CHAR_DOT = '.';
+constexpr char CHAR_MINUS = '-';
 
 struct Args
 {
 	std::string input_file;
 };
+
+bool IsNumericString(const std::string &str)
+{
+	for (const char c : str)
+	{
+		if (!std::isdigit(c) && c != CHAR_DOT && c != CHAR_MINUS)
+		{
+			return false;
+		}
+	}
+	return true;
+}
 
 void ReadMatrix(std::istream& in, Matrix& m)
 {
