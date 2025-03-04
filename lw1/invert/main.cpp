@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-// поправить парсинг (пр. 10a)
 const std::string HELP_IDENTIFIER = "-h";
 constexpr char CHAR_DOT = '.';
 constexpr char CHAR_MINUS = '-';
@@ -32,27 +31,28 @@ void ReadMatrix(std::istream& in, Matrix& m)
 
 	for (std::string line; getline(in, line); row++)
 	{
-		std::istringstream ss(line);
-		size_t col = 0;
 		if (row >= 3)
 		{
 			throw invalidMatrixFormat;
 		}
 
-		for (double n; ss >> n; col++)
+		std::istringstream ss(line);
+		size_t col = 0;
+
+		for (std::string str; ss >> str; col++)
 		{
 			if (col >= 3)
 			{
 				throw invalidMatrixFormat;
 			}
+			if (!IsNumericString(str))
+			{
+				throw std::invalid_argument("Invalid matrix");
+			}
 
-			m[row][col] = n;
+			m[row][col] = std::stod(str);
 		}
 
-		if (!ss.eof() && col != 3)
-		{
-			throw std::invalid_argument("Invalid matrix");
-		}
 		if (col < 2)
 		{
 			throw invalidMatrixFormat;
