@@ -3,6 +3,4 @@ project(crypt)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(crypt main.cpp
-        lib/crypto.cpp
-        lib/crypto.h)
+add_executable(crypt main.cpp)

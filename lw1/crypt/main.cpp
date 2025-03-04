@@ -1,17 +1,16 @@
 #include <iostream>
-#include <string>
+#include <fstream>
 
 struct Args
 {
-	bool isCrypt = false;
+	bool isDecrypt;
 	std::string inFilename, outFilename;
-	unsigned short key = 0;
+	uint8_t key;
 };
 
 void PrintHelp()
 {
-	std::cout << "Usage: crypt crypt <input file> <output file> <key>\n"
-				 "crypt decrypt <input file> <output file> <key>\n";
+	std::cout << "Usage: crypt <crypt|decrypt> <input file> <output file> <key>";
 }
 
 bool IsNumericString(const std::string& s)
@@ -29,15 +28,15 @@ bool IsNumericString(const std::string& s)
 Args ParseArgs(const char* argv[])
 {
 	Args args;
-	std::string operation = argv[1];
+	const std::string operation = argv[1];
 
 	if (operation == "crypt")
 	{
-		args.isCrypt = true;
+		args.isDecrypt = false;
 	}
 	else if (operation == "decrypt")
 	{
-		args.isCrypt = false;
+		args.isDecrypt = true;
 	}
 	else
 	{
@@ -57,8 +56,43 @@ Args ParseArgs(const char* argv[])
 
 	args.inFilename = argv[2];
 	args.outFilename = argv[3];
-	args.key = key;
+	args.key = static_cast<uint8_t>(key);
 	return args;
+}
+
+uint8_t MixBits(uint8_t byte)
+{
+	return byte & 0b1000'0000 >> 2 | byte & 0b0110'0000 >> 5 | byte & 0b0001'1000 << 3 | byte & 0b0000'0111 << 2;
+}
+
+uint8_t UnmixBits(uint8_t byte)
+{
+	return byte & 0b1100'0000 >> 3 | byte & 0b0010'0000 << 2 | byte & 0b0001'1100 >> 2 | byte & 0b0000'0011 << 5;
+}
+
+void CopyFileWithEncryption(const std::string& inFilename, const std::string& outFilename, uint8_t key, bool isDecrypt)
+{
+	std::ifstream in(inFilename, std::ios::binary);
+	if (!in.is_open())
+	{
+		throw std::invalid_argument("Cannot open input file");
+	}
+
+	std::ofstream out(outFilename, std::ios::binary);
+	if (!out.is_open())
+	{
+		throw std::invalid_argument("Cannot open output file");
+	}
+
+	char ch;
+	while (in.get(ch))
+	{
+		uint8_t byte = isDecrypt ? MixBits(ch ^ key) : MixBits(ch) ^ key;
+		out.put(byte);
+	}
+
+	in.close();
+	out.close();
 }
 
 int main(const int argc, const char* argv[])
@@ -71,9 +105,8 @@ int main(const int argc, const char* argv[])
 
 	try
 	{
-		if (const Args args = ParseArgs(argv); args.isCrypt)
-		{
-		}
+		const Args args = ParseArgs(argv);
+		CopyFileWithEncryption(args.inFilename, args.outFilename, args.key, args.isDecrypt);
 	}
 	catch (std::exception& e)
 	{
