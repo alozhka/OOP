@@ -10,7 +10,8 @@ int main()
 	{
 		ReadNumbers(std::cin, numbers);
 		ProcessNumbers(numbers);
-		PrintSortedNumbers(std::cout, numbers);
+		SortNumbers(numbers);
+		PrintNumbers(std::cout, numbers);
 	}
 	catch (const std::exception& e)
 	{

@@ -3,17 +3,28 @@
 #include <iomanip>
 #include <iostream>
 
+bool IsNumericString(const std::string &str)
+{
+	for (const char c : str)
+	{
+		if (!std::isdigit(c) && c != '.' && c != '-')
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void ReadNumbers(std::istream& in, std::vector<double>& numbers)
 {
-	double n;
-	while (in >> n)
+	std::string str;
+	while (in >> str)
 	{
-		numbers.push_back(n);
-	}
-
-	if (!in.eof() && in.fail())
-	{
-		throw std::invalid_argument("ERROR");
+		if (!IsNumericString(str))
+		{
+			throw std::invalid_argument("ERROR");
+		}
+		numbers.push_back(std::stod(str));
 	}
 }
 
@@ -33,15 +44,16 @@ void ProcessNumbers(std::vector<double>& numbers)
 		throw std::invalid_argument("ERROR");
 	}
 
-	for (size_t i = 0; i < numbers.size(); i++)
-	{
-		numbers[i] = numbers[i] * max / min;
-	}
+	std::ranges::transform(numbers, numbers.begin(), [max, min](double n) { return n * max / min; });
 }
 
-void PrintSortedNumbers(std::ostream& out, std::vector<double> numbers)
+void SortNumbers(std::vector<double>& numbers)
 {
 	std::ranges::sort(numbers);
+}
+
+void PrintNumbers(std::ostream& out, const std::vector<double>& numbers)
+{
 	const size_t size = numbers.size();
 
 	out << std::fixed << std::setprecision(3);
