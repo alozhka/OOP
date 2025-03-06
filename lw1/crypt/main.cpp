@@ -65,11 +65,11 @@ uint8_t MixBits(uint8_t byte)
 	return byte & 0b1000'0000 >> 2 | byte & 0b0110'0000 >> 5 | byte & 0b0001'1000 << 3 | byte & 0b0000'0111 << 2;
 }
 
-uint8_t CryptBite(uint8_t byte, uint8_t key)
+uint8_t CryptByte(uint8_t byte, uint8_t key)
 {
 	return MixBits(byte) ^ key;
 }
-uint8_t DecryptBite(uint8_t byte, uint8_t key)
+uint8_t DecryptByte(uint8_t byte, uint8_t key)
 {
 	return MixBits(byte ^ key);
 }
@@ -91,7 +91,7 @@ void CopyFileWithEncryption(const std::string& inFilename, const std::string& ou
 	char ch;
 	while (in.get(ch))
 	{
-		uint8_t byte = isDecrypt ? DecryptBite(ch, key) : CryptBite(ch, key);
+		uint8_t byte = isDecrypt ? DecryptByte(ch, key) : CryptByte(ch, key);
 		out.put(byte);
 	}
 

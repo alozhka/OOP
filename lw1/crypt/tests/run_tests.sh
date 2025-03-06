@@ -30,7 +30,19 @@ fi
 
 ### Negative
 
-# Разные файлы при разных ключах
+# Разные файлы при разных ключах не равны друг другу
+$PROGRAM crypt crypt/input.txt $OUTPUT 20
+cmp crypt/input.txt $OUTPUT > /dev/null
+if [ ! $? ]; then
+ echo "Crypting different keys tests failed"
+ exit 1
+fi
+$PROGRAM decrypt $OUTPUT $OUTPUT1 200
+cmp crypt/input.txt $OUTPUT1 > /dev/null
+if [ ! $? ]; then
+  echo "Decrypting different keys test failed"
+  exit 1
+fi
 
 # Invalid key
 OUTPUT_MESSAGE=$($PROGRAM crypt input.txt output.txt 10a)
