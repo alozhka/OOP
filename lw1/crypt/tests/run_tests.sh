@@ -30,6 +30,8 @@ fi
 
 ### Negative
 
+# Разные файлы при разных ключах
+
 # Invalid key
 OUTPUT_MESSAGE=$($PROGRAM crypt input.txt output.txt 10a)
 if [ "$OUTPUT_MESSAGE" != "Invalid key" ]; then
