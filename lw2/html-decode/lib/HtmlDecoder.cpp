@@ -1,8 +1,6 @@
-#include "html-decoder.h"
+#include "HtmlDecoder.h"
 
-#include <ostream>
-
-std::string HtmlDecodeString(std::string const& html)
+std::string HtmlDecodeString(const std::string& html)
 {
 	std::string result;
 	result.reserve(html.size());
@@ -11,30 +9,30 @@ std::string HtmlDecodeString(std::string const& html)
 	{
 		if (html[i] == '&')
 		{
-			if (html.compare(i, 6, "&quot;"))
+			if (html.compare(i, 6, "&quot;") == 0)
 			{
 				result += '"';
-				i += 6;
+				i += 5;
 			}
-			else if (html.compare(i, 6, "&apos;"))
+			else if (html.compare(i, 6, "&apos;") == 0)
 			{
 				result += '\'';
-				i += 6;
+				i += 5;
 			}
-			else if (html.compare(i, 6, "&lt;"))
+			else if (html.compare(i, 4, "&lt;") == 0)
 			{
 				result += '<';
-				i += 6;
+				i += 3;
 			}
-			else if (html.compare(i, 6, "&gt;"))
+			else if (html.compare(i, 4, "&gt;") == 0)
 			{
 				result += '>';
-				i += 6;
+				i += 3;
 			}
-			else if (html.compare(i, 6, "&amp;"))
+			else if (html.compare(i, 5, "&amp;") == 0)
 			{
 				result += '&';
-				i += 6;
+				i += 4;
 			}
 			else
 			{

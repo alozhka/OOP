@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <istream>
+#include <ostream>
 
 void HtmlDecodeFile(std::istream& in, std::ostream& out);
-
