@@ -3,4 +3,4 @@
 #include <istream>
 #include <ostream>
 
-void HtmlDecodeFile(std::istream& in, std::ostream& out);
+void HtmlDecode(std::istream& in, std::ostream& out);
