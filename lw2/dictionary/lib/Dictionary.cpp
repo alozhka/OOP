@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -18,28 +19,25 @@ std::string ToLower(const std::string& s)
 Dictionary LoadDictionary(std::istream& stream)
 {
 	Dictionary d;
-	std::string line;
+	std::string line, key, value;
 	while (std::getline(stream, line))
 	{
-		const size_t delimiterIndex = line.find(':');
-		if (delimiterIndex == std::string::npos)
-		{
-			break;
-		}
+		std::istringstream iss(line);
 
-		std::string key = line.substr(0, delimiterIndex);
-		std::string value = line.substr(delimiterIndex + 1);
-
-		if (key.empty())
+		if (std::getline(iss, key, ':'))
 		{
-			throw std::invalid_argument("Empty dictionary word");
-		}
-		if (value.empty())
-		{
-			throw std::invalid_argument("Empty dictionary translation");
-		}
+			std::set<std::string> translations;
+			while (std::getline(iss, value, ','))
+			{
+				translations.insert(value);
+			}
 
-		d.emplace(ToLower(key), ToLower(value));
+			d[key] = translations;
+			for (const std::string& translation : translations)
+			{
+				d[translation].insert(key);
+			}
+		}
 	}
 
 	return d;
@@ -60,4 +58,9 @@ Dictionary LoadDictionary(const std::string& filename)
 void AddTranslation(const Dictionary& dictionary, std::string key)
 {
 	throw std::runtime_error("Not Implemented");
+}
+
+void PrintTranslation(std::ostream& output, const Dictionary& dictionary, std::string key)
+{
+	auto translations = dictionary.equal_range(key);
 }

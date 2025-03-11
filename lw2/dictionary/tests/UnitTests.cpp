@@ -19,12 +19,30 @@ TEST_CASE("Converts string to lower case", "[convert][positive]")
 TEST_CASE("Reads data from memory", "[import][positive]")
 {
 	Dictionary expected = {
-		{ "cat", "кошка" },
-		{ "cat", "кот" },
-		{ "meow", "кот" },
-		{"meow", "к о т"}
+		{ "cat", { "кошка", "кот" } },
+		{ "meow", { "кот", "к о т" } },
+		{ "кот", { "cat", "meow" } },
+		{ "к о т", { "meow" } },
+		{ "кошка", { "cat" } }
 	};
-	std::istringstream ss("cat:кошка\ncat:кот\nmeow:кот\nmeow:к о т\n");
+	std::istringstream ss("cat:кошка,кот\nmeow:кот,к о т\nкот:cat,meow\nк о т:meow\n");
 
-	REQUIRE(expected == LoadDictionary(ss));
+	Dictionary actual = LoadDictionary(ss);
+	REQUIRE(expected == actual);
 }
+
+TEST_CASE("Translate words from English to Russian and ", "[translate][positive]")
+{
+	Dictionary expected = {
+		{ "cat", { "кошка", "кот" } },
+		{ "meow", { "кот", "к о т" } },
+		{ "кот", { "cat", "meow" } },
+		{ "к о т", { "meow" } }
+	};
+
+	REQUIRE("кот, кошка");
+}
+
+/**
+ * Negative
+ */
