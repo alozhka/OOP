@@ -6,21 +6,29 @@ TMPDIR="/tmp"
 ##### Positive #####
 
 # Печатает help
-$PROGRAM -h > "$TMPDIR"/prints-help.txt
+if ! $PROGRAM -h > "$TMPDIR"/prints-help.txt; then
+  echo "Prints help test failed: expected returning 0"
+  exit 1
+fi
 if ! cmp -s "prints-help.txt" "$TMPDIR"/prints-help.txt; then
   echo "Prints help test failed"
   exit 1
 fi
 
 # Replace в файле
-$PROGRAM replace/input.txt "$TMPDIR"/output.txt 123 123123
+if ! $PROGRAM replace/input.txt "$TMPDIR"/output.txt 123 123123; then
+  echo "Replace test failed: expected returning 0"
+  exit 1
+fi
 if ! cmp -s "replace/output.txt" "$TMPDIR"/output.txt; then
   echo "Replace test failed"
   exit 1
 fi
 
 # Replace через stdin со множеством строк
-$PROGRAM < long_text/input.txt > "$TMPDIR"/output.txt
+if ! $PROGRAM < long_text/input.txt > "$TMPDIR"/output.txt; then
+ echo "Replace multiple lines failed: expected returning 0"
+fi
 if ! cmp -s long_text/output.txt "$TMPDIR"/output.txt; then
   echo "Replace multiple lines failed"
   exit 1;
