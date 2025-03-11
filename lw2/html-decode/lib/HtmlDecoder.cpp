@@ -1,5 +1,18 @@
 #include "HtmlDecoder.h"
 
+#include <map>
+
+namespace Html::Decode
+{
+const std::map<std::string, char> ENCODED_HTML_SYMBOLS = {
+	{ "&quot;", '"' },
+	{ "&apos;", '\'' },
+	{ "&lt;", '<' },
+	{ "&gt;", '>' },
+	{ "&amp;", '&' }
+};
+}
+
 std::string HtmlDecode(const std::string& html)
 {
 	std::string result;
@@ -13,32 +26,19 @@ std::string HtmlDecode(const std::string& html)
 			continue;
 		}
 
-		if (html.compare(i, 6, "&quot;") == 0)
+		bool replaced = false;
+		for (const auto& [encoded, symbol] : Html::Decode::ENCODED_HTML_SYMBOLS)
 		{
-			result += '"';
-			i += 5;
+			if (html.compare(i, encoded.size(), encoded) == 0)
+			{
+				result += symbol;
+				i += encoded.size() - 1;
+				replaced = true;
+				break;
+			}
 		}
-		else if (html.compare(i, 6, "&apos;") == 0)
-		{
-			result += '\'';
-			i += 5;
-		}
-		else if (html.compare(i, 4, "&lt;") == 0)
-		{
-			result += '<';
-			i += 3;
-		}
-		else if (html.compare(i, 4, "&gt;") == 0)
-		{
-			result += '>';
-			i += 3;
-		}
-		else if (html.compare(i, 5, "&amp;") == 0)
-		{
-			result += '&';
-			i += 4;
-		}
-		else
+
+		if (!replaced)
 		{
 			result += html[i];
 		}
