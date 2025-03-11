@@ -15,3 +15,16 @@ TEST_CASE("Converts string to lower case", "[convert][positive]")
 
 	REQUIRE(data.actual == ToLower(data.initial));
 }
+
+TEST_CASE("Reads data from memory", "[import][positive]")
+{
+	Dictionary expected = {
+		{ "cat", "кошка" },
+		{ "cat", "кот" },
+		{ "meow", "кот" },
+		{"meow", "к о т"}
+	};
+	std::istringstream ss("cat:кошка\ncat:кот\nmeow:кот\nmeow:к о т\n");
+
+	REQUIRE(expected == LoadDictionary(ss));
+}
