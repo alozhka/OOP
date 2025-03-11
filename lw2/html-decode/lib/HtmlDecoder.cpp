@@ -4,13 +4,33 @@
 
 namespace Html::Decode
 {
-const std::map<std::string, char> ENCODED_HTML_SYMBOLS = {
+const std::map<std::string, char> ENCODED_HTML_ENTITIES = {
 	{ "&quot;", '"' },
 	{ "&apos;", '\'' },
 	{ "&lt;", '<' },
 	{ "&gt;", '>' },
 	{ "&amp;", '&' }
 };
+}
+
+void ReplaceHtmlEntity(const std::string& s, size_t& pos, std::string& output)
+{
+	bool replaced = false;
+	for (const auto& [encoded, symbol] : Html::Decode::ENCODED_HTML_ENTITIES)
+	{
+		if (s.compare(pos, encoded.size(), encoded) == 0)
+		{
+			output += symbol;
+			pos += encoded.size() - 1;
+			replaced = true;
+			break;
+		}
+	}
+
+	if (!replaced)
+	{
+		output += s[pos];
+	}
 }
 
 std::string HtmlDecode(const std::string& html)
@@ -26,22 +46,7 @@ std::string HtmlDecode(const std::string& html)
 			continue;
 		}
 
-		bool replaced = false;
-		for (const auto& [encoded, symbol] : Html::Decode::ENCODED_HTML_SYMBOLS)
-		{
-			if (html.compare(i, encoded.size(), encoded) == 0)
-			{
-				result += symbol;
-				i += encoded.size() - 1;
-				replaced = true;
-				break;
-			}
-		}
-
-		if (!replaced)
-		{
-			result += html[i];
-		}
+		ReplaceHtmlEntity(html, i, result);
 	}
 	return result;
 }
