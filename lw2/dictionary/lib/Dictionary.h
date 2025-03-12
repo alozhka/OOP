@@ -6,10 +6,10 @@
 
 using Dictionary = std::unordered_map<std::string, std::set<std::string>>;
 
-Dictionary LoadDictionary(std::string filename);
+Dictionary LoadDictionary(const std::string& filename);
 
-void AddTranslation(const Dictionary& dictionary, std::string key);
+void AddTranslation(Dictionary& dictionary, const std::string& word, const std::string& translation);
 
-void PrintTranslation(std::ostream& output, const Dictionary& dictionary, std::string key);
+bool TryPrintTranslation(std::ostream& output, const Dictionary& dictionary, const std::string& word);
 
-void SaveDictionary(const Dictionary& dictionary, std::string filename);
+void SaveDictionary(const std::string& filename, const Dictionary& dictionary);

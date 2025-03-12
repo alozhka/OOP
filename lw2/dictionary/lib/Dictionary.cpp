@@ -33,10 +33,6 @@ Dictionary LoadDictionary(std::istream& stream)
 			}
 
 			d[key] = translations;
-			for (const std::string& translation : translations)
-			{
-				d[translation].insert(key);
-			}
 		}
 	}
 
@@ -55,12 +51,64 @@ Dictionary LoadDictionary(const std::string& filename)
 	return d;
 }
 
-void AddTranslation(const Dictionary& dictionary, std::string key)
+void AddTranslation(Dictionary& dictionary, const std::string& word, const std::string& translation)
 {
-	throw std::runtime_error("Not Implemented");
+	dictionary[ToLower(word)].insert(translation);
 }
 
-void PrintTranslation(std::ostream& output, const Dictionary& dictionary, std::string key)
+bool TryPrintTranslation(std::ostream& output, const Dictionary& dictionary, const std::string& word)
 {
-	auto translations = dictionary.equal_range(key);
+	const std::string lowerInput = ToLower(word);
+
+	if (!dictionary.contains(lowerInput))
+	{
+		return false;
+	}
+
+	bool first = true;
+	for (const auto& translation : dictionary.at(lowerInput))
+	{
+		if (!first)
+			output << ", ";
+		output << translation;
+		first = false;
+	}
+	output << std::endl;
+
+	return true;
+}
+
+void SaveDictionary(std::ostream& out, const Dictionary& dictionary)
+{
+	for (const auto& [key, translations] : dictionary)
+	{
+		out << key << ":";
+		bool first = true;
+		for (const auto& word : translations)
+		{
+			if (!first)
+				out << ",";
+			out << word;
+			first = false;
+		}
+		out << std::endl;
+	}
+}
+
+void SaveDictionary(const std::string& filename, const Dictionary& dictionary)
+{
+	std::ofstream file(filename);
+	for (const auto& [key, translations] : dictionary)
+	{
+		file << key << ":";
+		bool first = true;
+		for (const auto& word : translations)
+		{
+			if (!first)
+				file << ",";
+			file << word;
+			first = false;
+		}
+		file << "\n";
+	}
 }
