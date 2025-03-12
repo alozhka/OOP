@@ -18,7 +18,7 @@ TEST_CASE("Converts string to lower case", "[convert][positive]")
 	REQUIRE(data.actual == ToLower(data.initial));
 }
 
-TEST_CASE("Reads data from memory", "[import][positive]")
+TEST_CASE("Reads data from stream", "[import][positive]")
 {
 	Dictionary expected = {
 		{ "cat", { "кошка", "кот" } },
@@ -45,4 +45,27 @@ TEST_CASE("Adds correct translation to dictionary", "[translate][positive]")
 	AddTranslation(actual, "The Red Square", "Красная площадь");
 
 	REQUIRE(expected == actual);
+}
+
+TEST_CASE("Prints translation correctly", "[translation][positive]")
+{
+	const Dictionary initial = {
+		{ "cat", { "кот", "кошка" } },
+		{ "the red square", { "Красная площадь" } }
+	};
+	std::ostringstream oss;
+
+	bool found = TryPrintTranslation(oss, initial, "cat");
+	REQUIRE(found);
+	REQUIRE("кот, кошка\n" == oss.str());
+
+	oss.str("");
+	found = TryPrintTranslation(oss, initial, "The Red Square");
+	REQUIRE(found);
+	REQUIRE("Красная площадь\n" == oss.str());
+
+	oss.str("");
+	found = TryPrintTranslation(oss, initial, "Not exists");
+	REQUIRE(!found);
+	REQUIRE(oss.str().empty());
 }
