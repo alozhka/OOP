@@ -45,7 +45,7 @@ void ProcessInput(Dictionary& dictionary, bool& modified)
 	}
 }
 
-void promptSaveAndExit(const std::string& filename, const Dictionary& dict, const bool modified)
+void PromptSaveAndExit(const std::string& filename, const Dictionary& dict, const bool modified)
 {
 	if (modified)
 	{
@@ -80,7 +80,7 @@ int main(const int argc, const char* argv[])
 
 		bool modified = false;
 		ProcessInput(dictionary, modified);
-		promptSaveAndExit(args.dictFilename, dictionary, modified);
+		PromptSaveAndExit(args.dictFilename, dictionary, modified);
 		return 0;
 	}
 	catch (const std::exception& e)

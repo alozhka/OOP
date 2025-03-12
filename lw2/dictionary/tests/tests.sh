@@ -22,7 +22,7 @@ fi
 
 # Add data, prints it and saves
 cp data/initial.txt data/data.txt
-$PROGRAM data/initial.txt < commands/print_add_save.txt > $OUTPUT
+$PROGRAM data/data.txt < commands/print_add_save.txt > $OUTPUT
 if ! cmp expected/print_add_save.txt $OUTPUT; then
   echo "Saved data output test failed"
   exit 1
