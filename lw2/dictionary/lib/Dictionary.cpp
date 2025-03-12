@@ -44,7 +44,7 @@ Dictionary LoadDictionary(const std::string& filename)
 	std::ifstream stream(filename);
 	if (!stream.is_open())
 	{
-		throw std::invalid_argument("Input file not found");
+		throw std::invalid_argument("Не удалось открыть входной файл");
 	}
 	Dictionary d = LoadDictionary(stream);
 	stream.close();

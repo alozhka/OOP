@@ -1,0 +1,6 @@
+cat
+meat
+мясо
+meat
+...
+y

@@ -49,8 +49,7 @@ void promptSaveAndExit(const std::string& filename, const Dictionary& dict, cons
 {
 	if (modified)
 	{
-		std::cout << "В словарь были внесены изменения. Введите Y или y для сохранения перед выходом." << std::endl;
-		std::cout << ">";
+		std::cout << "В словарь были внесены изменения. Введите Y или y для сохранения перед выходом.\n>";
 		std::string choice;
 		getline(std::cin, choice);
 		if (choice == "Y" || choice == "y")
@@ -73,12 +72,20 @@ int main(const int argc, const char* argv[])
 		return 1;
 	}
 
-	Args args;
-	ParseArgs(args, argv);
-	Dictionary dictionary = LoadDictionary(args.dictFilename);
+	try
+	{
+		Args args;
+		ParseArgs(args, argv);
+		Dictionary dictionary = LoadDictionary(args.dictFilename);
 
-	bool modified = false;
-	ProcessInput(dictionary, modified);
-	promptSaveAndExit(args.dictFilename, dictionary, modified);
-	return 0;
+		bool modified = false;
+		ProcessInput(dictionary, modified);
+		promptSaveAndExit(args.dictFilename, dictionary, modified);
+		return 0;
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+		return 1;
+	}
 }
