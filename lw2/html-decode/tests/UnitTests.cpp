@@ -18,7 +18,7 @@ TEST_CASE("Decode HTML symbols in string", "[decode][positive]")
 		TestData{ "1&something;3", "1&something;3" },
 		TestData{ " &quot;1&apos;2&amp;3&lt;4&gt;5&amp;gt;&sample;a", " \"1'2&3<4>5&gt;&sample;a" });
 
-	REQUIRE(data.expected == HtmlDecode(data.initial));
+	REQUIRE(data.expected == HtmlDecodeString(data.initial));
 }
 
 TEST_CASE("Decode HTML symbols in stream", "[decode][positive]")

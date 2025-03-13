@@ -33,7 +33,7 @@ void ReplaceHtmlEntity(const std::string& s, size_t& pos, std::string& output)
 	}
 }
 
-std::string HtmlDecode(const std::string& html)
+std::string HtmlDecodeString(const std::string& html)
 {
 	std::string result;
 
@@ -55,6 +55,6 @@ void HtmlDecode(std::istream& in, std::ostream& out)
 	std::string line;
 	while (std::getline(in, line))
 	{
-		out << HtmlDecode(line) << std::endl;
+		out << HtmlDecodeString(line) << std::endl;
 	}
 }

@@ -12,13 +12,8 @@
 **/.idea
 **/cmake-build-debug
 **/cmake-build-release
-**/cmake-build-release
-**/cmake-build-release
-**/cmake-build-release
-**/cmake-build-release
-**/cmake-build-release
-**/cmake-build-release
-**/cmake-build-release
+**/cmake-build-debug-coverage
+**/cmake-build-release-coverage
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
