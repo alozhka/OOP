@@ -36,7 +36,6 @@ void ReplaceHtmlEntity(const std::string& s, size_t& pos, std::string& output)
 std::string HtmlDecode(const std::string& html)
 {
 	std::string result;
-	result.reserve(html.size());
 
 	for (size_t i = 0; i < html.size(); i++)
 	{
