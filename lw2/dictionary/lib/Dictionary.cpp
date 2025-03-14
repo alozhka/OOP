@@ -2,9 +2,12 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+
+constexpr char DASH = '-';
 
 std::string ToLower(const std::string& s)
 {
@@ -14,6 +17,28 @@ std::string ToLower(const std::string& s)
 	std::ranges::transform(s, std::back_inserter(result), tolower);
 
 	return result;
+}
+
+bool IsEnglishString(const std::string& s)
+{
+	return std::ranges::all_of(s.begin(), s.end(), [](unsigned char c) { return std::isalpha(c) || std::isspace(c) || c == DASH; });
+}
+
+bool IsRussianString(const std::string& s)
+{
+	if (s.empty())
+	{
+		return false;
+	}
+	std::string russian;
+
+	for (const auto ch : s)
+	{
+		std::cout << ch;
+		russian += ch;
+	}
+
+	return true;
 }
 
 Dictionary LoadDictionary(std::istream& stream)
@@ -60,22 +85,78 @@ bool TryPrintTranslation(std::ostream& output, const Dictionary& dictionary, con
 {
 	const std::string lowerInput = ToLower(word);
 
-	if (!dictionary.contains(lowerInput))
+	const auto translationsIterator = dictionary.find(lowerInput);
+	if (translationsIterator == dictionary.end())
 	{
 		return false;
 	}
 
 	bool first = true;
-	for (const auto& translation : dictionary.at(lowerInput))
+	for (const std::string& translation : translationsIterator->second)
 	{
 		if (!first)
+		{
 			output << ", ";
+		}
 		output << translation;
 		first = false;
 	}
 	output << std::endl;
 
 	return true;
+}
+
+std::string ReceiveTranslation(const std::string& word)
+{
+	std::cout << "Неизвестное слово \"" << word << "\". Введите перевод или пустую строку для отказа.\n";
+	std::cout << ">";
+
+	std::string translation;
+	getline(std::cin, translation);
+
+	return translation;
+}
+
+void ProcessDictionaryInput(Dictionary& dictionary, bool& dictModified)
+{
+	std::string input;
+	while (true)
+	{
+		std::cout << ">";
+		getline(std::cin, input);
+
+		if (input == "...")
+			break;
+
+		if (!IsEnglishString(input))
+		{
+			std::cout << "Слово должно быть только на английском\n";
+			continue;
+		}
+
+		const bool wordExists = TryPrintTranslation(std::cout, dictionary, input);
+		if (!wordExists)
+		{
+			std::string translation = ReceiveTranslation(input);
+
+			if (!translation.empty())
+			{
+				if (!IsRussianString(input))
+				{
+					std::cout << "Перевод должен быть только на русском\n";
+					continue;
+				}
+
+				AddTranslation(dictionary, input, translation);
+				std::cout << "Слово \"" << input << "\" сохранено в словаре как \"" << translation << "\".\n";
+				dictModified = true;
+			}
+			else
+			{
+				std::cout << "Слово \"" << input << "\" проигнорировано.\n";
+			}
+		}
+	}
 }
 
 void SaveDictionary(std::ostream& out, const Dictionary& dictionary)

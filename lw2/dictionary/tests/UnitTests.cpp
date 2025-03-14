@@ -1,3 +1,4 @@
+#include "../cmake-build-debug/_deps/catch2-src/src/catch2/matchers/catch_matchers_string.hpp"
 #include "../lib/Dictionary.cpp"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
@@ -68,4 +69,15 @@ TEST_CASE("Prints translation correctly", "[translation][positive]")
 	found = TryPrintTranslation(oss, initial, "Not exists");
 	REQUIRE(!found);
 	REQUIRE(oss.str().empty());
+}
+
+TEST_CASE("Check russian and english strings", "[translate][negative]")
+{
+	REQUIRE(IsRussianString("Строка русская"));
+	REQUIRE(!IsRussianString("Строка with english"));
+	REQUIRE(!IsRussianString("Строка с 123"));
+
+	REQUIRE(IsEnglishString("English string"));
+	REQUIRE(!IsEnglishString("English and русский"));
+	REQUIRE(!IsEnglishString("English and 123"));
 }
