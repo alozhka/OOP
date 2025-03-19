@@ -7,18 +7,19 @@
 
 int main()
 {
-	std::string line;
-	while (std::getline(std::cin, line))
+	try
 	{
-		try
+		std::string line;
+		while (std::getline(std::cin, line))
 		{
 			const int result = CalculateExpression(line);
 			std::cout << result << std::endl;
 		}
-		catch (const std::invalid_argument& e)
-		{
-			std::cout << "ERROR" << std::endl;
-		}
 	}
-	return 0;
+	catch (const std::exception& e)
+	{
+		std::cout << "ERROR" << std::endl;
+	}
+
+	return EXIT_SUCCESS;
 }
