@@ -1,7 +1,8 @@
 #include "lib/PrimeNumbers.h"
 #include <iostream>
+#include <string>
 
-constexpr int MAX_UPPER_BOUND = 1'000'000;
+constexpr int MAX_UPPER_BOUND = 100'000'000;
 
 struct Args
 {
@@ -13,14 +14,16 @@ void PrintHelp()
 	std::cerr << "Usage: prime_numbers.exe <upperBound>" << std::endl;
 }
 
-void ParseArgs(Args& args, int argc, char* argv[])
+void ParseArgs(Args& args, const char* argv[])
 {
-	int upperBound = std::stoi(argv[1]);
+	const int upperBound = std::stoi(argv[1]);
 
-	if (0 < upperBound && upperBound <= MAX_UPPER_BOUND)
+	if (upperBound < 0 || upperBound > MAX_UPPER_BOUND)
 	{
-
+		throw std::invalid_argument("Upper bound must be between 0 and " + std::to_string(MAX_UPPER_BOUND));
 	}
+
+	args.upperBound = upperBound;
 }
 
 int main(const int argc, const char* argv[])
@@ -31,22 +34,12 @@ int main(const int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	Args args;
 	try
 	{
-		upperBound = std::stoi(argv[1]);
-		if (upperBound < 0 || upperBound > 100000000)
-		{
-			std::cerr << "Upper bound must be between 0 and 100000000." << std::endl;
-			return 1;
-		}
-
-		std::set<int> primes = GeneratePrimeNumbersSet(upperBound);
-
-		for (int prime : primes)
-		{
-			std::cout << prime << std::endl;
-		}
+		Args args{};
+		ParseArgs(args, argv);
+		const std::set<int> primes = GeneratePrimeNumbersSet(args.upperBound);
+		PrintSet(std::cout, primes);
 	}
 	catch (const std::exception& e)
 	{

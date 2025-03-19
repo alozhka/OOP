@@ -1,5 +1,6 @@
 #include "PrimeNumbers.h"
 #include <cmath>
+#include <ostream>
 #include <vector>
 
 std::set<int> GeneratePrimeNumbersSet(const int upperBound)
@@ -35,4 +36,12 @@ std::set<int> GeneratePrimeNumbersSet(const int upperBound)
 	}
 
 	return primes;
+}
+
+void PrintSet(std::ostream& out, const std::set<int>& set)
+{
+	for (const int el : set)
+	{
+		out << el << std::endl;
+	}
 }
