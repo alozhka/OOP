@@ -3,13 +3,16 @@
 #include <ostream>
 #include <vector>
 
+constexpr int MAX_UPPER_BOUND = 100'000'000;
+
 std::set<int> GeneratePrimeNumbersSet(const int upperBound)
 {
-	std::set<int> primes;
-	if (upperBound < 0)
+	if (upperBound < 0 || upperBound > MAX_UPPER_BOUND)
 	{
-		return primes;
+		throw std::invalid_argument("Upper bound must be between 0 and " + std::to_string(MAX_UPPER_BOUND));
 	}
+
+	std::set<int> primes;
 
 	std::vector isPrime(upperBound + 1, true);
 	for (int i = 2; i <= std::floor(std::sqrt(upperBound)); i++)

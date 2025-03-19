@@ -2,8 +2,6 @@
 #include <iostream>
 #include <string>
 
-constexpr int MAX_UPPER_BOUND = 100'000'000;
-
 struct Args
 {
 	int upperBound;
@@ -17,11 +15,6 @@ void PrintHelp()
 void ParseArgs(Args& args, const char* argv[])
 {
 	const int upperBound = std::stoi(argv[1]);
-
-	if (upperBound < 0 || upperBound > MAX_UPPER_BOUND)
-	{
-		throw std::invalid_argument("Upper bound must be between 0 and " + std::to_string(MAX_UPPER_BOUND));
-	}
 
 	args.upperBound = upperBound;
 }
