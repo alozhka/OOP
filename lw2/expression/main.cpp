@@ -16,7 +16,7 @@ int main()
 			std::cout << result << std::endl;
 		}
 	}
-	catch (const std::exception& e)
+	catch (const std::exception&)
 	{
 		std::cout << "ERROR" << std::endl;
 	}
