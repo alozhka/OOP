@@ -53,6 +53,24 @@ void CalculateLastOperation(std::stack<char>& operations, std::stack<std::string
 	values.push(std::to_string(result));
 }
 
+void ParseOperation(std::istringstream& iss, std::stack<char>& operations)
+{
+	char operation;
+	if (!(iss >> operation))
+	{
+		throw std::invalid_argument("Invalid operation");
+	}
+
+	if (operation == '+' || operation == '*')
+	{
+		operations.push(operation);
+	}
+	else
+	{
+		throw std::invalid_argument("Invalid operation");
+	}
+}
+
 int CalculateExpression(const std::string& expression)
 {
 	std::stack<std::string> values;
@@ -65,13 +83,7 @@ int CalculateExpression(const std::string& expression)
 		if (ch == '(')
 		{
 			values.emplace("(");
-
-			char operation;
-			iss >> operation;
-			if (operation == '+' || operation == '*')
-			{
-				operations.push(operation);
-			}
+			ParseOperation(iss, operations);
 		}
 		else if (ch == ')')
 		{
@@ -81,7 +93,10 @@ int CalculateExpression(const std::string& expression)
 		{
 			iss.unget();
 			int num;
-			iss >> num;
+			if (!(iss >> num))
+			{
+				throw std::invalid_argument("Invalid number");
+			}
 			values.push(std::to_string(num));
 		}
 	}
