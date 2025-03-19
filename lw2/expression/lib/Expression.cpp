@@ -8,50 +8,50 @@ constexpr char CLOSED_BRACE = ')';
 constexpr char PLUS = '+';
 constexpr char MULTIPLY = '*';
 
-int PerformOperation(const char operation, std::stack<int>& values)
+int PerformAddition(std::stack<std::string>& values)
 {
 	int result = 0;
-
-	if (operation == PLUS)
+	while (!values.empty() && values.top() != "(")
 	{
-		result = 0;
-		while (!values.empty() && values.top() != OPENED_BRACE)
-		{
-			result += values.top();
-			values.pop();
-		}
-	}
-	else if (operation == MULTIPLY)
-	{
-		result = 1;
-		while (!values.empty() && values.top() != CLOSED_BRACE)
-		{
-			result *= values.top();
-			values.pop();
-		}
-	}
-
-	return result;
-}
-
-int PerformAddition(std::stack<std::string>& values) {
-	int result = 0;
-	while (!values.empty() && values.top() != "(") {
 		result += std::stoi(values.top());
 		values.pop();
 	}
 	return result;
 }
 
-int PerformMultiplication(std::stack<std::string>& values) {
+int PerformMultiplication(std::stack<std::string>& values)
+{
 	int result = 1;
-	while (!values.empty() && values.top() != "(") {
+	while (!values.empty() && values.top() != "(")
+	{
 		result *= std::stoi(values.top());
 		values.pop();
 	}
 	return result;
 }
 
+void CalculateLastOperation(std::stack<char>& operations, std::stack<std::string>& values)
+{
+	const char operation = operations.top();
+	operations.pop();
+
+	int result = 0;
+	if (operation == '+')
+	{
+		result = PerformAddition(values);
+	}
+	else if (operation == '*')
+	{
+		result = PerformMultiplication(values);
+	}
+
+	if (!values.empty() && values.top() == "(")
+	{
+		values.pop();
+	}
+
+	values.push(std::to_string(result));
+}
 
 int CalculateExpression(const std::string& expression)
 {
@@ -65,32 +65,17 @@ int CalculateExpression(const std::string& expression)
 		if (ch == '(')
 		{
 			values.emplace("(");
-		}
-		else if (ch == '+' || ch == '*')
-		{
-			operations.push(ch);
+
+			char operation;
+			iss >> operation;
+			if (operation == '+' || operation == '*')
+			{
+				operations.push(operation);
+			}
 		}
 		else if (ch == ')')
 		{
-			char operation = operations.top();
-			operations.pop();
-
-			int result = 0;
-			if (operation == '+')
-			{
-				result = PerformAddition(values);
-			}
-			else if (operation == '*')
-			{
-				result = PerformMultiplication(values);
-			}
-
-			if (!values.empty() && values.top() == "(")
-			{
-				values.pop();
-			}
-
-			values.push(std::to_string(result));
+			CalculateLastOperation(operations, values);
 		}
 		else
 		{
