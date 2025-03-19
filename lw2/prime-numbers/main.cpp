@@ -1,75 +1,58 @@
+#include "lib/PrimeNumbers.h"
 #include <iostream>
-#include <set>
-#include <vector>
-#include <string>
 
-using namespace std;
+constexpr int MAX_UPPER_BOUND = 1'000'000;
 
-set<int> GeneratePrimeNumbersSet(int upperBound) {
-	set<int> primes;
-	if (upperBound < 2) {
-		return primes;
-	}
+struct Args
+{
+	int upperBound;
+};
 
-	vector<bool> sieve(upperBound + 1, true);
-	sieve[0] = sieve[1] = false;
-
-	// Обработка четных чисел
-	if (upperBound >= 2) {
-		sieve[2] = true;
-		for (int j = 4; j <= upperBound; j += 2) {
-			sieve[j] = false;
-		}
-	}
-
-	// Просеивание нечетных чисел
-	for (int i = 3; i * i <= upperBound; i += 2) {
-		if (sieve[i]) {
-			for (int j = i * i; j <= upperBound; j += 2 * i) {
-				sieve[j] = false;
-			}
-		}
-	}
-
-	// Сбор простых чисел
-	vector<int> primesList;
-	if (upperBound >= 2) {
-		primesList.push_back(2);
-	}
-	for (int i = 3; i <= upperBound; i += 2) {
-		if (sieve[i]) {
-			primesList.push_back(i);
-		}
-	}
-
-	primes.insert(primesList.begin(), primesList.end());
-	return primes;
+void PrintHelp()
+{
+	std::cerr << "Usage: prime_numbers.exe <upperBound>" << std::endl;
 }
 
-int main(int argc, char* argv[]) {
-	if (argc != 2) {
-		cerr << "Usage: " << argv[0] << " upperBound" << endl;
-		return 1;
+void ParseArgs(Args& args, int argc, char* argv[])
+{
+	int upperBound = std::stoi(argv[1]);
+
+	if (0 < upperBound && upperBound <= MAX_UPPER_BOUND)
+	{
+
+	}
+}
+
+int main(const int argc, const char* argv[])
+{
+	if (argc != 2)
+	{
+		PrintHelp();
+		return EXIT_FAILURE;
 	}
 
-	int upperBound;
-	try {
-		upperBound = stoi(argv[1]);
-	} catch (const exception& e) {
-		cerr << "Invalid upper bound: must be an integer." << endl;
-		return 1;
+	Args args;
+	try
+	{
+		upperBound = std::stoi(argv[1]);
+		if (upperBound < 0 || upperBound > 100000000)
+		{
+			std::cerr << "Upper bound must be between 0 and 100000000." << std::endl;
+			return 1;
+		}
+
+		std::set<int> primes = GeneratePrimeNumbersSet(upperBound);
+
+		for (int prime : primes)
+		{
+			std::cout << prime << std::endl;
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << std::endl;
+		return EXIT_FAILURE;
 	}
 
-	if (upperBound < 0 || upperBound > 100000000) {
-		cerr << "Upper bound must be between 0 and 100000000." << endl;
-		return 1;
-	}
-
-	set<int> primes = GeneratePrimeNumbersSet(upperBound);
-
-	for (int prime : primes) {
-		cout << prime << endl;
-	}
-
-	return 0;
+	return EXIT_SUCCESS;
 }

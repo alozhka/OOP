@@ -3,4 +3,5 @@ project(prime_numbers)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(prime_numbers main.cpp)
+add_executable(prime_numbers main.cpp
+        lib/PrimeNumbers.cpp)
