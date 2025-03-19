@@ -22,7 +22,7 @@ TEST_CASE("Calculates expression", "[positive]")
 		TestData{ "(+ (* 2 3) (* 3 4))", 18 },
 		TestData{ "(* (+ 1 2) (+ 3 1))", 12 },
 		TestData{ "(+ 5 (* 2 3 2) (+ 5 (+ 2 5) (* 2 2) ))", 33 },
-		TestData{ "(+ -2 3)", 1 });
+		TestData{ "(+ -2 3)", 1 },TestData{ "(+ 40 40)", 80 });
 
 	REQUIRE(data.expected == CalculateExpression(data.expression));
 }
