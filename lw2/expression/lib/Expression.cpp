@@ -4,14 +4,16 @@
 #include <stack>
 
 constexpr char OPENED_BRACE = '(';
+constexpr std::string OPENED_BRACE_STR = "(";
 constexpr char CLOSED_BRACE = ')';
+constexpr std::string CLOSED_BRACE_STR = ")";
 constexpr char PLUS = '+';
 constexpr char MULTIPLY = '*';
 
 int PerformAddition(std::stack<std::string>& values)
 {
 	int result = 0;
-	while (!values.empty() && values.top() != "(")
+	while (!values.empty() && values.top() != OPENED_BRACE_STR)
 	{
 		result += std::stoi(values.top());
 		values.pop();
@@ -22,7 +24,7 @@ int PerformAddition(std::stack<std::string>& values)
 int PerformMultiplication(std::stack<std::string>& values)
 {
 	int result = 1;
-	while (!values.empty() && values.top() != "(")
+	while (!values.empty() && values.top() != OPENED_BRACE_STR)
 	{
 		result *= std::stoi(values.top());
 		values.pop();
@@ -36,16 +38,16 @@ void CalculateLastOperation(std::stack<char>& operations, std::stack<std::string
 	operations.pop();
 
 	int result = 0;
-	if (operation == '+')
+	if (operation == PLUS)
 	{
 		result = PerformAddition(values);
 	}
-	else if (operation == '*')
+	else if (operation == MULTIPLY)
 	{
 		result = PerformMultiplication(values);
 	}
 
-	if (!values.empty() && values.top() == "(")
+	if (!values.empty() && values.top() == OPENED_BRACE_STR)
 	{
 		values.pop();
 	}
@@ -61,14 +63,12 @@ void ParseOperation(std::istringstream& iss, std::stack<char>& operations)
 		throw std::invalid_argument("Invalid operation");
 	}
 
-	if (operation == '+' || operation == '*')
-	{
-		operations.push(operation);
-	}
-	else
+	if (operation != PLUS && operation != MULTIPLY)
 	{
 		throw std::invalid_argument("Invalid operation");
 	}
+
+	operations.push(operation);
 }
 
 int CalculateExpression(const std::string& expression)
@@ -80,12 +80,12 @@ int CalculateExpression(const std::string& expression)
 
 	while (iss >> ch)
 	{
-		if (ch == '(')
+		if (ch == OPENED_BRACE)
 		{
-			values.emplace("(");
+			values.emplace(OPENED_BRACE_STR);
 			ParseOperation(iss, operations);
 		}
-		else if (ch == ')')
+		else if (ch == CLOSED_BRACE)
 		{
 			CalculateLastOperation(operations, values);
 		}
