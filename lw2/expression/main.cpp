@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <stack>
 #include <stdexcept>
 
 int main()
