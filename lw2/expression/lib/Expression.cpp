@@ -38,13 +38,16 @@ void CalculateLastOperation(std::stack<char>& operations, std::stack<std::string
 	operations.pop();
 
 	int result = 0;
-	if (operation == PLUS)
+	switch (operation)
 	{
+	case PLUS:
 		result = PerformAddition(values);
-	}
-	else if (operation == MULTIPLY)
-	{
+		break;
+	case MULTIPLY:
 		result = PerformMultiplication(values);
+		break;
+	default:
+		throw std::invalid_argument("Invalid operation");
 	}
 
 	if (!values.empty() && values.top() == OPENED_BRACE_STR)
