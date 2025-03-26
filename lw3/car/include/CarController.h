@@ -1,5 +1,6 @@
 #pragma once
 #include "Car.h"
+#include <istream>
 
 class CarController
 {
@@ -9,8 +10,8 @@ public:
 
 private:
 	bool Info() const;
-	bool TurnOnEngine() const;
-	bool TurnOffEngine() const;
+	bool TurnOnEngine();
+	bool TurnOffEngine();
 	bool SetGear(std::istream& args);
 	bool SetSpeed(std::istream& args);
 
