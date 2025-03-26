@@ -20,8 +20,6 @@ std::string Car::GetDirection() const
 		return "forward";
 	case Direction::StandingStill:
 		return "standing still";
-	default:
-		throw std::runtime_error("Invalid direction");
 	}
 }
 
@@ -58,22 +56,25 @@ bool Car::SetGear(int gear)
 
 	if (!m_engineOn && gear != 0)
 	{
-		throw std::runtime_error("Сannot set gear while engine is off");
+		throw std::runtime_error("Gear is settable when engine is turned on");
 	}
 
-	if (m_gear == -1 && gear > 0)
+	if (m_gear == 0 && gear > 0 && m_direction == Direction::Backward)
 	{
-		throw std::runtime_error("Unsuitable current speed");
+		throw std::runtime_error("Unsuitable current gear");
+	}
+
+	if (m_gear < 0 && gear > 0)
+	{
+		throw std::runtime_error("Unsuitable current gear");
 	}
 
 	if (gear != 0 && !GearInSpeedRange(gear, m_speed))
 	{
-		throw std::runtime_error("Unsuitable current speed");
+		throw std::runtime_error("Unsuitable current gear");
 	}
 
 	m_gear = gear;
-	UpdateDirection();
-
 	return true;
 }
 
@@ -87,6 +88,11 @@ bool Car::SetSpeed(int speed)
 	if (!m_engineOn)
 	{
 		throw std::runtime_error("Speed is settable when engine is turned on");
+	}
+
+	if (m_gear == 0 && speed > m_speed)
+	{
+		throw std::runtime_error("Unsuitable current speed");
 	}
 
 	if (m_gear != 0 && !GearInSpeedRange(m_gear, speed))

@@ -58,7 +58,7 @@ int ReadInteger(std::istream& in)
 	int i;
 	if (!(in >> i))
 	{
-		throw std::invalid_argument("Invalid command argument");
+		throw std::runtime_error("Invalid command argument");
 	}
 
 	return i;
