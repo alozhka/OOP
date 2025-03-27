@@ -19,6 +19,7 @@ class Car
 	Direction m_direction;
 
 	std::string GetDirection() const;
+	void UpdateDirection();
 	static bool GearInSpeedRange(int gear, int speed);
 
 public:
@@ -28,7 +29,6 @@ public:
 	void TurnOffEngine();
 	void SetGear(int gear);
 	void SetSpeed(int speed);
-	void UpdateDirection();
 
 	void PrintInfo(std::ostream& out) const;
 };
