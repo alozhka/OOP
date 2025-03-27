@@ -78,5 +78,8 @@ void CarController::SetSpeed(std::istream& args)
 
 void CarController::Info() const
 {
-	m_car.PrintInfo(m_output);
+	m_output << "Engine: " << (m_car.IsEngineOn() ? "on" : "off") << std::endl;
+	m_output << "Direction: " << m_car.GetDirection() << std::endl;
+	m_output << "Speed: " << m_car.GetSpeed() << std::endl;
+	m_output << "Gear: " << m_car.GetGear() << std::endl;
 }

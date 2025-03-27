@@ -35,11 +35,6 @@ TEST_CASE("Car prints info", "[controller][info]")
 	REQUIRE(expected1 == out.str());
 
 	out.str("");
-	car.PrintInfo(out);
-
-	REQUIRE(expected1 == out.str());
-
-	out.str("");
 
 	while (controller.HandleCommand())
 	{

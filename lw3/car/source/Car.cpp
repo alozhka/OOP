@@ -111,13 +111,19 @@ void Car::SetSpeed(int speed)
 	m_speed = speed;
 	UpdateDirection();
 }
-
-void Car::PrintInfo(std::ostream& out) const
+bool Car::IsEngineOn() const
 {
-	out << "Engine: " << (m_engineOn ? "on" : "off") << std::endl;
-	out << "Direction: " << GetDirection() << std::endl;
-	out << "Speed: " << m_speed << std::endl;
-	out << "Gear: " << m_gear << std::endl;
+	return m_engineOn;
+}
+
+int Car::GetGear() const
+{
+	return m_gear;
+}
+
+int Car::GetSpeed() const
+{
+	return m_speed;
 }
 
 bool Car::GearInSpeedRange(int gear, int speed) const

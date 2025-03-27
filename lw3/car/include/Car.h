@@ -18,7 +18,10 @@ public:
 	void SetGear(int gear);
 	void SetSpeed(int speed);
 
-	void PrintInfo(std::ostream& out) const;
+	bool IsEngineOn() const;
+	[[nodiscard]] int GetGear() const;
+	[[nodiscard]] int GetSpeed() const;
+	[[nodiscard]] std::string GetDirection() const;
 
 private:
 	static constexpr int MIN_GEAR = -1;
@@ -37,8 +40,6 @@ private:
 	int m_speed;
 	int m_gear;
 	Direction m_direction;
-
-	[[nodiscard]] std::string GetDirection() const;
 
 	void ThrowIfGearIsInvalid(int gear) const;
 	void ThrowIfSpeedIsInvalid(int speed) const;
