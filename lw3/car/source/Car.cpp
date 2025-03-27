@@ -48,7 +48,7 @@ void Car::TurnOffEngine()
 
 void Car::SetGear(int gear)
 {
-	if (gear < m_MIN_GEAR || gear > m_MAX_GEAR)
+	if (gear < MIN_GEAR || gear > MAX_GEAR)
 	{
 		throw std::runtime_error("Invalid gear");
 	}
@@ -110,18 +110,8 @@ void Car::PrintInfo(std::ostream& out) const
 	out << "Gear: " << m_gear << std::endl;
 }
 
-bool Car::GearInSpeedRange(int gear, int speed)
+bool Car::GearInSpeedRange(int gear, int speed) const
 {
-	static const std::unordered_map<int, std::pair<int, int>> GEAR_TO_SPEED_RANGES = {
-		{ -1, { 0, 20 } },
-		{ 0, { 0, 150 } },
-		{ 1, { 0, 30 } },
-		{ 2, { 20, 50 } },
-		{ 3, { 30, 60 } },
-		{ 4, { 40, 90 } },
-		{ 5, { 50, 150 } }
-	};
-
 	const auto [leftBorder, rightBorder] = GEAR_TO_SPEED_RANGES.at(gear);
 	return leftBorder <= speed && speed <= rightBorder;
 }
