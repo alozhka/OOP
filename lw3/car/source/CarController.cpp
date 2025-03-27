@@ -43,14 +43,14 @@ bool CarController::HandleCommand() const
 	return true;
 }
 
-bool CarController::TurnOnEngine()
+void CarController::TurnOnEngine()
 {
-	return m_car.TurnOnEngine();
+	m_car.TurnOnEngine();
 }
 
-bool CarController::TurnOffEngine()
+void CarController::TurnOffEngine()
 {
-	return m_car.TurnOffEngine();
+	m_car.TurnOffEngine();
 }
 
 int ReadInteger(std::istream& in)
@@ -64,20 +64,19 @@ int ReadInteger(std::istream& in)
 	return i;
 }
 
-bool CarController::SetGear(std::istream& args)
+void CarController::SetGear(std::istream& args)
 {
 	const int gear = ReadInteger(args);
-	return m_car.SetGear(gear);
+	m_car.SetGear(gear);
 }
 
-bool CarController::SetSpeed(std::istream& args)
+void CarController::SetSpeed(std::istream& args)
 {
 	const int speed = ReadInteger(args);
-	return m_car.SetSpeed(speed);
+	m_car.SetSpeed(speed);
 }
 
-bool CarController::Info() const
+void CarController::Info() const
 {
 	m_car.PrintInfo(m_output);
-	return true;
 }

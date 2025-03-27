@@ -9,13 +9,13 @@ public:
 	bool HandleCommand() const;
 
 private:
-	bool Info() const;
-	bool TurnOnEngine();
-	bool TurnOffEngine();
-	bool SetGear(std::istream& args);
-	bool SetSpeed(std::istream& args);
+	void Info() const;
+	void TurnOnEngine();
+	void TurnOffEngine();
+	void SetGear(std::istream& args);
+	void SetSpeed(std::istream& args);
 
-	using Command = std::function<bool(std::istream& args)>;
+	using Command = std::function<void(std::istream& args)>;
 	using ActionMap = std::unordered_map<std::string, Command>;
 	const ActionMap m_actionMap;
 

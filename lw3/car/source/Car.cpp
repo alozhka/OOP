@@ -20,10 +20,12 @@ std::string Car::GetDirection() const
 		return "forward";
 	case Direction::StandingStill:
 		return "standing still";
+	default:
+		throw std::invalid_argument("Invalid direction");
 	}
 }
 
-bool Car::TurnOnEngine()
+void Car::TurnOnEngine()
 {
 	if (!m_engineOn)
 	{
@@ -32,11 +34,9 @@ bool Car::TurnOnEngine()
 		m_gear = 0;
 		m_speed = 0;
 	}
-
-	return true;
 }
 
-bool Car::TurnOffEngine()
+void Car::TurnOffEngine()
 {
 	if (m_speed != 0 || m_gear != 0)
 	{
@@ -44,10 +44,9 @@ bool Car::TurnOffEngine()
 	}
 
 	m_engineOn = false;
-	return true;
 }
 
-bool Car::SetGear(int gear)
+void Car::SetGear(int gear)
 {
 	if (gear < m_MIN_GEAR || gear > m_MAX_GEAR)
 	{
@@ -75,10 +74,9 @@ bool Car::SetGear(int gear)
 	}
 
 	m_gear = gear;
-	return true;
 }
 
-bool Car::SetSpeed(int speed)
+void Car::SetSpeed(int speed)
 {
 	if (speed < 0)
 	{
@@ -102,7 +100,6 @@ bool Car::SetSpeed(int speed)
 
 	m_speed = speed;
 	UpdateDirection();
-	return true;
 }
 
 void Car::PrintInfo(std::ostream& out) const
@@ -115,7 +112,7 @@ void Car::PrintInfo(std::ostream& out) const
 
 bool Car::GearInSpeedRange(int gear, int speed)
 {
-	static const std::unordered_map<int, std::pair<int, int>> m_GEAR_TO_SPEED_RANGES = {
+	static const std::unordered_map<int, std::pair<int, int>> GEAR_TO_SPEED_RANGES = {
 		{ -1, { 0, 20 } },
 		{ 0, { 0, 150 } },
 		{ 1, { 0, 30 } },
@@ -125,7 +122,7 @@ bool Car::GearInSpeedRange(int gear, int speed)
 		{ 5, { 50, 150 } }
 	};
 
-	const auto [leftBorder, rightBorder] = m_GEAR_TO_SPEED_RANGES.at(gear);
+	const auto [leftBorder, rightBorder] = GEAR_TO_SPEED_RANGES.at(gear);
 	return leftBorder <= speed && speed <= rightBorder;
 }
 

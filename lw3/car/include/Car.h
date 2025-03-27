@@ -18,16 +18,16 @@ class Car
 	int m_gear;
 	Direction m_direction;
 
-	[[nodiscard]] std::string GetDirection() const;
+	std::string GetDirection() const;
 	static bool GearInSpeedRange(int gear, int speed);
 
 public:
 	explicit Car();
 
-	bool TurnOnEngine();
-	bool TurnOffEngine();
-	bool SetGear(int gear);
-	bool SetSpeed(int speed);
+	void TurnOnEngine();
+	void TurnOffEngine();
+	void SetGear(int gear);
+	void SetSpeed(int speed);
 	void UpdateDirection();
 
 	void PrintInfo(std::ostream& out) const;
