@@ -25,28 +25,7 @@ std::string Car::GetDirection() const
 	}
 }
 
-void Car::TurnOnEngine()
-{
-	if (!m_engineOn)
-	{
-		m_engineOn = true;
-		m_direction = Direction::StandingStill;
-		m_gear = 0;
-		m_speed = 0;
-	}
-}
-
-void Car::TurnOffEngine()
-{
-	if (m_speed != 0 || m_gear != 0)
-	{
-		throw std::runtime_error("Сar must be stopped and in neutral gear");
-	}
-
-	m_engineOn = false;
-}
-
-void Car::SetGear(int gear)
+void Car::ThrowIfGearIsInvalid(int gear) const
 {
 	if (gear < MIN_GEAR || gear > MAX_GEAR)
 	{
@@ -72,11 +51,9 @@ void Car::SetGear(int gear)
 	{
 		throw std::runtime_error("Unsuitable current gear");
 	}
-
-	m_gear = gear;
 }
 
-void Car::SetSpeed(int speed)
+void Car::ThrowIfSpeedIsInvalid(int speed) const
 {
 	if (speed < 0)
 	{
@@ -97,6 +74,39 @@ void Car::SetSpeed(int speed)
 	{
 		throw std::runtime_error("Unsuitable current speed");
 	}
+}
+
+void Car::TurnOnEngine()
+{
+	if (!m_engineOn)
+	{
+		m_engineOn = true;
+		m_direction = Direction::StandingStill;
+		m_gear = 0;
+		m_speed = 0;
+	}
+}
+
+void Car::TurnOffEngine()
+{
+	if (m_speed != 0 || m_gear != 0)
+	{
+		throw std::runtime_error("Сar must be stopped and in neutral gear");
+	}
+
+	m_engineOn = false;
+}
+
+void Car::SetGear(int gear)
+{
+	ThrowIfGearIsInvalid(gear);
+
+	m_gear = gear;
+}
+
+void Car::SetSpeed(int speed)
+{
+	ThrowIfSpeedIsInvalid(speed);
 
 	m_speed = speed;
 	UpdateDirection();

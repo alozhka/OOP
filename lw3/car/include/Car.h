@@ -10,6 +10,16 @@ enum class Direction
 
 class Car
 {
+public:
+	Car();
+
+	void TurnOnEngine();
+	void TurnOffEngine();
+	void SetGear(int gear);
+	void SetSpeed(int speed);
+
+	void PrintInfo(std::ostream& out) const;
+
 private:
 	static constexpr int MIN_GEAR = -1;
 	static constexpr int MAX_GEAR = 5;
@@ -29,16 +39,10 @@ private:
 	Direction m_direction;
 
 	[[nodiscard]] std::string GetDirection() const;
+
+	void ThrowIfGearIsInvalid(int gear) const;
+	void ThrowIfSpeedIsInvalid(int speed) const;
+
 	void UpdateDirection();
-	bool GearInSpeedRange(int gear, int speed) const;
-
-public:
-	Car();
-
-	void TurnOnEngine();
-	void TurnOffEngine();
-	void SetGear(int gear);
-	void SetSpeed(int speed);
-
-	void PrintInfo(std::ostream& out) const;
+	[[nodiscard]] bool GearInSpeedRange(int gear, int speed) const;
 };
