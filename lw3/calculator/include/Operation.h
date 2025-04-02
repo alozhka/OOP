@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <cmath>
 
 class UnaryOperation
 {
@@ -24,5 +25,7 @@ private:
 namespace Operations
 {
 const BinaryOperation SUM([](double a, double b) { return a + b; });
-const BinaryOperation SUB([](double a, double b) { return a - b; });
+const BinaryOperation SUBTRACT([](double a, double b) { return a - b; });
+const BinaryOperation MULTIPLY([](double a, double b) { return a * b; });
+const BinaryOperation DIVIDE([](double a, double b) { return b == 0 ? std::nan("") : a / b; });
 } // namespace Operations
