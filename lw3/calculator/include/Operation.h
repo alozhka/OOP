@@ -2,20 +2,10 @@
 #include <functional>
 #include <cmath>
 
-class UnaryOperation
+class Operation
 {
 public:
-	explicit UnaryOperation(std::function<double(double)> fn);
-	[[nodiscard]] double Execute(double arg) const;
-
-private:
-	std::function<double(double)> m_fn;
-};
-
-class BinaryOperation
-{
-public:
-	explicit BinaryOperation(std::function<double(double, double)> fn);
+	explicit Operation(std::function<double(double, double)> fn);
 	[[nodiscard]] double Execute(double arg1, double arg2) const;
 
 private:
@@ -24,8 +14,8 @@ private:
 
 namespace Operations
 {
-const BinaryOperation SUM([](double a, double b) { return a + b; });
-const BinaryOperation SUBTRACT([](double a, double b) { return a - b; });
-const BinaryOperation MULTIPLY([](double a, double b) { return a * b; });
-const BinaryOperation DIVIDE([](double a, double b) { return b == 0 ? std::nan("") : a / b; });
+const Operation SUM([](double a, double b) { return a + b; });
+const Operation SUBTRACT([](double a, double b) { return a - b; });
+const Operation MULTIPLY([](double a, double b) { return a * b; });
+const Operation DIVIDE([](double a, double b) { return b == 0 ? std::nan("") : a / b; });
 } // namespace Operations

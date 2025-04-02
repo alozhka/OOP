@@ -11,14 +11,15 @@ void Calculator::DefineVariable(std::string_view name, double value)
 		throw std::runtime_error("Name already exists");
 	}
 
-	m_variables.emplace(name.data(), value);
+	m_variables.emplace(std::string(name), value);
 }
 
-void Calculator::DefineBinaryFunction(std::string_view name, const BinaryOperation& op, std::string_view arg1, std::string_view arg2)
+void Calculator::DefineBinaryFunction(std::string_view name, const Operation& op, std::string_view arg1, std::string_view arg2)
 {
 	Expression* expr1 = GetExpression(arg1);
 	Expression* expr2 = GetExpression(arg2);
-	m_functions[name.data()] = std::make_unique<BinaryFunction>(op, expr1, expr2);
+	auto fn = Function(op, expr1, expr2);
+	m_functions.emplace(std::string(name), std::move(fn));
 }
 
 double Calculator::GetValue(std::string_view name)
@@ -39,5 +40,5 @@ Expression* Calculator::GetExpression(std::string_view name)
 		throw std::runtime_error("Name does not exists");
 	}
 
-	return fnIt->second.get();
+	return &fnIt->second;
 }

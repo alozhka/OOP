@@ -2,18 +2,14 @@
 #include "Expression.h"
 #include "Operation.h"
 
-class Function : public Expression
-{
-};
-
-class BinaryFunction final : public Function
+class Function final : public Expression
 {
 public:
-	BinaryFunction(BinaryOperation  op, Expression* arg1, Expression* arg2);
+	Function(Operation  op, Expression* arg1, Expression* arg2);
 	double GetResult() override;
 
 private:
-	const BinaryOperation m_op;
+	const Operation m_op;
 	Expression* m_arg1;
 	Expression* m_arg2;
 };
