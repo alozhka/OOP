@@ -4,13 +4,18 @@
 #include <catch2/internal/catch_compiler_capabilities.hpp>
 #include <catch2/internal/catch_test_registry.hpp>
 
-TEST_CASE("Calculator can sum", "[positive][calculator]")
+TEST_CASE("Calculator computes functions", "[positive][calculator]")
 {
 	Calculator calc;
-	auto five = Variable(5);
-	auto four = Variable(4);
-	calc.DefineBinaryFunction("testAdd", Operations::SUM, &five, &four);
-	const double result = calc.GetValue("testAdd");
+	calc.DefineVariable("five", 5);
+	calc.DefineVariable("four", 4);
+	calc.DefineVariable("eight", 8);
 
-	REQUIRE(result == 9);
+	calc.DefineBinaryFunction("testAdd", Operations::SUM, "five", "four");
+
+	REQUIRE(9 == calc.GetValue("testAdd"));
+
+	calc.DefineBinaryFunction("testMultiply", Operations::MULTIPLY, "testAdd", "eight");
+
+	REQUIRE(72 == calc.GetValue("testMultiply"));
 }

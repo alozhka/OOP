@@ -10,10 +10,14 @@ class Calculator
 public:
 	Calculator();
 
-	void DefineBinaryFunction(const std::string& name, const BinaryOperation& op, Expression* arg1, Expression* arg2);
-	double GetValue(const std::string& name);
+	void DefineVariable(std::string_view name, double value);
+	void DefineBinaryFunction(std::string_view name, const BinaryOperation& op, std::string_view arg1, std::string_view arg2);
+
+	double GetValue(std::string_view name);
 
 private:
+	Expression* GetExpression(std::string_view name);
+
 	std::map<std::string, Variable> m_variables;
 	std::map<std::string, std::unique_ptr<Function>> m_functions;
 };
