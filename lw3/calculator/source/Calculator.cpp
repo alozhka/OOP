@@ -14,7 +14,7 @@ void Calculator::DefineVariable(std::string_view name, double value)
 	m_variables.emplace(std::string(name), value);
 }
 
-void Calculator::DefineBinaryFunction(std::string_view name, const Operation& op, std::string_view arg1, std::string_view arg2)
+void Calculator::DefineFunction(std::string_view name, const Operation& op, std::string_view arg1, std::string_view arg2)
 {
 	Expression* expr1 = GetExpression(arg1);
 	Expression* expr2 = GetExpression(arg2);
