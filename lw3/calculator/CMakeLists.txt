@@ -14,8 +14,11 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(unit_tests tests/UnitTests.cpp source/Calculator.cpp source/Function.cpp
-        source/Operation.cpp)
+add_executable(unit_tests tests/UnitTests.cpp
+        source/Calculator.cpp
+        source/Function.cpp
+        source/Operation.cpp
+        source/Variable.cpp)
 
 target_link_libraries(unit_tests PRIVATE Catch2::Catch2WithMain)
 

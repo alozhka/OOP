@@ -7,7 +7,9 @@
 TEST_CASE("Calculator can sum", "[positive][calculator]")
 {
 	Calculator calc;
-	calc.DefineBinaryFunction("testAdd", Operations::SUM, 5, 4);
+	auto five = Variable(5);
+	auto four = Variable(4);
+	calc.DefineBinaryFunction("testAdd", Operations::SUM, &five, &four);
 	const double result = calc.GetValue("testAdd");
 
 	REQUIRE(result == 9);

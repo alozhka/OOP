@@ -4,7 +4,7 @@
 
 Calculator::Calculator() = default;
 
-void Calculator::DefineBinaryFunction(const std::string& name, const BinaryOperation& op, double arg1, double arg2)
+void Calculator::DefineBinaryFunction(const std::string& name, const BinaryOperation& op, Expression* arg1, Expression* arg2)
 {
 	m_functions[name] = std::make_unique<BinaryFunction>(op, arg1, arg2);
 }

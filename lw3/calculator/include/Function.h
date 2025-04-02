@@ -9,11 +9,11 @@ class Function : public Expression
 class BinaryFunction final : public Function
 {
 public:
-	BinaryFunction(BinaryOperation  op, double arg1, double arg2);
+	BinaryFunction(BinaryOperation  op, Expression* arg1, Expression* arg2);
 	double GetResult() override;
 
 private:
 	const BinaryOperation m_op;
-	double m_arg1;
-	double m_arg2;
+	Expression* m_arg1;
+	Expression* m_arg2;
 };

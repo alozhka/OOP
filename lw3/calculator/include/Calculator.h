@@ -10,7 +10,7 @@ class Calculator
 public:
 	Calculator();
 
-	void DefineBinaryFunction(const std::string& name, const BinaryOperation& op, double arg1, double arg2);
+	void DefineBinaryFunction(const std::string& name, const BinaryOperation& op, Expression* arg1, Expression* arg2);
 	double GetValue(const std::string& name);
 
 private:
