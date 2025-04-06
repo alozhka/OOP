@@ -27,6 +27,19 @@ double Calculator::GetValue(std::string_view name)
 	return GetExpression(name)->GetResult();
 }
 
+void Calculator::SetValue(std::string_view name, double value)
+{
+	Expression* expr = GetExpression(name);
+	Variable* var = dynamic_cast<Variable*>(expr);
+
+	if (var == nullptr)
+	{
+		throw std::runtime_error("Invalid name");
+	}
+
+	var->SetValue(value);
+}
+
 Expression* Calculator::GetExpression(std::string_view name)
 {
 	if (const auto varIt = m_variables.find(name.data()); varIt != m_variables.end())

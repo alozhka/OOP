@@ -13,8 +13,10 @@ public:
 private:
 	void AddVariable(std::istream& args);
 	void AddFunction(std::istream& args);
+	void SetValue(std::istream& args);
+	void PrintExpression(std::istream& args);
 
-	static std::smatch ParseRegex(const std::string& pattern, const std::string& str);
+	static std::smatch ParseRegex(std::istream& args, const std::regex& regex);
 
 	using Command = std::function<void(std::istream&)>;
 
