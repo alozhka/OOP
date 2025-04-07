@@ -1,5 +1,6 @@
 #include "../include/CalculatorController.h"
 
+#include <iomanip>
 #include <sstream>
 
 namespace Regexes
@@ -9,12 +10,25 @@ const std::regex NAME_VALUE_REGEX(R"regex(\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-
 const std::regex EXPRESSION_REGEX(R"regex(\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*([+\-*/=])?\s*([a-zA-Z_][a-zA-Z0-9_]*)?)regex");
 } // namespace Regexes
 
+bool IsNumericString(const std::string& s)
+{
+	for (const char c : s)
+	{
+		if (!std::isdigit(c) && c != '.' && c != '-')
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 CalculatorController::CalculatorController(Calculator& calc, std::istream& input, std::ostream& output)
 	: m_commands{
 		{ "var", std::bind_front(&CalculatorController::AddVariable, this) },
 		{ "fn", std::bind_front(&CalculatorController::AddFunction, this) },
 		{ "print", std::bind_front(&CalculatorController::PrintExpression, this) },
 		{ "let", std::bind_front(&CalculatorController::UpdateOrCreateExpression, this) },
+		{ "printvars", [this](const std::string&) { return this->PrintVariables(); } },
 		{ "printfns", [this](const std::string&) { return this->PrintFunctions(); } }
 	}
 	, m_operations{ { "+", Operations::SUM }, { "-", Operations::SUBTRACT }, { "*", Operations::MULTIPLY }, { "/", Operations::DIVIDE } }
@@ -22,6 +36,7 @@ CalculatorController::CalculatorController(Calculator& calc, std::istream& input
 	, m_input(input)
 	, m_output(output)
 {
+	m_output << std::fixed << std::setprecision(2);
 }
 
 void CalculatorController::AddVariable(const std::string& args)
@@ -40,9 +55,17 @@ void CalculatorController::UpdateOrCreateExpression(const std::string& args)
 		const std::string name = matches[1].str();
 		const std::string arg1 = matches[2].str();
 
-		m_calc.DefineVariable(name, std::stod(arg1));
+		if (!IsNumericString(arg1))
+		{
+			m_calc.UpdateOrCreateVariable(name, arg1);
+		}
+		else
+		{
+			m_calc.UpdateOrCreateVariable(name, std::stod(arg1));
+		}
+		return;
 	}
-	catch (std::invalid_argument&)
+	catch (std::runtime_error&)
 	{
 	}
 
@@ -55,7 +78,7 @@ void CalculatorController::UpdateOrCreateExpression(const std::string& args)
 
 	if (operation.empty() && arg2.empty())
 	{
-		m_calc.SetValue(name, std::stod(arg1));
+		m_calc.UpdateOrCreateVariable(name, std::stod(arg1));
 	}
 
 	const auto operationIt = m_operations.find(operation);
@@ -103,12 +126,22 @@ void CalculatorController::PrintFunctions()
 	}
 }
 
+void CalculatorController::PrintVariables()
+{
+	std::map<std::string, double> values = m_calc.ListVariableValues();
+
+	for (const auto& [name, value] : values)
+	{
+		m_output << name << ":" << value << std::endl;
+	}
+}
+
 std::smatch CalculatorController::ParseRegex(const std::string& str, const std::regex& regex)
 {
 	std::smatch match;
 	if (!std::regex_match(str, match, regex))
 	{
-		throw std::invalid_argument("Invalid usage");
+		throw std::runtime_error("Invalid usage");
 	}
 	return match;
 }

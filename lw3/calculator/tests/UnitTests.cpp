@@ -39,7 +39,7 @@ TEST_CASE("Controller handles commands", "[positive][calculator]")
 
 	controller.HandleInput();
 
-	REQUIRE("nan\n42.00\n1.23\nx:99.00\ny:23.00\n" == output.str());
+	REQUIRE("nan\n42.00\n1.23\nx:99.00\ny:1.23\n" == output.str());
 }
 
 TEST_CASE("Calculator defines functions", "[positive][calculator]")

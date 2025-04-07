@@ -16,29 +16,66 @@ void Calculator::DefineVariable(std::string_view name, double value)
 
 void Calculator::DefineFunction(std::string_view name, const Operation& op, std::string_view arg1, std::string_view arg2)
 {
-	Expression* expr1 = GetExpression(arg1);
-	Expression* expr2 = GetExpression(arg2);
-	auto fn = Function(op, expr1, expr2);
+	const std::optional<Expression*> expr1 = GetExpression(arg1);
+	const std::optional<Expression*> expr2 = GetExpression(arg2);
+	auto fn = Function(op, expr1.value(), expr2.value());
 	m_functions.emplace(std::string(name), std::move(fn));
 }
 
 double Calculator::GetValue(std::string_view name)
 {
-	return GetExpression(name)->GetResult();
+	return GetExpression(name).value()->GetResult();
 }
 
-void Calculator::SetValue(std::string_view name, double value)
+void Calculator::UpdateOrCreateVariable(std::string_view name, double value)
 {
-	Expression* expr = GetExpression(name);
-	auto* var = dynamic_cast<Variable*>(expr);
+	const std::optional<Expression*> expr = GetExpression(name);
 
-	if (var == nullptr)
+	if (!expr.has_value())
 	{
-		throw std::runtime_error("Invalid name");
+		m_variables.emplace(std::string(name), value);
+	}
+	else
+	{
+		auto* var = dynamic_cast<Variable*>(expr.value());
+		var->SetValue(value);
+	}
+}
+
+void Calculator::UpdateOrCreateVariable(std::string_view name, std::string_view expressionName)
+{
+	std::optional<Expression*> destination = GetExpression(expressionName);
+	if (!destination.has_value())
+	{
+		throw std::runtime_error("Name does not exist");
 	}
 
-	var->SetValue(value);
+	std::optional<Expression*> source = GetExpression(name);
+
+	if (!source.has_value())
+	{
+		m_variables.emplace(std::string(name), destination.value()->GetResult());
+	}
+	else
+	{
+		auto* var = dynamic_cast<Variable*>(source.value());
+		var->SetValue(destination.value()->GetResult());
+	}
+
+
 }
+std::map<std::string, double> Calculator::ListVariableValues()
+{
+	std::map<std::string, double> results;
+
+	for (auto& [name, fn] : m_variables)
+	{
+		results.emplace(name, fn.GetResult());
+	}
+
+	return results;
+}
+
 std::map<std::string, double> Calculator::ListFunctionValues()
 {
 	std::map<std::string, double> results;
@@ -51,7 +88,7 @@ std::map<std::string, double> Calculator::ListFunctionValues()
 	return results;
 }
 
-Expression* Calculator::GetExpression(std::string_view name)
+std::optional<Expression*> Calculator::GetExpression(std::string_view name)
 {
 	if (const auto varIt = m_variables.find(name.data()); varIt != m_variables.end())
 	{
@@ -61,7 +98,7 @@ Expression* Calculator::GetExpression(std::string_view name)
 	const auto fnIt = m_functions.find(name.data());
 	if (fnIt == m_functions.end())
 	{
-		throw std::runtime_error("Name does not exists");
+		return std::nullopt;
 	}
 
 	return &fnIt->second;

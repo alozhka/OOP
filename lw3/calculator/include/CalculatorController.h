@@ -13,8 +13,11 @@ public:
 private:
 	void AddVariable(const std::string& args);
 	void AddFunction(const std::string& args);
+
 	void UpdateOrCreateExpression(const std::string& args);
+
 	void PrintExpression(const std::string& args);
+	void PrintVariables();
 	void PrintFunctions();
 
 	static std::smatch ParseRegex(const std::string& str, const std::regex& regex);
