@@ -30,7 +30,7 @@ double Calculator::GetValue(std::string_view name)
 void Calculator::SetValue(std::string_view name, double value)
 {
 	Expression* expr = GetExpression(name);
-	Variable* var = dynamic_cast<Variable*>(expr);
+	auto* var = dynamic_cast<Variable*>(expr);
 
 	if (var == nullptr)
 	{
@@ -38,6 +38,17 @@ void Calculator::SetValue(std::string_view name, double value)
 	}
 
 	var->SetValue(value);
+}
+std::map<std::string, double> Calculator::ListFunctionValues()
+{
+	std::map<std::string, double> results;
+
+	for (auto& [name, fn] : m_functions)
+	{
+		results.emplace(name, fn.GetResult());
+	}
+
+	return results;
 }
 
 Expression* Calculator::GetExpression(std::string_view name)

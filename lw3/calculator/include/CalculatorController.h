@@ -11,14 +11,15 @@ public:
 	void HandleInput();
 
 private:
-	void AddVariable(std::istream& args);
-	void AddFunction(std::istream& args);
-	void SetValue(std::istream& args);
-	void PrintExpression(std::istream& args);
+	void AddVariable(const std::string& args);
+	void AddFunction(const std::string& args);
+	void UpdateOrCreateExpression(const std::string& args);
+	void PrintExpression(const std::string& args);
+	void PrintFunctions();
 
-	static std::smatch ParseRegex(std::istream& args, const std::regex& regex);
+	static std::smatch ParseRegex(const std::string& str, const std::regex& regex);
 
-	using Command = std::function<void(std::istream&)>;
+	using Command = std::function<void(const std::string&)>;
 
 	std::unordered_map<std::string, Command> m_commands;
 	std::unordered_map<std::string, Operation> m_operations;

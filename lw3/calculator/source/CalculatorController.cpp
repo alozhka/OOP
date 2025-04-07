@@ -1,21 +1,21 @@
 #include "../include/CalculatorController.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace Regexes
 {
-const std::regex VALUE_REGEX(R"(^\s*([a-zA-Z_][a-zA-Z0-9_]*)$)");
-const std::regex NAME_VALUE_REGEX(R"(^\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-zA-Z_][a-zA-Z0-9_]*)(\+|\-|\*|\/)?([a-zA-Z_][a-zA-Z0-9_]*)?$)");
-}
-
+const std::regex VALUE_REGEX(R"regex(\s*([a-zA-Z_][a-zA-Z0-9_.]*)\s*)regex");
+const std::regex NAME_VALUE_REGEX(R"regex(\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-zA-Z0-9_.]*)\s*)regex");
+const std::regex EXPRESSION_REGEX(R"regex(\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*([+\-*/=])?\s*([a-zA-Z_][a-zA-Z0-9_]*)?)regex");
+} // namespace Regexes
 
 CalculatorController::CalculatorController(Calculator& calc, std::istream& input, std::ostream& output)
 	: m_commands{
 		{ "var", std::bind_front(&CalculatorController::AddVariable, this) },
 		{ "fn", std::bind_front(&CalculatorController::AddFunction, this) },
 		{ "print", std::bind_front(&CalculatorController::PrintExpression, this) },
-		{ "let", std::bind_front(&CalculatorController::SetValue, this) }
+		{ "let", std::bind_front(&CalculatorController::UpdateOrCreateExpression, this) },
+		{ "printfns", [this](const std::string&) { return this->PrintFunctions(); } }
 	}
 	, m_operations{ { "+", Operations::SUM }, { "-", Operations::SUBTRACT }, { "*", Operations::MULTIPLY }, { "/", Operations::DIVIDE } }
 	, m_calc(calc)
@@ -24,53 +24,87 @@ CalculatorController::CalculatorController(Calculator& calc, std::istream& input
 {
 }
 
-void CalculatorController::AddVariable(std::istream& args)
+void CalculatorController::AddVariable(const std::string& args)
 {
 	const std::smatch matches = ParseRegex(args, Regexes::VALUE_REGEX);
 
 	m_calc.DefineVariable(matches[1].str());
 }
 
-void CalculatorController::SetValue(std::istream& args)
+void CalculatorController::UpdateOrCreateExpression(const std::string& args)
 {
-	const std::smatch matches = ParseRegex(args, Regexes::NAME_VALUE_REGEX);
+	try
+	{
+		const std::smatch matches = ParseRegex(args, Regexes::NAME_VALUE_REGEX);
+
+		const std::string name = matches[1].str();
+		const std::string arg1 = matches[2].str();
+
+		m_calc.DefineVariable(name, std::stod(arg1));
+	}
+	catch (std::invalid_argument&)
+	{
+	}
+
+	const std::smatch matches = ParseRegex(args, Regexes::EXPRESSION_REGEX);
 
 	const std::string name = matches[1].str();
-	const double value = std::stod(matches[2].str());
+	const std::string arg1 = matches[2].str();
+	const std::string operation = matches[3].str();
+	const std::string arg2 = matches[4].str();
 
-	m_calc.SetValue(name, value);
-}
+	if (operation.empty() && arg2.empty())
+	{
+		m_calc.SetValue(name, std::stod(arg1));
+	}
 
-void CalculatorController::AddFunction(std::istream& args)
-{
-	std::smatch matches = ParseRegex(args, Regexes::NAME_VALUE_REGEX);
-
-	std::string name = matches[1].str();
-	std::string arg1 = matches[2].str();
-	std::string operation = matches[3].str();
-	std::string arg2 = matches[4].str();
-
-	auto it = m_operations.find(operation);
-	if (it == m_operations.end())
+	const auto operationIt = m_operations.find(operation);
+	if (operationIt == m_operations.end())
 	{
 		throw std::invalid_argument("Invalid usage");
 	}
 
-	m_calc.DefineFunction(name, it->second, arg1, arg2);
+	m_calc.DefineFunction(name, operationIt->second, arg1, arg2);
 }
 
-void CalculatorController::PrintExpression(std::istream& args)
+void CalculatorController::AddFunction(const std::string& args)
+{
+	const std::smatch matches = ParseRegex(args, Regexes::EXPRESSION_REGEX);
+
+	const std::string name = matches[1].str();
+	const std::string arg1 = matches[2].str();
+	const std::string operation = matches[3].str();
+	const std::string arg2 = matches[4].str();
+
+	const auto operationIt = m_operations.find(operation);
+	if (operationIt == m_operations.end())
+	{
+		throw std::invalid_argument("Invalid usage");
+	}
+
+	m_calc.DefineFunction(name, operationIt->second, arg1, arg2);
+}
+
+void CalculatorController::PrintExpression(const std::string& args)
 {
 	const std::smatch matches = ParseRegex(args, Regexes::VALUE_REGEX);
 
 	const double result = m_calc.GetValue(matches[1].str());
-	std::cout << result << std::endl;
+	m_output << result << std::endl;
 }
 
-std::smatch CalculatorController::ParseRegex(std::istream& args, const std::regex& regex)
+void CalculatorController::PrintFunctions()
 {
-	std::string str;
-	std::getline(args, str);
+	std::map<std::string, double> values = m_calc.ListFunctionValues();
+
+	for (const auto& [name, value] : values)
+	{
+		m_output << name << ":" << value << std::endl;
+	}
+}
+
+std::smatch CalculatorController::ParseRegex(const std::string& str, const std::regex& regex)
+{
 	std::smatch match;
 	if (!std::regex_match(str, match, regex))
 	{
@@ -92,13 +126,15 @@ void CalculatorController::HandleInput()
 		const auto it = m_commands.find(action);
 		if (it == m_commands.end())
 		{
-			m_output << "Unknown command";
+			m_output << "Unknown command\n";
 			continue;
 		}
 
 		try
 		{
-			it->second(ss);
+			std::string command;
+			std::getline(ss, command);
+			it->second(command);
 		}
 		catch (const std::runtime_error& e)
 		{

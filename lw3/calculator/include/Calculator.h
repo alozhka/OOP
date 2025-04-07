@@ -15,6 +15,7 @@ public:
 
 	double GetValue(std::string_view name);
 	void SetValue(std::string_view name, double value);
+	std::map<std::string, double> ListFunctionValues();
 
 private:
 	Expression* GetExpression(std::string_view name);
