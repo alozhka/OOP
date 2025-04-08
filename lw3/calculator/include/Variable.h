@@ -6,9 +6,8 @@ class Variable final : public Expression
 {
 public:
 	explicit Variable(double value);
-	explicit Variable(Expression* expr);
 
-	double GetResult() override;
+	[[nodiscard]] double GetResult() const override;
 
 	void SetValue(double value);
 private:

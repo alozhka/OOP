@@ -4,6 +4,7 @@
 #include "Variable.h"
 #include <map>
 #include <memory>
+#include <optional>
 
 class Calculator
 {
@@ -14,10 +15,10 @@ public:
 	void DefineFunction(std::string_view name, const Operation& op, std::string_view arg1, std::string_view arg2);
 
 	double GetValue(std::string_view name);
-	void UpdateOrCreateVariable(std::string_view name, double value);
-	void UpdateOrCreateVariable(std::string_view name, std::string_view expressionName);
-	std::map<std::string, double> ListVariableValues();
-	std::map<std::string, double> ListFunctionValues();
+	void SetValue(std::string_view name, double value);
+	void SetValue(std::string_view name, std::string_view expressionName);
+	std::map<std::string, double> ListVariableValues() const;
+	std::map<std::string, double> ListFunctionValues() const;
 
 private:
 	std::optional<Expression*> GetExpression(std::string_view name);

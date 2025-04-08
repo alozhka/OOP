@@ -57,11 +57,11 @@ void CalculatorController::UpdateOrCreateExpression(const std::string& args)
 
 		if (!IsNumericString(arg1))
 		{
-			m_calc.UpdateOrCreateVariable(name, arg1);
+			m_calc.SetValue(name, arg1);
 		}
 		else
 		{
-			m_calc.UpdateOrCreateVariable(name, std::stod(arg1));
+			m_calc.SetValue(name, std::stod(arg1));
 		}
 		return;
 	}
@@ -78,7 +78,7 @@ void CalculatorController::UpdateOrCreateExpression(const std::string& args)
 
 	if (operation.empty() && arg2.empty())
 	{
-		m_calc.UpdateOrCreateVariable(name, std::stod(arg1));
+		m_calc.SetValue(name, std::stod(arg1));
 	}
 
 	const auto operationIt = m_operations.find(operation);

@@ -5,12 +5,7 @@ Variable::Variable(double value)
 	m_value = value;
 }
 
-Variable::Variable(Expression* expr)
-{
-	m_value = expr->GetResult();
-}
-
-double Variable::GetResult()
+double Variable::GetResult() const
 {
 	return m_value;
 }

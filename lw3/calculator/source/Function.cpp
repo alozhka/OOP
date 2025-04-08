@@ -9,7 +9,7 @@ Function::Function(Operation op, Expression* arg1, Expression* arg2)
 {
 }
 
-double Function::GetResult()
+double Function::GetResult() const
 {
 	return m_op.Execute(m_arg1->GetResult(), m_arg2->GetResult());
 }

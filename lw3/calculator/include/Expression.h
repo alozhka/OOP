@@ -3,5 +3,5 @@
 class Expression
 {
 public:
-	virtual double GetResult() = 0;
+	[[nodiscard]] virtual double GetResult() const = 0;
 };

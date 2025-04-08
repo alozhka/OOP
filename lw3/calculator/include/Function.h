@@ -6,7 +6,7 @@ class Function final : public Expression
 {
 public:
 	Function(Operation  op, Expression* arg1, Expression* arg2);
-	double GetResult() override;
+	[[nodiscard]] double GetResult() const override;
 
 private:
 	const Operation m_op;
