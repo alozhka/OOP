@@ -35,9 +35,9 @@ bool IsNumericString(const std::string& s)
 CalculatorController::CalculatorController(Calculator& calc, std::istream& input, std::ostream& output)
 	: m_commands{
 		{ "var", std::bind_front(&CalculatorController::AddVariable, this) },
-		{ "fn", std::bind_front(&CalculatorController::AddFunction, this) },
+		{ "fn", std::bind_front(&CalculatorController::SetFunction, this) },
 		{ "print", std::bind_front(&CalculatorController::PrintExpression, this) },
-		{ "let", std::bind_front(&CalculatorController::UpdateOrCreateExpression, this) },
+		{ "let", std::bind_front(&CalculatorController::SetValue, this) },
 		{ "printvars", [this](const std::string&) { return this->PrintVariables(); } },
 		{ "printfns", [this](const std::string&) { return this->PrintFunctions(); } }
 	}
@@ -56,7 +56,7 @@ void CalculatorController::AddVariable(const std::string& args)
 	m_calc.DefineVariable(matches[1].str());
 }
 
-void CalculatorController::UpdateOrCreateExpression(const std::string& args)
+void CalculatorController::SetValue(const std::string& args)
 {
 	try
 	{
@@ -97,10 +97,10 @@ void CalculatorController::UpdateOrCreateExpression(const std::string& args)
 		throw std::invalid_argument("Invalid usage");
 	}
 
-	m_calc.DefineFunction(name, operationIt->second, arg1, arg2);
+	m_calc.DefineBinaryFunction(name, operationIt->second, arg1, arg2);
 }
 
-void CalculatorController::AddFunction(const std::string& args)
+void CalculatorController::SetFunction(const std::string& args)
 {
 	const std::smatch matches = ParseRegex(args, Regexes::EXPRESSION_REGEX);
 
@@ -109,13 +109,19 @@ void CalculatorController::AddFunction(const std::string& args)
 	const std::string operation = matches[3].str();
 	const std::string arg2 = matches[4].str();
 
+	if (operation.empty() && arg2.empty())
+	{
+		m_calc.DefineUnaryFunction(name, Operations::Unary::IDENTITY, arg1);
+		return;
+	}
+
 	const auto operationIt = m_operations.find(operation);
 	if (operationIt == m_operations.end())
 	{
 		throw std::invalid_argument("Invalid usage");
 	}
 
-	m_calc.DefineFunction(name, operationIt->second, arg1, arg2);
+	m_calc.DefineBinaryFunction(name, operationIt->second, arg1, arg2);
 }
 
 void CalculatorController::PrintExpression(const std::string& args)
@@ -165,9 +171,9 @@ void CalculatorController::HandleInput()
 
 		try
 		{
-			std::string command;
-			std::getline(ss, command);
-			it->second(command);
+			std::string args;
+			std::getline(ss, args);
+			it->second(args);
 		}
 		catch (const std::runtime_error& e)
 		{

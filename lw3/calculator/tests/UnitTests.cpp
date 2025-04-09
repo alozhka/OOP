@@ -12,11 +12,11 @@ TEST_CASE("Calculator computes functions", "[positive][calculator]")
 	calc.DefineVariable("four", 4);
 	calc.DefineVariable("eight", 8);
 
-	calc.DefineFunction("testAdd", Operations::SUM, "five", "four");
+	calc.DefineBinaryFunction("testAdd", Operations::SUM, "five", "four");
 
 	REQUIRE(9 == calc.GetValue("testAdd"));
 
-	calc.DefineFunction("testMultiply", Operations::MULTIPLY, "testAdd", "eight");
+	calc.DefineBinaryFunction("testMultiply", Operations::MULTIPLY, "testAdd", "eight");
 
 	REQUIRE(72 == calc.GetValue("testMultiply"));
 }
@@ -64,4 +64,22 @@ TEST_CASE("Calculator defines functions", "[positive][calculator]")
 	controller.HandleInput();
 
 	REQUIRE("nan\n7.00\n14.00\nXPlusY:14.00\nXPlusYDivZ:4.00\n" == output.str());
+}
+
+TEST_CASE("let computes value once, fn computes value each execution", "[positive][calculator]")
+{
+	std::istringstream input(
+		"let v=42\n"
+		"let variable=v\n"
+		"fn function=v\n"
+		"let v=43\n"
+		"print variable\n"
+		"print function\n");
+	std::ostringstream output;
+	Calculator calc;
+	CalculatorController controller(calc, input, output);
+
+	controller.HandleInput();
+
+	REQUIRE("42.00\n43.00\n" == output.str());
 }
