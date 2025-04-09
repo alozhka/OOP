@@ -97,3 +97,36 @@ TEST_CASE("Calculator combines variables and functions", "[positive][calculator]
 			"radius:20.00\n"
 		== output.str());
 }
+
+// negative
+
+TEST_CASE("Cannot handle invalid command", "[negative][calculator]")
+{
+	std::istringstream input("unknowncommand");
+	std::ostringstream output;
+	Calculator calc;
+	CalculatorController controller(calc, input, output);
+
+	controller.HandleInput();
+
+	REQUIRE("Unknown command\n" == output.str());
+}
+
+TEST_CASE("Cannot handle command with invalid syntax", "[negative][calculator]")
+{
+	std::istringstream input("var a\n"
+							 "var b\n"
+							 "fn func = b _ a\n"
+							 "fn func = b / \n"
+							 "let a = \n");
+	std::ostringstream output;
+	Calculator calc;
+	CalculatorController controller(calc, input, output);
+
+	controller.HandleInput();
+
+	REQUIRE("Invalid usage\n"
+			"Invalid usage\n"
+			"Invalid usage\n"
+		== output.str());
+}

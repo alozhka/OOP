@@ -17,7 +17,7 @@ namespace Regexes
 {
 const std::regex VALUE_REGEX(R"regex(\s*([a-zA-Z_][a-zA-Z0-9_.]*)\s*)regex");
 const std::regex NAME_VALUE_REGEX(R"regex(\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-zA-Z0-9_.]*)\s*)regex");
-const std::regex EXPRESSION_REGEX(R"regex(\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*([+\-*/=])?\s*([a-zA-Z_][a-zA-Z0-9_]*)?)regex");
+const std::regex EXPRESSION_REGEX(R"regex(\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*([+\-*/])?\s*([a-zA-Z_][a-zA-Z0-9_]*)?)regex");
 } // namespace Regexes
 
 bool IsNumericString(const std::string& s)
@@ -65,6 +65,10 @@ void CalculatorController::SetValue(const std::string& args)
 		const std::string name = matches[1].str();
 		const std::string arg1 = matches[2].str();
 
+		if (arg1.empty())
+		{
+			throw std::runtime_error("Invalid usage");
+		}
 		if (!IsNumericString(arg1))
 		{
 			m_calc.SetValue(name, arg1);
@@ -116,9 +120,9 @@ void CalculatorController::SetFunction(const std::string& args)
 	}
 
 	const auto operationIt = m_operations.find(operation);
-	if (operationIt == m_operations.end())
+	if (arg2.empty() || operationIt == m_operations.end())
 	{
-		throw std::invalid_argument("Invalid usage");
+		throw std::runtime_error("Invalid usage");
 	}
 
 	m_calc.DefineBinaryFunction(name, operationIt->second, arg1, arg2);
