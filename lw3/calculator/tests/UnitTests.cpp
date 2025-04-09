@@ -5,23 +5,7 @@
 #include <catch2/internal/catch_compiler_capabilities.hpp>
 #include <catch2/internal/catch_test_registry.hpp>
 
-TEST_CASE("Calculator computes functions", "[positive][calculator]")
-{
-	Calculator calc;
-	calc.DefineVariable("five", 5);
-	calc.DefineVariable("four", 4);
-	calc.DefineVariable("eight", 8);
-
-	calc.DefineBinaryFunction("testAdd", Operations::SUM, "five", "four");
-
-	REQUIRE(9 == calc.GetValue("testAdd"));
-
-	calc.DefineBinaryFunction("testMultiply", Operations::MULTIPLY, "testAdd", "eight");
-
-	REQUIRE(72 == calc.GetValue("testMultiply"));
-}
-
-TEST_CASE("Controller handles commands", "[positive][calculator]")
+TEST_CASE("Calculator defines variables", "[positive][calculator]")
 {
 	std::istringstream input(
 		"var x\n"
@@ -82,4 +66,34 @@ TEST_CASE("let computes value once, fn computes value each execution", "[positiv
 	controller.HandleInput();
 
 	REQUIRE("42.00\n43.00\n" == output.str());
+}
+
+TEST_CASE("Calculator combines variables and functions", "[positive][calculator]")
+{
+	std::istringstream input(
+		"var radius\n"
+		"let pi=3.14159265\n"
+		"fn radiusSquared=radius*radius\n"
+		"fn circleArea=pi*radiusSquared\n"
+		"let radius=10\n"
+		"print circleArea\n"
+		"let circle10Area=circleArea\n"
+		"let radius=20\n"
+		"let circle20Area=circleArea\n"
+		"printfns\n"
+		"printvars\n");
+	std::ostringstream output;
+	Calculator calc;
+	CalculatorController controller(calc, input, output);
+
+	controller.HandleInput();
+
+	REQUIRE("314.16\n"
+			"circleArea:1256.64\n"
+			"radiusSquared:400.00\n"
+			"circle10Area:314.16\n"
+			"circle20Area:1256.64\n"
+			"pi:3.14\n"
+			"radius:20.00\n"
+		== output.str());
 }
