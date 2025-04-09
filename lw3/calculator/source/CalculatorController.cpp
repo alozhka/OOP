@@ -64,50 +64,23 @@ void CalculatorController::AddVariable(const std::string& args)
 
 void CalculatorController::SetValue(const std::string& args)
 {
-	try
-	{
-		const std::smatch matches = ParseRegex(args, Regexes::NAME_VALUE_REGEX);
-
-		const std::string name = matches[1].str();
-		const std::string arg1 = matches[2].str();
-
-		if (arg1.empty())
-		{
-			throw std::runtime_error("Invalid usage");
-		}
-		if (!IsNumericString(arg1))
-		{
-			m_calc.SetValue(name, arg1);
-		}
-		else
-		{
-			m_calc.SetValue(name, std::stod(arg1));
-		}
-		return;
-	}
-	catch (ParseError&)
-	{
-	}
-
-	const std::smatch matches = ParseRegex(args, Regexes::EXPRESSION_REGEX);
+	const std::smatch matches = ParseRegex(args, Regexes::NAME_VALUE_REGEX);
 
 	const std::string name = matches[1].str();
 	const std::string arg1 = matches[2].str();
-	const std::string operation = matches[3].str();
-	const std::string arg2 = matches[4].str();
 
-	if (operation.empty() && arg2.empty())
-	{
-		m_calc.SetValue(name, std::stod(arg1));
-	}
-
-	const auto operationIt = m_operations.find(operation);
-	if (operationIt == m_operations.end())
+	if (arg1.empty())
 	{
 		throw std::runtime_error("Invalid usage");
 	}
-
-	m_calc.DefineBinaryFunction(name, operationIt->second, arg1, arg2);
+	if (!IsNumericString(arg1))
+	{
+		m_calc.SetValue(name, arg1);
+	}
+	else
+	{
+		m_calc.SetValue(name, std::stod(arg1));
+	}
 }
 
 void CalculatorController::SetFunction(const std::string& args)
