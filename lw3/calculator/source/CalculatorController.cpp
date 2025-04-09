@@ -3,6 +3,16 @@
 #include <iomanip>
 #include <sstream>
 
+void PrintMap(std::ostream& out, const std::function<std::map<std::string, double>()>& callback)
+{
+	std::map<std::string, double> values = callback();
+
+	for (const auto& [name, value] : values)
+	{
+		out << name << ":" << value << std::endl;
+	}
+}
+
 namespace Regexes
 {
 const std::regex VALUE_REGEX(R"regex(\s*([a-zA-Z_][a-zA-Z0-9_.]*)\s*)regex");
@@ -116,24 +126,14 @@ void CalculatorController::PrintExpression(const std::string& args)
 	m_output << result << std::endl;
 }
 
-void CalculatorController::PrintFunctions()
+void CalculatorController::PrintFunctions() const
 {
-	std::map<std::string, double> values = m_calc.ListFunctionValues();
-
-	for (const auto& [name, value] : values)
-	{
-		m_output << name << ":" << value << std::endl;
-	}
+	PrintMap(m_output, std::bind_front(&Calculator::ListFunctionValues, m_calc));
 }
 
-void CalculatorController::PrintVariables()
+void CalculatorController::PrintVariables() const
 {
-	std::map<std::string, double> values = m_calc.ListVariableValues();
-
-	for (const auto& [name, value] : values)
-	{
-		m_output << name << ":" << value << std::endl;
-	}
+	PrintMap(m_output, std::bind_front(&Calculator::ListVariableValues, m_calc));
 }
 
 std::smatch CalculatorController::ParseRegex(const std::string& str, const std::regex& regex)

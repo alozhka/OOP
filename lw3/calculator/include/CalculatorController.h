@@ -17,8 +17,8 @@ private:
 	void UpdateOrCreateExpression(const std::string& args);
 
 	void PrintExpression(const std::string& args);
-	void PrintVariables();
-	void PrintFunctions();
+	void PrintVariables() const;
+	void PrintFunctions() const;
 
 	static std::smatch ParseRegex(const std::string& str, const std::regex& regex);
 
