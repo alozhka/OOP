@@ -149,3 +149,21 @@ TEST_CASE("Cannot define expression with already present name", "[negative][calc
 			"Name already exists\n"
 		== output.str());
 }
+
+TEST_CASE("Cannot use undefined expression", "[negative][calculator]")
+{
+	std::istringstream input("let b = a\n"
+							 "var b\n"
+							 "fn c = b / a\n"
+							 "fn c = a / b\n");
+	std::ostringstream output;
+	Calculator calc;
+	CalculatorController controller(calc, input, output);
+
+	controller.HandleInput();
+
+	REQUIRE("Name does not exist\n"
+			"Name does not exist\n"
+			"Name does not exist\n"
+		== output.str());
+}

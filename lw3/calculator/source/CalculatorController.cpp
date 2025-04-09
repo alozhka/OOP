@@ -3,6 +3,12 @@
 #include <iomanip>
 #include <sstream>
 
+class ParseError : public std::runtime_error
+{
+public:
+	using runtime_error::runtime_error;
+};
+
 void PrintMap(std::ostream& out, const std::function<std::map<std::string, double>()>& callback)
 {
 	std::map<std::string, double> values = callback();
@@ -79,7 +85,7 @@ void CalculatorController::SetValue(const std::string& args)
 		}
 		return;
 	}
-	catch (std::runtime_error&)
+	catch (ParseError&)
 	{
 	}
 
@@ -98,7 +104,7 @@ void CalculatorController::SetValue(const std::string& args)
 	const auto operationIt = m_operations.find(operation);
 	if (operationIt == m_operations.end())
 	{
-		throw std::invalid_argument("Invalid usage");
+		throw std::runtime_error("Invalid usage");
 	}
 
 	m_calc.DefineBinaryFunction(name, operationIt->second, arg1, arg2);
@@ -151,7 +157,7 @@ std::smatch CalculatorController::ParseRegex(const std::string& str, const std::
 	std::smatch match;
 	if (!std::regex_match(str, match, regex))
 	{
-		throw std::runtime_error("Invalid usage");
+		throw ParseError("Invalid usage");
 	}
 	return match;
 }
@@ -179,7 +185,7 @@ void CalculatorController::HandleInput()
 			std::getline(ss, args);
 			it->second(args);
 		}
-		catch (const std::runtime_error& e)
+		catch (const std::exception& e)
 		{
 			m_output << e.what() << std::endl;
 		}

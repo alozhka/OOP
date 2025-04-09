@@ -1,8 +1,7 @@
 #pragma once
 #include "Calculator.h"
-#include <regex>
 #include <functional>
-#include <istream>
+#include <regex>
 
 class CalculatorController
 {
