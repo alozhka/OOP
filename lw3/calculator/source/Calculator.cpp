@@ -8,15 +8,14 @@ Calculator::Calculator() = default;
 
 void Calculator::DefineVariable(std::string_view name, double value)
 {
-	if (m_variables.contains(name.data()) || m_functions.contains(name.data()))
-	{
-		throw std::runtime_error("Name already exists");
-	}
+	ThrowIfNameIsTaken(name);
 
 	m_variables.emplace(std::string(name), value);
 }
 void Calculator::DefineUnaryFunction(std::string_view name, const UnaryOperation& op, std::string_view arg)
 {
+	ThrowIfNameIsTaken(name);
+
 	const std::optional<Expression*> expr = GetExpression(arg.data());
 
 	if (!expr.has_value())
@@ -30,6 +29,8 @@ void Calculator::DefineUnaryFunction(std::string_view name, const UnaryOperation
 
 void Calculator::DefineBinaryFunction(std::string_view name, const BinaryOperation& op, std::string_view arg1, std::string_view arg2)
 {
+	ThrowIfNameIsTaken(name);
+
 	const std::optional<Expression*> expr1 = GetExpression(arg1.data());
 	if (!expr1.has_value())
 	{
@@ -118,4 +119,12 @@ std::optional<Expression*> Calculator::GetExpression(std::string_view name)
 	}
 
 	return fnIt->second.get();
+}
+
+void Calculator::ThrowIfNameIsTaken(std::string_view name) const
+{
+	if (m_variables.contains(name.data()) || m_functions.contains(name.data()))
+	{
+		throw std::runtime_error("Name already exists");
+	}
 }

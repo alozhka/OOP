@@ -24,6 +24,7 @@ public:
 
 private:
 	std::optional<Expression*> GetExpression(std::string_view name);
+	void ThrowIfNameIsTaken(std::string_view name) const;
 
 	std::map<std::string, Variable> m_variables;
 	std::map<std::string, std::shared_ptr<Function>> m_functions;

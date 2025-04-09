@@ -130,3 +130,22 @@ TEST_CASE("Cannot handle command with invalid syntax", "[negative][calculator]")
 			"Invalid usage\n"
 		== output.str());
 }
+
+TEST_CASE("Cannot define expression with already present name", "[negative][calculator]")
+{
+	std::istringstream input("var a\n"
+							 "var a\n"
+							 "fn a = a\n"
+							 "fn b = a\n"
+							 "var b\n");
+	std::ostringstream output;
+	Calculator calc;
+	CalculatorController controller(calc, input, output);
+
+	controller.HandleInput();
+
+	REQUIRE("Name already exists\n"
+			"Name already exists\n"
+			"Name already exists\n"
+		== output.str());
+}
