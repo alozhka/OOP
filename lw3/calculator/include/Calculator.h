@@ -19,13 +19,13 @@ public:
 	double GetValue(std::string_view name);
 	void SetValue(std::string_view name, double value);
 	void SetValue(std::string_view name, std::string_view expressionName);
-	std::map<std::string, double> ListVariableValues() const;
-	std::map<std::string, double> ListFunctionValues() const;
+	[[nodiscard]] std::map<std::string, double> ListVariableValues() const;
+	[[nodiscard]] std::map<std::string, double> ListFunctionValues() const;
 
 private:
-	std::optional<Expression*> GetExpression(std::string_view name);
+	std::shared_ptr<Expression> GetExpression(std::string_view name);
 	void ThrowIfNameIsTaken(std::string_view name) const;
 
-	std::map<std::string, Variable> m_variables;
+	std::map<std::string, std::shared_ptr<Variable>> m_variables;
 	std::map<std::string, std::shared_ptr<Function>> m_functions;
 };

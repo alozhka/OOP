@@ -6,11 +6,12 @@
 class BinaryFunction final : public Function
 {
 public:
-	BinaryFunction(BinaryOperation op, Expression* arg1, Expression* arg2);
+	BinaryFunction(BinaryOperation op, std::shared_ptr<Expression> arg1, std::shared_ptr<Expression> arg2);
 	[[nodiscard]] double GetResult() const override;
 
+	~BinaryFunction() override = default;
 private:
 	const BinaryOperation m_op;
-	Expression* m_arg1;
-	Expression* m_arg2;
+	std::shared_ptr<Expression> m_arg1;
+	std::shared_ptr<Expression> m_arg2;
 };

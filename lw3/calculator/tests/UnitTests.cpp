@@ -167,3 +167,19 @@ TEST_CASE("Cannot use undefined expression", "[negative][calculator]")
 			"Name does not exist\n"
 		== output.str());
 }
+
+TEST_CASE("Cannot divide on zero", "[negative][calculator]")
+{
+	std::istringstream input("let b = 3\n"
+							 "let a = 0\n"
+							 "fn c = b / a\n"
+							 "printfns\n");
+	std::ostringstream output;
+	Calculator calc;
+	CalculatorController controller(calc, input, output);
+
+	controller.HandleInput();
+
+	REQUIRE("c:nan\n"
+		== output.str());
+}

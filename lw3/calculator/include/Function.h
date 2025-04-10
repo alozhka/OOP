@@ -5,4 +5,6 @@ class Function : public Expression
 {
 public:
 	[[nodiscard]] double GetResult() const override = 0;
+
+	~Function() override = default;
 };

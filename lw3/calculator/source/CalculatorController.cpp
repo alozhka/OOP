@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <sstream>
 
-class ParseError : public std::runtime_error
+class ParseError final : public std::runtime_error
 {
 public:
 	using runtime_error::runtime_error;
@@ -55,14 +55,14 @@ CalculatorController::CalculatorController(Calculator& calc, std::istream& input
 	m_output << std::fixed << std::setprecision(2);
 }
 
-void CalculatorController::AddVariable(const std::string& args)
+void CalculatorController::AddVariable(const std::string& args) const
 {
 	const std::smatch matches = ParseRegex(args, Regexes::VALUE_REGEX);
 
 	m_calc.DefineVariable(matches[1].str());
 }
 
-void CalculatorController::SetValue(const std::string& args)
+void CalculatorController::SetValue(const std::string& args) const
 {
 	const std::smatch matches = ParseRegex(args, Regexes::NAME_VALUE_REGEX);
 
@@ -107,7 +107,7 @@ void CalculatorController::SetFunction(const std::string& args)
 	m_calc.DefineBinaryFunction(name, operationIt->second, arg1, arg2);
 }
 
-void CalculatorController::PrintExpression(const std::string& args)
+void CalculatorController::PrintExpression(const std::string& args) const
 {
 	const std::smatch matches = ParseRegex(args, Regexes::VALUE_REGEX);
 

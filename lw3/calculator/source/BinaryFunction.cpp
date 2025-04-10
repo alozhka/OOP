@@ -2,10 +2,10 @@
 
 #include "../include/BinaryFunction.h"
 
-BinaryFunction::BinaryFunction(BinaryOperation op, Expression* arg1, Expression* arg2)
+BinaryFunction::BinaryFunction(BinaryOperation op, std::shared_ptr<Expression> arg1, std::shared_ptr<Expression> arg2)
 	: m_op(std::move(op))
-	, m_arg1(arg1)
-	, m_arg2(arg2)
+	, m_arg1(std::move(arg1))
+	, m_arg2(std::move(arg2))
 {
 }
 

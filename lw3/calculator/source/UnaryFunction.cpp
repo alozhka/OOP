@@ -1,8 +1,10 @@
+#include <utility>
+
 #include "../include/UnaryFunction.h"
 
-UnaryFunction::UnaryFunction(UnaryOperation op, Expression* arg)
+UnaryFunction::UnaryFunction(UnaryOperation op, std::shared_ptr<Expression> arg)
 	: m_op(std::move(op))
-	, m_arg(arg)
+	, m_arg(std::move(arg))
 {
 }
 

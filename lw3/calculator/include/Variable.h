@@ -8,8 +8,8 @@ public:
 	explicit Variable(double value);
 
 	[[nodiscard]] double GetResult() const override;
-
 	void SetValue(double value);
+
 private:
 	double m_value;
 };

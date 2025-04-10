@@ -5,10 +5,11 @@
 class UnaryFunction final : public Function
 {
 public:
-	UnaryFunction(UnaryOperation op, Expression* arg);
+	UnaryFunction(UnaryOperation op, std::shared_ptr<Expression> arg);
 	[[nodiscard]] double GetResult() const override;
 
+	~UnaryFunction() override = default;
 private:
 	const UnaryOperation m_op;
-	const Expression* m_arg;
+	const std::shared_ptr<Expression> m_arg;
 };

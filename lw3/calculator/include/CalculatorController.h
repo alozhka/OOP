@@ -10,12 +10,12 @@ public:
 	void HandleInput();
 
 private:
-	void AddVariable(const std::string& args);
-	void SetValue(const std::string& args);
+	void AddVariable(const std::string& args) const;
+	void SetValue(const std::string& args) const;
 
 	void SetFunction(const std::string& args);
 
-	void PrintExpression(const std::string& args);
+	void PrintExpression(const std::string& args) const;
 	void PrintVariables() const;
 	void PrintFunctions() const;
 
