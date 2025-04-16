@@ -2,17 +2,17 @@
 #include "CPoint.h"
 #include "ISolidShape.h"
 
-class CTriangle final : public ISolidShape
+class CTriangle final : public virtual ISolidShape
 {
 public:
-	double GetArea() override;
-	double GetPerimeter() override;
-	std::string ToString() override;
-	u_int32_t GetOutlineColor() override;
+	[[nodiscard]] double GetArea() const override;
+	[[nodiscard]] double GetPerimeter() const override;
+	[[nodiscard]] std::string ToString() const override;
+	[[nodiscard]] u_int32_t GetOutlineColor() const override;
 
-	u_int32_t GetFilledColor() override;
+	[[nodiscard]] u_int32_t GetFilledColor() const override;
 
-	CPoint GetVertex1();
-	CPoint GetVertex2();
-	CPoint GetVertex3();
+	[[nodiscard]] CPoint GetVertex1() const;
+	[[nodiscard]] CPoint GetVertex2() const;
+	[[nodiscard]] CPoint GetVertex3() const;
 };

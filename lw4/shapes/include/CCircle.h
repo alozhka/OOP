@@ -2,15 +2,15 @@
 #include "CPoint.h"
 #include "ISolidShape.h"
 
-class CCircle final : public ISolidShape
+class CCircle final : public virtual ISolidShape
 {
 public:
-	double GetArea() override;
-	double GetPerimeter() override;
-	std::string ToString() override;
-	u_int32_t GetOutlineColor() override;
+	[[nodiscard]] double GetArea() const override;
+	[[nodiscard]] double GetPerimeter() const override;
+	[[nodiscard]] std::string ToString() const override;
+	[[nodiscard]] u_int32_t GetOutlineColor() const override;
 
-	u_int32_t GetFilledColor() override;
+	[[nodiscard]] u_int32_t GetFilledColor() const override;
 
 	CPoint GetCenter();
 	double GetRadius();

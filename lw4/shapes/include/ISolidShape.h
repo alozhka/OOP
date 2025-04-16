@@ -4,7 +4,7 @@
 class ISolidShape : public IShape
 {
 public:
-	virtual u_int32_t GetFilledColor() = 0;
+	[[nodiscard]] virtual u_int32_t GetFilledColor() const = 0;
 
 	~ISolidShape() override = default;
 };
