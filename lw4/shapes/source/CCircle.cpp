@@ -2,7 +2,7 @@
 
 #include <complex>
 
-CCircle::CCircle(const CPoint& center, double radius, u_int32_t outlineColor, u_int32_t filledColor)
+CCircle::CCircle(CPoint center, double radius, u_int32_t outlineColor, u_int32_t filledColor)
 	: m_outlineColor(outlineColor)
 	, m_filledColor(filledColor)
 	, m_radius(radius)

@@ -5,7 +5,7 @@
 class CCircle final : public virtual ISolidShape
 {
 public:
-	CCircle(const CPoint& center, double radius, u_int32_t outlineColor, u_int32_t filledColor);
+	CCircle(CPoint center, double radius, u_int32_t outlineColor, u_int32_t filledColor);
 
 	[[nodiscard]] double GetArea() const override;
 	[[nodiscard]] double GetPerimeter() const override;
