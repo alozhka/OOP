@@ -19,11 +19,7 @@ double CLineSegment::GetPerimeter() const
 
 std::string CLineSegment::ToString() const
 {
-	return "LineSegment: Area - "
-		+ std::to_string(this->GetArea())
-		+ "; Perimeter - "
-		+ std::to_string(this->GetPerimeter())
-		+ ".";
+	return "LineSegment: Area - " + std::to_string(this->GetArea()) + "; Perimeter - " + std::to_string(this->GetPerimeter());
 }
 
 u_int32_t CLineSegment::GetOutlineColor() const
