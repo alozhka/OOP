@@ -1,6 +1,6 @@
 #include "../include/CRectangle.h"
 
-CRectangle::CRectangle(CPoint leftTopPoint, double width, double height, u_int32_t outlineColor, u_int32_t filledColor)
+CRectangle::CRectangle(CPoint leftTopPoint, double width, double height, uint32_t outlineColor, uint32_t filledColor)
 	: m_outlineColor(outlineColor)
 	, m_filledColor(filledColor)
 	, m_width(width)
@@ -19,12 +19,12 @@ double CRectangle::GetPerimeter() const
 	return 2 * m_width * m_height;
 }
 
-u_int32_t CRectangle::GetOutlineColor() const
+uint32_t CRectangle::GetOutlineColor() const
 {
 	return m_outlineColor;
 }
 
-u_int32_t CRectangle::GetFilledColor() const
+uint32_t CRectangle::GetFilledColor() const
 {
 	return m_filledColor;
 }

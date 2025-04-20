@@ -1,6 +1,6 @@
 #include "../include/CLineSegment.h"
 
-CLineSegment::CLineSegment(CPoint x, CPoint y, u_int32_t color)
+CLineSegment::CLineSegment(CPoint x, CPoint y, uint32_t color)
 	: m_outlineColor(color)
 	, m_startPoint(x)
 	, m_endPoint(y)
@@ -22,7 +22,7 @@ std::string CLineSegment::ToString() const
 	return "LineSegment: Area - " + std::to_string(this->GetArea()) + "; Perimeter - " + std::to_string(this->GetPerimeter());
 }
 
-u_int32_t CLineSegment::GetOutlineColor() const
+uint32_t CLineSegment::GetOutlineColor() const
 {
 	return m_outlineColor;
 }
