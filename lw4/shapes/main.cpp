@@ -1,3 +1,5 @@
+#include "include/CCanvas.h"
+
 #include <SFML/Graphics.hpp>
 
 struct WindowSettings
@@ -26,6 +28,8 @@ static sf::RenderWindow RenderWindow()
 int main()
 {
 	sf::RenderWindow window = RenderWindow();
+	const CCanvas canvas(window);
+
 
 	while (window.isOpen())
 	{

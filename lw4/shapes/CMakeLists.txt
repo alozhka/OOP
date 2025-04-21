@@ -25,6 +25,12 @@ add_executable(${CMAKE_PROJECT_NAME} main.cpp
         include/CRectangle.h
         source/CCircle.cpp
         include/CCircle.h
-        include/ICanvas.h)
+        include/ICanvas.h
+        include/ICanvasDrawable.h
+        source/CCanvas.cpp
+        source/CCanvas.cpp
+        include/CCanvas.h
+        source/CShapesController.cpp
+        include/CShapesController.h)
 target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SFML::Graphics)
