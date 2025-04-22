@@ -1,5 +1,6 @@
 #include "../include/CShapesController.h"
 
+#include "../include/CCanvas.h"
 #include "../include/CCircle.h"
 #include "../include/CLineSegment.h"
 #include "../include/CRectangle.h"
@@ -19,8 +20,13 @@ CShapesController::CShapesController(std::istream& input, std::ostream& output)
 {
 }
 
-void CShapesController::DrawShapes()
+void CShapesController::DrawShapes(sf::RenderWindow& window)
 {
+	CCanvas canvas(window);
+	for (const std::unique_ptr<IShape>& shape : m_shapes)
+	{
+		shape->Draw(canvas);
+	}
 }
 
 void CShapesController::HandleInput()

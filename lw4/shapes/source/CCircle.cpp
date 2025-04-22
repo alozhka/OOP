@@ -11,6 +11,11 @@ CCircle::CCircle(CPoint center, double radius, uint32_t outlineColor, uint32_t f
 {
 }
 
+void CCircle::Draw(ICanvas& canvas) const
+{
+	canvas.FillCircle(GetCenter(), GetRadius(), GetFilledColor(), GetOutlineColor());
+}
+
 double CCircle::GetArea() const
 {
 	return std::numbers::pi * std::pow(m_radius, 2);

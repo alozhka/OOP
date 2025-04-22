@@ -7,6 +7,11 @@ CLineSegment::CLineSegment(CPoint x, CPoint y, uint32_t color)
 {
 }
 
+void CLineSegment::Draw(ICanvas& canvas) const
+{
+	canvas.DrawLine(GetStartPoint(), GetEndPoint(), GetOutlineColor());
+}
+
 double CLineSegment::GetArea() const
 {
 	return 0;

@@ -9,6 +9,11 @@ CRectangle::CRectangle(CPoint leftTopPoint, double width, double height, uint32_
 {
 }
 
+void CRectangle::Draw(ICanvas& canvas) const
+{
+	canvas.FillPolygon({ GetLeftTop(), GetRightBottom() }, GetFilledColor(), GetOutlineColor());
+}
+
 double CRectangle::GetArea() const
 {
 	return m_width * m_height;

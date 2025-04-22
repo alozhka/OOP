@@ -13,6 +13,14 @@ CTriangle::CTriangle(CPoint p1, CPoint p2, CPoint p3, uint32_t inlineColor, uint
 	}
 }
 
+void CTriangle::Draw(ICanvas& canvas) const
+{
+	canvas.FillPolygon(
+		{ GetVertex1(), GetVertex2(), GetVertex3() },
+		GetFilledColor(),
+		GetOutlineColor());
+}
+
 double CTriangle::GetArea() const
 {
 	return 0.5 * m_determinant * (m_determinant > 0 ? 1 : -1);

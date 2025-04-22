@@ -8,7 +8,7 @@ class CShapesController
 {
 public:
 	CShapesController(std::istream& input, std::ostream& output);
-	void DrawShapes();
+	void DrawShapes(sf::RenderWindow& window);
 	void HandleInput();
 	void PrintResults();
 

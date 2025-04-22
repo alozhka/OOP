@@ -32,7 +32,6 @@ int main()
 	sf::RenderWindow window = CreateWindow();
 	const CCanvas canvas(window);
 	CShapesController shapesController(std::cin, std::cout);
-
 	bool inputFinished = false;
 
 	while (window.isOpen())
@@ -44,11 +43,9 @@ int main()
 				window.close();
 			}
 		}
-
 		if (!inputFinished)
 		{
 			shapesController.HandleInput();
-
 			if ((inputFinished = std::cin.eof()))
 			{
 				shapesController.PrintResults();
@@ -56,9 +53,7 @@ int main()
 		}
 
 		window.clear(sf::Color::Black);
-
-		shapesController.DrawShapes();
-
+		shapesController.DrawShapes(window);
 		window.display();
 	}
 
