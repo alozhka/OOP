@@ -8,7 +8,7 @@ CPoint::CPoint(double x, double y)
 	this->y = y;
 }
 
-double CPoint::Distance(const CPoint& a, const CPoint& b)
+double CPoint::GetDistance(const CPoint& a, const CPoint& b)
 {
 	return std::hypot(a.x - b.x, a.y - b.y);
 }

@@ -1,6 +1,8 @@
 #include "include/CCanvas.h"
+#include "include/CShapesController.h"
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 struct WindowSettings
 {
@@ -8,7 +10,7 @@ struct WindowSettings
 	sf::Vector2u size = { 800, 800 };
 };
 
-static sf::RenderWindow RenderWindow()
+static sf::RenderWindow CreateWindow()
 {
 	sf::ContextSettings settings;
 	const WindowSettings windowSettings;
@@ -27,17 +29,38 @@ static sf::RenderWindow RenderWindow()
 
 int main()
 {
-	sf::RenderWindow window = RenderWindow();
+	sf::RenderWindow window = CreateWindow();
 	const CCanvas canvas(window);
+	CShapesController shapesController(std::cin, std::cout);
 
+	bool inputFinished = false;
 
 	while (window.isOpen())
 	{
 		while (const std::optional event = window.pollEvent())
 		{
 			if (event->is<sf::Event::Closed>())
+			{
 				window.close();
+			}
 		}
+
+		if (!inputFinished)
+		{
+			shapesController.HandleInput();
+
+			if ((inputFinished = std::cin.eof()))
+			{
+				shapesController.PrintResults();
+			}
+		}
+
+		window.clear(sf::Color::Black);
+
+		shapesController.DrawShapes();
+
+		window.display();
 	}
-	return 0;
+
+	return EXIT_SUCCESS;
 }

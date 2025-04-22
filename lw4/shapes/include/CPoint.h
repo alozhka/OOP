@@ -7,5 +7,5 @@ public:
 
 	CPoint(double x, double y);
 
-	static double Distance(const CPoint& a, const CPoint& b);
+	static double GetDistance(const CPoint& a, const CPoint& b);
 };

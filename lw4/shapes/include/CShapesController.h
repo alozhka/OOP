@@ -2,6 +2,7 @@
 #include "IShape.h"
 
 #include <istream>
+#include <regex>
 
 class CShapesController
 {
@@ -12,8 +13,12 @@ public:
 	void PrintResults();
 
 private:
-	void AddRectangle(std::string_view args);
-	using ActionMap = std::unordered_map<std::string, std::function<void(std::string)>>;
+	void AddRectangle(std::istream& input);
+	void AddCircle(std::istream& input);
+	void AddLine(std::istream& input);
+	void AddTriangle(std::istream& input);
+
+	using ActionMap = std::unordered_map<std::string, std::function<void(std::istream&)>>;
 
 	ActionMap m_action_map;
 	std::istream& m_input;
