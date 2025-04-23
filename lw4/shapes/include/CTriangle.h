@@ -12,7 +12,7 @@ public:
 	[[nodiscard]] double GetArea() const override;
 	[[nodiscard]] double GetPerimeter() const override;
 	[[nodiscard]] uint32_t GetOutlineColor() const override;
-	[[nodiscard]] uint32_t GetFilledColor() const override;
+	[[nodiscard]] uint32_t GetInlineColor() const override;
 	[[nodiscard]] CPoint GetVertex1() const;
 	[[nodiscard]] CPoint GetVertex2() const;
 	[[nodiscard]] CPoint GetVertex3() const;
@@ -24,5 +24,5 @@ public:
 private:
 	CPoint m_vertex1, m_vertex2, m_vertex3;
 	double m_determinant;
-	uint32_t m_filledColor, m_outlineColor;
+	uint32_t m_inlineColor, m_outlineColor;
 };

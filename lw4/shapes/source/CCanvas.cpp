@@ -15,7 +15,7 @@ void CCanvas::DrawLine(CPoint from, CPoint to, uint32_t color) const
 	m_window.draw(line, 2, sf::PrimitiveType::Lines);
 }
 
-void CCanvas::FillPolygon(const std::vector<CPoint>& points, uint32_t filledColor, uint32_t outlineColor) const
+void CCanvas::FillPolygon(const std::vector<CPoint>& points, uint32_t inlineColor, uint32_t outlineColor) const
 {
 	sf::ConvexShape polygon;
 	polygon.setPointCount(points.size());
@@ -26,30 +26,30 @@ void CCanvas::FillPolygon(const std::vector<CPoint>& points, uint32_t filledColo
 		polygon.setPoint(i, v);
 	}
 
-	polygon.setFillColor(sf::Color(filledColor));
+	polygon.setFillColor(sf::Color(inlineColor));
 	polygon.setOutlineColor(sf::Color(outlineColor));
 	polygon.setOutlineThickness(1.0f);
 
 	m_window.draw(polygon);
 }
 
-void CCanvas::FillRectangle(CPoint coordinates, double width, double height, uint32_t filledColor, uint32_t outlineColor) const
+void CCanvas::FillRectangle(CPoint coordinates, double width, double height, uint32_t inlineColor, uint32_t outlineColor) const
 {
 	sf::RectangleShape rect(sf::Vector2f(static_cast<float>(width), static_cast<float>(height)));
 	rect.setPosition(sf::Vector2f(static_cast<float>(coordinates.x), static_cast<float>(coordinates.y)));
-	rect.setFillColor(sf::Color(filledColor));
+	rect.setFillColor(sf::Color(inlineColor));
 	rect.setOutlineColor(sf::Color(outlineColor));
 	rect.setOutlineThickness(1.0f);
 
 	m_window.draw(rect);
 }
 
-void CCanvas::FillCircle(CPoint center, double radius, uint32_t filledColor, uint32_t outlineColor) const
+void CCanvas::FillCircle(CPoint center, double radius, uint32_t inlineColor, uint32_t outlineColor) const
 {
 	sf::CircleShape circle(static_cast<float>(radius));
 	const sf::Vector2f pos(static_cast<float>(center.x), static_cast<float>(center.y));
 	circle.setPosition(pos);
-	circle.setFillColor(sf::Color(filledColor));
+	circle.setFillColor(sf::Color(inlineColor));
 	circle.setOutlineColor(sf::Color(outlineColor));
 	circle.setOutlineThickness(1.0f);
 

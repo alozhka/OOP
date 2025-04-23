@@ -30,7 +30,6 @@ static sf::RenderWindow CreateWindow()
 int main()
 {
 	sf::RenderWindow window = CreateWindow();
-	const CCanvas canvas(window);
 	CShapesController shapesController(std::cin, std::cout);
 	bool inputFinished = false;
 

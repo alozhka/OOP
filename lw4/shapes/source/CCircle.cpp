@@ -3,9 +3,9 @@
 #include <numbers>
 #include <complex>
 
-CCircle::CCircle(CPoint center, double radius, uint32_t outlineColor, uint32_t filledColor)
+CCircle::CCircle(CPoint center, double radius, uint32_t inlineColor, uint32_t outlineColor)
 	: m_outlineColor(outlineColor)
-	, m_filledColor(filledColor)
+	, m_inlineColor(inlineColor)
 	, m_radius(radius)
 	, m_center(center)
 {
@@ -13,7 +13,7 @@ CCircle::CCircle(CPoint center, double radius, uint32_t outlineColor, uint32_t f
 
 void CCircle::Draw(ICanvas& canvas) const
 {
-	canvas.FillCircle(GetCenter(), GetRadius(), GetFilledColor(), GetOutlineColor());
+	canvas.FillCircle(GetCenter(), GetRadius(), GetInlineColor(), GetOutlineColor());
 }
 
 double CCircle::GetArea() const
@@ -36,9 +36,9 @@ uint32_t CCircle::GetOutlineColor() const
 	return m_outlineColor;
 }
 
-uint32_t CCircle::GetFilledColor() const
+uint32_t CCircle::GetInlineColor() const
 {
-	return m_filledColor;
+	return m_inlineColor;
 }
 
 CPoint CCircle::GetCenter() const

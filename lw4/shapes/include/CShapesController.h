@@ -18,6 +18,9 @@ private:
 	void AddLine(std::istream& input);
 	void AddTriangle(std::istream& input);
 
+	static uint32_t ColorToInt(const std::string& colorStr);
+	static void ThrowIfInvalidColorFormat(std::string_view color);
+
 	using ActionMap = std::unordered_map<std::string, std::function<void(std::istream&)>>;
 
 	ActionMap m_action_map;

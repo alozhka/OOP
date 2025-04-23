@@ -3,7 +3,7 @@ CTriangle::CTriangle(CPoint p1, CPoint p2, CPoint p3, uint32_t inlineColor, uint
 	: m_vertex1(p1)
 	, m_vertex2(p2)
 	, m_vertex3(p3)
-	, m_filledColor(inlineColor)
+	, m_inlineColor(inlineColor)
 	, m_outlineColor(outlineColor)
 {
 	m_determinant = (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
@@ -17,7 +17,7 @@ void CTriangle::Draw(ICanvas& canvas) const
 {
 	canvas.FillPolygon(
 		{ GetVertex1(), GetVertex2(), GetVertex3() },
-		GetFilledColor(),
+		GetInlineColor(),
 		GetOutlineColor());
 }
 
@@ -38,9 +38,9 @@ uint32_t CTriangle::GetOutlineColor() const
 	return m_outlineColor;
 }
 
-uint32_t CTriangle::GetFilledColor() const
+uint32_t CTriangle::GetInlineColor() const
 {
-	return m_filledColor;
+	return m_inlineColor;
 }
 
 CPoint CTriangle::GetVertex1() const

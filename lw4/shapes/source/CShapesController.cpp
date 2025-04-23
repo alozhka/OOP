@@ -9,6 +9,11 @@
 #include <functional>
 #include <sstream>
 
+namespace Regexes
+{
+static const std::regex COLOR_REGEX("^[0-9a-fA-F]{6}$");
+}
+
 CShapesController::CShapesController(std::istream& input, std::ostream& output)
 	: m_action_map{
 		{ "rectangle", std::bind_front(&CShapesController::AddRectangle, this) },
@@ -68,63 +73,98 @@ void CShapesController::PrintResults()
 void CShapesController::AddRectangle(std::istream& input)
 {
 	double x, y, width, height;
-	uint32_t filledColor, outlineColor;
+	std::string inlineColorStr, outlineColorStr;
 
-	if (!(input >> x >> y >> width >> height >> std::hex >> filledColor >> std::hex >> outlineColor))
+	if (!(input >> x >> y >> width >> height >> inlineColorStr >> outlineColorStr))
 	{
 		throw std::invalid_argument("Invalid arguments. Usage: rectangle <x> <y> <width> <height> <inlineColor> <outlineColor>");
 	}
 
-	auto rect = std::make_unique<CRectangle>(CPoint{ x, y }, width, height, filledColor, outlineColor);
+	ThrowIfInvalidColorFormat(inlineColorStr);
+	ThrowIfInvalidColorFormat(outlineColorStr);
+
+	uint32_t inlineColor = ColorToInt(inlineColorStr);
+	uint32_t outlineColor = ColorToInt(outlineColorStr);
+	auto rect = std::make_unique<CRectangle>(CPoint{ x, y }, width, height, inlineColor, outlineColor);
 	m_shapes.push_back(std::move(rect));
 }
 
 void CShapesController::AddCircle(std::istream& input)
 {
 	double x, y, radius;
-	uint32_t filledColor, outlineColor;
+	std::string inlineColorStr, outlineColorStr;
 
-	if (!(input >> x >> y >> radius >> std::hex >> filledColor >> std::hex >> outlineColor))
+	if (!(input >> x >> y >> radius >> inlineColorStr >> outlineColorStr))
 	{
 		throw std::invalid_argument("Invalid arguments. Usage: circle <x> <y> <radius>");
 	}
 
-	auto circle = std::make_unique<CCircle>(CPoint{ x, y }, radius, filledColor, outlineColor);
+	ThrowIfInvalidColorFormat(inlineColorStr);
+	ThrowIfInvalidColorFormat(outlineColorStr);
+
+	uint32_t inlineColor = ColorToInt(inlineColorStr);
+	uint32_t outlineColor = ColorToInt(outlineColorStr);
+	auto circle = std::make_unique<CCircle>(CPoint{ x, y }, radius, inlineColor, outlineColor);
 	m_shapes.push_back(std::move(circle));
 }
 
 void CShapesController::AddLine(std::istream& input)
 {
 	double x1, y1, x2, y2;
-	uint32_t filledColor;
+	std::string outlineColorStr;
 
-	if (!(input >> x1 >> y1 >> x2 >> y2 >> std::hex >> filledColor))
+	if (!(input >> x1 >> y1 >> x2 >> y2 >> outlineColorStr))
 	{
-		throw std::invalid_argument("Invalid arguments. Usage: line <x1> <y1> <x2> <y2> <inlineColor>");
+		throw std::invalid_argument("Invalid arguments. Usage: line <x1> <y1> <x2> <y2> <outlineColor>");
 	}
 
+	ThrowIfInvalidColorFormat(outlineColorStr);
+
+	uint32_t outlineColor = ColorToInt(outlineColorStr);
 	auto line = std::make_unique<CLineSegment>(
 		CPoint{ x1, y1 },
 		CPoint{ x2, y2 },
-		filledColor);
+		outlineColor);
 	m_shapes.push_back(std::move(line));
 }
 
 void CShapesController::AddTriangle(std::istream& input)
 {
 	double x1, y1, x2, y2, x3, y3;
-	uint32_t filledColor, outlineColor;
-	if (!(input >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> std::hex >> filledColor >> std::hex >> outlineColor))
+	std::string inlineColorStr, outlineColorStr;
+	if (!(input >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> inlineColorStr >> outlineColorStr))
 	{
 		throw std::invalid_argument("Invalid arguments. "
 									"Usage: triangle <x1> <y1> <x2> <y2> <x3> <y3> <inlineColor> <outlineColor>");
 	}
 
+	ThrowIfInvalidColorFormat(inlineColorStr);
+	ThrowIfInvalidColorFormat(outlineColorStr);
+
+	uint32_t inlineColor = ColorToInt(inlineColorStr);
+	uint32_t outlineColor = ColorToInt(outlineColorStr);
 	auto triangle = std::make_unique<CTriangle>(
 		CPoint{ x1, y1 },
 		CPoint{ x2, y2 },
 		CPoint{ x3, y3 },
-		filledColor,
+		inlineColor,
 		outlineColor);
 	m_shapes.push_back(std::move(triangle));
+}
+
+uint32_t CShapesController::ColorToInt(const std::string& colorStr)
+{
+	uint32_t num;
+	std::stringstream ss;
+	ss << std::hex << colorStr << "FF";
+	ss >> num;
+	return num;
+}
+
+void CShapesController::ThrowIfInvalidColorFormat(std::string_view color)
+{
+	if (!std::regex_match(color.data(), Regexes::COLOR_REGEX))
+	{
+		throw std::invalid_argument("Invalid color format.");
+	}
 }

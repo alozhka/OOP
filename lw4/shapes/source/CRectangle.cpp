@@ -1,8 +1,8 @@
 #include "../include/CRectangle.h"
 
-CRectangle::CRectangle(CPoint leftTopPoint, double width, double height, uint32_t outlineColor, uint32_t filledColor)
+CRectangle::CRectangle(CPoint leftTopPoint, double width, double height, uint32_t inlineColor, uint32_t outlineColor)
 	: m_outlineColor(outlineColor)
-	, m_filledColor(filledColor)
+	, m_inlineColor(inlineColor)
 	, m_width(width)
 	, m_height(height)
 	, m_leftTopPoint(leftTopPoint)
@@ -11,7 +11,7 @@ CRectangle::CRectangle(CPoint leftTopPoint, double width, double height, uint32_
 
 void CRectangle::Draw(ICanvas& canvas) const
 {
-	canvas.FillRectangle(GetLeftTop(), GetWidth(), GetHeight(), GetFilledColor(), GetOutlineColor());
+	canvas.FillRectangle(GetLeftTop(), GetWidth(), GetHeight(), GetInlineColor(), GetOutlineColor());
 }
 
 double CRectangle::GetArea() const
@@ -29,9 +29,9 @@ uint32_t CRectangle::GetOutlineColor() const
 	return m_outlineColor;
 }
 
-uint32_t CRectangle::GetFilledColor() const
+uint32_t CRectangle::GetInlineColor() const
 {
-	return m_filledColor;
+	return m_inlineColor;
 }
 
 CPoint CRectangle::GetLeftTop() const
