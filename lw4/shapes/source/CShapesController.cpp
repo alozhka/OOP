@@ -6,6 +6,7 @@
 #include "../include/CRectangle.h"
 #include "../include/CTriangle.h"
 
+#include <functional>
 #include <sstream>
 
 CShapesController::CShapesController(std::istream& input, std::ostream& output)
@@ -42,6 +43,7 @@ void CShapesController::HandleInput()
 	if (it == m_action_map.end())
 	{
 		m_output << "Invalid command\n";
+		return;
 	}
 
 	try

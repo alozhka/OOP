@@ -14,7 +14,7 @@ static sf::RenderWindow CreateWindow()
 {
 	sf::ContextSettings settings;
 	const WindowSettings windowSettings;
-	settings.antiAliasingLevel = 16;
+	settings.antiAliasingLevel = 8;
 
 	return sf::RenderWindow{
 		sf::VideoMode(

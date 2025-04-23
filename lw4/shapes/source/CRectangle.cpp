@@ -11,7 +11,7 @@ CRectangle::CRectangle(CPoint leftTopPoint, double width, double height, uint32_
 
 void CRectangle::Draw(ICanvas& canvas) const
 {
-	canvas.FillPolygon({ GetLeftTop(), GetRightBottom() }, GetFilledColor(), GetOutlineColor());
+	canvas.FillRectangle(GetLeftTop(), GetWidth(), GetHeight(), GetFilledColor(), GetOutlineColor());
 }
 
 double CRectangle::GetArea() const
@@ -21,7 +21,7 @@ double CRectangle::GetArea() const
 
 double CRectangle::GetPerimeter() const
 {
-	return 2 * m_width * m_height;
+	return 2 * (m_width + m_height);
 }
 
 uint32_t CRectangle::GetOutlineColor() const
