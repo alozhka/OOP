@@ -1,7 +1,6 @@
 #pragma once
 #include "CPoint.h"
 
-#include <SFML/Graphics.hpp>
 #include <vector>
 
 class ICanvas

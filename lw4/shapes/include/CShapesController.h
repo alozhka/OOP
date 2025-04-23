@@ -1,6 +1,7 @@
 #pragma once
-#include "IShape.h"
 
+#include "IShape.h"
+#include "SFML/Graphics/RenderWindow.hpp"
 #include <istream>
 #include <regex>
 
