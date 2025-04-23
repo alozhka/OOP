@@ -15,16 +15,15 @@ void CMockCanvas::DrawLine(CPoint from, CPoint to, uint32_t color) const
 
 void CMockCanvas::FillPolygon(const std::vector<CPoint>& points, uint32_t inlineColor, uint32_t outlineColor) const
 {
-	m_output << "Filling polygon\n"
-			 << "points:\n";
+	m_output << "Filling polygon\npoints: ";
 
 	for (const CPoint p : points)
 	{
-		m_output << "coords: " << p.x << " " << p.y << "\n";
+		m_output << "coords: " << p.x << " " << p.y << ", ";
 	}
 
-	m_output << "inline color: " << inlineColor << "\n"
-			 << "outline color: " << outlineColor << "\n";
+	m_output << "\ninline color: " << std::hex << inlineColor << std::endl
+			 << "outline color: " << std::hex << outlineColor << std::endl;
 }
 
 void CMockCanvas::FillRectangle(CPoint leftTop, double width, double height, uint32_t inlineColor, uint32_t outlineColor) const

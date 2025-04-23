@@ -2,6 +2,7 @@
 #include "../include/CCircle.h"
 #include "../include/CLineSegment.h"
 #include "../include/CRectangle.h"
+#include "../include/CTriangle.h"
 #include "CMockCanvas.h"
 
 #include <catch2/catch_test_macros.hpp>
@@ -69,7 +70,7 @@ TEST_CASE("Can draw circle", "[draw][circle]")
 	REQUIRE(circle.GetOutlineColor() == TestData::outlineColor);
 }
 
-TEST_CASE("Can draw rectangle", "[draw][circle]")
+TEST_CASE("Can draw rectangle", "[draw][rectangle]")
 {
 	CRectangle rect(
 		TestData::firstPoint,
@@ -92,4 +93,42 @@ TEST_CASE("Can draw rectangle", "[draw][circle]")
 	REQUIRE(rect.GetPerimeter() == 2 * (TestData::width + TestData::height));
 	REQUIRE(rect.GetInlineColor() == TestData::inlineColor);
 	REQUIRE(rect.GetOutlineColor() == TestData::outlineColor);
+}
+
+TEST_CASE("Can draw triangle", "[draw][triangle]")
+{
+	CTriangle triangle(
+		TestData::firstPoint,
+		TestData::secondPoint,
+		TestData::thirdPoint,
+		TestData::inlineColor,
+		TestData::outlineColor);
+	std::ostringstream oss;
+	CMockCanvas canvas(oss);
+	double expectedPerimeter = CPoint::GetDistance(TestData::firstPoint, TestData::thirdPoint)
+		+ CPoint::GetDistance(TestData::secondPoint, TestData::thirdPoint)
+		+ CPoint::GetDistance(TestData::firstPoint, TestData::secondPoint);
+	double expectedArea = 0.5 * (TestData::firstPoint.x - TestData::thirdPoint.x)
+			* (TestData::secondPoint.y - TestData::thirdPoint.y)
+		- (TestData::secondPoint.x - TestData::thirdPoint.x)
+			* (TestData::firstPoint.y - TestData::secondPoint.y);
+	std::string expected = R"a(Filling polygon
+points: coords: 13 10, coords: 10 14, coords: 10 10,
+inline color: 6a6a6b
+outline color: ffffff
+)a";
+
+	triangle.Draw(canvas);
+
+	REQUIRE(expected == oss.str());
+	REQUIRE(triangle.GetVertex1().x == TestData::firstPoint.x);
+	REQUIRE(triangle.GetVertex1().y == TestData::firstPoint.y);
+	REQUIRE(triangle.GetVertex2().x == TestData::secondPoint.x);
+	REQUIRE(triangle.GetVertex2().y == TestData::secondPoint.y);
+	REQUIRE(triangle.GetVertex3().x == TestData::thirdPoint.x);
+	REQUIRE(triangle.GetVertex3().y == TestData::thirdPoint.y);
+	REQUIRE(triangle.GetArea() == expectedArea);
+	REQUIRE(triangle.GetPerimeter() == expectedPerimeter);
+	REQUIRE(triangle.GetInlineColor() == TestData::inlineColor);
+	REQUIRE(triangle.GetOutlineColor() == TestData::outlineColor);
 }
