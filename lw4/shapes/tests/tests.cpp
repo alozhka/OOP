@@ -1,6 +1,7 @@
 
 #include "../include/CCircle.h"
 #include "../include/CLineSegment.h"
+#include "../include/CRectangle.h"
 #include "CMockCanvas.h"
 
 #include <catch2/catch_test_macros.hpp>
@@ -66,4 +67,29 @@ TEST_CASE("Can draw circle", "[draw][circle]")
 	REQUIRE(circle.GetPerimeter() == 2 * std::numbers::pi * TestData::validRadius);
 	REQUIRE(circle.GetInlineColor() == TestData::inlineColor);
 	REQUIRE(circle.GetOutlineColor() == TestData::outlineColor);
+}
+
+TEST_CASE("Can draw rectangle", "[draw][circle]")
+{
+	CRectangle rect(
+		TestData::firstPoint,
+		TestData::width,
+		TestData::height,
+		TestData::inlineColor,
+		TestData::outlineColor);
+	std::ostringstream oss;
+	CMockCanvas canvas(oss);
+	std::string expected = "Filling rectangle\nleft top: 13 10\nwidth: 50\nheight: 24\ninline color: 6a6a6b\noutline color: ffffff\n";
+
+	rect.Draw(canvas);
+
+	REQUIRE(expected == oss.str());
+	REQUIRE(rect.GetLeftTop().x == TestData::firstPoint.x);
+	REQUIRE(rect.GetLeftTop().y == TestData::firstPoint.y);
+	REQUIRE(rect.GetWidth() == TestData::width);
+	REQUIRE(rect.GetHeight() == TestData::height);
+	REQUIRE(rect.GetArea() == TestData::width * TestData::height);
+	REQUIRE(rect.GetPerimeter() == 2 * (TestData::width + TestData::height));
+	REQUIRE(rect.GetInlineColor() == TestData::inlineColor);
+	REQUIRE(rect.GetOutlineColor() == TestData::outlineColor);
 }

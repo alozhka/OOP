@@ -33,8 +33,8 @@ void CMockCanvas::FillRectangle(CPoint leftTop, double width, double height, uin
 			 << "left top: " << leftTop.x << " " << leftTop.y << "\n"
 			 << "width: " << width << "\n"
 			 << "height: " << height << "\n"
-			 << "inline color: " << inlineColor << "\n"
-			 << "outline color: " << outlineColor << "\n";
+			 << "inline color: " << std::hex << inlineColor << "\n"
+			 << "outline color: " << std::hex << outlineColor << "\n";
 }
 
 void CMockCanvas::FillCircle(CPoint center, double radius, uint32_t inlineColor, uint32_t outlineColor) const
