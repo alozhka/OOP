@@ -6,6 +6,8 @@
 #include "CMockCanvas.h"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <numbers>
 
 namespace TestData
@@ -131,4 +133,23 @@ outline color: ffffff
 	REQUIRE(triangle.GetPerimeter() == expectedPerimeter);
 	REQUIRE(triangle.GetInlineColor() == TestData::inlineColor);
 	REQUIRE(triangle.GetOutlineColor() == TestData::outlineColor);
+}
+
+// negative
+
+TEST_CASE("Cannot create triangle with invalid coords", "[negative][draw][circle]")
+{
+	const std::function createTriangle = [] {
+		return CTriangle(
+			CPoint{ 50, 50 },
+			CPoint{ 100, 100 },
+			CPoint{ 120, 120 },
+			TestData::inlineColor,
+			TestData::outlineColor);
+	};
+
+	REQUIRE_THROWS_MATCHES(
+		createTriangle(),
+		std::runtime_error,
+		Catch::Matchers::Message("Invalid triangle coordinates"));
 }
