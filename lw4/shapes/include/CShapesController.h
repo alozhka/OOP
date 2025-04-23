@@ -8,15 +8,18 @@ class CShapesController
 {
 public:
 	CShapesController(std::istream& input, std::ostream& output);
-	void DrawShapes(sf::RenderWindow& window);
+	void DrawShapes(sf::RenderWindow& window) const;
 	void HandleInput();
-	void PrintResults();
+	void PrintResults() const;
 
 private:
 	void AddRectangle(std::istream& input);
 	void AddCircle(std::istream& input);
 	void AddLine(std::istream& input);
 	void AddTriangle(std::istream& input);
+
+	[[nodiscard]] IShape* FindShapeWithMaxArea() const;
+	[[nodiscard]] IShape* FindShapeWithMinPerimeter() const;
 
 	static uint32_t ColorToInt(const std::string& colorStr);
 	static void ThrowIfInvalidColorFormat(std::string_view color);

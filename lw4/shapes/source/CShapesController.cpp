@@ -26,7 +26,7 @@ CShapesController::CShapesController(std::istream& input, std::ostream& output)
 {
 }
 
-void CShapesController::DrawShapes(sf::RenderWindow& window)
+void CShapesController::DrawShapes(sf::RenderWindow& window) const
 {
 	CCanvas canvas(window);
 	for (const std::unique_ptr<IShape>& shape : m_shapes)
@@ -61,13 +61,21 @@ void CShapesController::HandleInput()
 	}
 }
 
-void CShapesController::PrintResults()
+void CShapesController::PrintResults() const
 {
 	if (m_shapes.empty())
 	{
 		m_output << "No shapes provided\n";
 		return;
 	}
+
+	m_output << "Shape with max area: \n";
+	const IShape* maxAreaShape = FindShapeWithMaxArea();
+	m_output << maxAreaShape->ToString() << std::endl;
+
+	m_output << "Shape with min perimeter: \n";
+	const IShape* minPerimeterShape = FindShapeWithMinPerimeter();
+	m_output << minPerimeterShape->ToString() << std::endl;
 }
 
 void CShapesController::AddRectangle(std::istream& input)
@@ -96,7 +104,7 @@ void CShapesController::AddCircle(std::istream& input)
 
 	if (!(input >> x >> y >> radius >> inlineColorStr >> outlineColorStr))
 	{
-		throw std::invalid_argument("Invalid arguments. Usage: circle <x> <y> <radius>");
+		throw std::invalid_argument("Invalid arguments. Usage: circle <x> <y> <radius> <inlineColor> <outlineColor>");
 	}
 
 	ThrowIfInvalidColorFormat(inlineColorStr);
@@ -150,6 +158,24 @@ void CShapesController::AddTriangle(std::istream& input)
 		inlineColor,
 		outlineColor);
 	m_shapes.push_back(std::move(triangle));
+}
+
+IShape* CShapesController::FindShapeWithMaxArea() const
+{
+	auto result = std::ranges::max_element(m_shapes, [](auto& a, auto& b) {
+		return a->GetArea() < b->GetArea();
+	});
+
+	return result == m_shapes.end() ? nullptr : result->get();
+}
+
+IShape* CShapesController::FindShapeWithMinPerimeter() const
+{
+	auto result = std::ranges::min_element(m_shapes, [](auto& a, auto& b) {
+		return a->GetPerimeter() < b->GetPerimeter();
+	});
+
+	return result == m_shapes.end() ? nullptr : result->get();
 }
 
 uint32_t CShapesController::ColorToInt(const std::string& colorStr)

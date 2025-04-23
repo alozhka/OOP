@@ -45,8 +45,9 @@ int main()
 		if (!inputFinished)
 		{
 			shapesController.HandleInput();
-			if ((inputFinished = std::cin.eof()))
+			if (std::cin.eof())
 			{
+				inputFinished = true;
 				shapesController.PrintResults();
 			}
 		}
