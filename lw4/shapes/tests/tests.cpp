@@ -1,5 +1,6 @@
 
 #include "../include/CCircle.h"
+#include "../include/CLineSegment.h"
 #include "CMockCanvas.h"
 
 #include <catch2/catch_test_macros.hpp>
@@ -21,6 +22,28 @@ const CPoint firstPoint{ 13.0, 10.0 };
 const CPoint secondPoint{ 10.0, 14.0 };
 const CPoint thirdPoint{ 10.0, 10.0 };
 } // namespace TestData
+
+TEST_CASE("Can draw line", "[draw][line]")
+{
+	CLineSegment line(
+		TestData::firstPoint,
+		TestData::secondPoint,
+		TestData::outlineColor);
+	std::ostringstream oss;
+	CMockCanvas canvas(oss);
+	std::string expected = "Drawing line\nfrom: 13 10\nto: 10 14\ncolor: ffffff\n";
+
+	line.Draw(canvas);
+
+	REQUIRE(expected == oss.str());
+	REQUIRE(line.GetStartPoint().x == TestData::firstPoint.x);
+	REQUIRE(line.GetStartPoint().y == TestData::firstPoint.y);
+	REQUIRE(line.GetEndPoint().x == TestData::secondPoint.x);
+	REQUIRE(line.GetEndPoint().y == TestData::secondPoint.y);
+	REQUIRE(line.GetArea() == 0);
+	REQUIRE(line.GetPerimeter() == CPoint::GetDistance(TestData::firstPoint, TestData::secondPoint));
+	REQUIRE(line.GetOutlineColor() == TestData::outlineColor);
+}
 
 TEST_CASE("Can draw circle", "[draw][circle]")
 {

@@ -10,7 +10,7 @@ void CMockCanvas::DrawLine(CPoint from, CPoint to, uint32_t color) const
 	m_output << "Drawing line\n"
 			 << "from: " << from.x << " " << from.y << "\n"
 			 << "to: " << to.x << " " << to.y << "\n"
-			 << "color: " << color << "\n";
+			 << "color: " << std::hex << color << "\n";
 }
 
 void CMockCanvas::FillPolygon(const std::vector<CPoint>& points, uint32_t inlineColor, uint32_t outlineColor) const
