@@ -42,15 +42,17 @@ int main()
 				window.close();
 			}
 		}
+		// вынести логику считывания отдельно
 		if (!inputFinished)
 		{
-			shapesController.HandleInput();
+			shapesController.ProcessShape();
 			if (std::cin.eof())
 			{
 				inputFinished = true;
 				shapesController.PrintResults();
 			}
 		}
+		// до сюда
 
 		window.clear(sf::Color::Black);
 		shapesController.DrawShapes(window);

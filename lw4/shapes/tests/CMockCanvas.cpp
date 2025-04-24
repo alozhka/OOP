@@ -19,10 +19,10 @@ void CMockCanvas::FillPolygon(const std::vector<CPoint>& points, uint32_t inline
 
 	for (const CPoint p : points)
 	{
-		m_output << "coords: " << p.x << " " << p.y << ", ";
+		m_output << "coords: " << p.x << " " << p.y << std::endl;
 	}
 
-	m_output << "\ninline color: " << std::hex << inlineColor << std::endl
+	m_output << "inline color: " << std::hex << inlineColor << std::endl
 			 << "outline color: " << std::hex << outlineColor << std::endl;
 }
 

@@ -15,7 +15,7 @@ static const std::regex COLOR_REGEX("^[0-9a-fA-F]{6}$");
 }
 
 CShapesController::CShapesController(std::istream& input, std::ostream& output)
-	: m_action_map{
+	: m_actionMap{
 		{ "rectangle", std::bind_front(&CShapesController::AddRectangle, this) },
 		{ "circle", std::bind_front(&CShapesController::AddCircle, this) },
 		{ "triangle", std::bind_front(&CShapesController::AddTriangle, this) },
@@ -35,7 +35,7 @@ void CShapesController::DrawShapes(sf::RenderWindow& window) const
 	}
 }
 
-void CShapesController::HandleInput()
+void CShapesController::ProcessShape()
 {
 	std::string command;
 	std::getline(m_input, command);
@@ -44,8 +44,8 @@ void CShapesController::HandleInput()
 	std::string action;
 	iss >> action;
 
-	const auto it = m_action_map.find(action);
-	if (it == m_action_map.end())
+	const auto it = m_actionMap.find(action);
+	if (it == m_actionMap.end())
 	{
 		m_output << "Invalid command\n";
 		return;

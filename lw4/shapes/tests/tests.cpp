@@ -1,4 +1,3 @@
-
 #include "../include/CCircle.h"
 #include "../include/CLineSegment.h"
 #include "../include/CRectangle.h"
@@ -97,6 +96,7 @@ TEST_CASE("Can draw rectangle", "[draw][rectangle]")
 	REQUIRE(rect.GetOutlineColor() == TestData::outlineColor);
 }
 
+// разделить тест конструктора и рисовку
 TEST_CASE("Can draw triangle", "[draw][triangle]")
 {
 	CTriangle triangle(
@@ -115,7 +115,9 @@ TEST_CASE("Can draw triangle", "[draw][triangle]")
 		- (TestData::secondPoint.x - TestData::thirdPoint.x)
 			* (TestData::firstPoint.y - TestData::secondPoint.y);
 	std::string expected = R"a(Filling polygon
-points: coords: 13 10, coords: 10 14, coords: 10 10,
+points: coords: 13 10
+coords: 10 14
+coords: 10 10
 inline color: 6a6a6b
 outline color: ffffff
 )a";
@@ -137,8 +139,9 @@ outline color: ffffff
 
 // negative
 
-TEST_CASE("Cannot create triangle with invalid coords", "[negative][draw][circle]")
+TEST_CASE("Cannot create triangle with invalid coords", "[negative][draw][triangle]")
 {
+	// валидация координат треугольника
 	const std::function createTriangle = [] {
 		return CTriangle(
 			CPoint{ 50, 50 },
@@ -153,3 +156,22 @@ TEST_CASE("Cannot create triangle with invalid coords", "[negative][draw][circle
 		std::runtime_error,
 		Catch::Matchers::Message("Invalid triangle coordinates"));
 }
+
+TEST_CASE("Cannot create circle with invalid radius", "[negative][draw][circle]")
+{
+	const std::function createCircle = [] {
+		return CCircle(
+			CPoint{ 50, 50 },
+			0,
+			TestData::inlineColor,
+			TestData::outlineColor);
+	};
+
+	REQUIRE_THROWS_MATCHES(
+		createCircle(),
+		std::runtime_error,
+		Catch::Matchers::Message("Circle must have not-zero radius"));
+}
+
+// валидация на прямоугольник
+// для контроллера min и max фигуры

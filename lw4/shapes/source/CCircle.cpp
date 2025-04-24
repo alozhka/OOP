@@ -1,7 +1,7 @@
 #include "../include/CCircle.h"
 
-#include <numbers>
 #include <complex>
+#include <numbers>
 
 CCircle::CCircle(CPoint center, double radius, uint32_t inlineColor, uint32_t outlineColor)
 	: m_outlineColor(outlineColor)
@@ -9,6 +9,10 @@ CCircle::CCircle(CPoint center, double radius, uint32_t inlineColor, uint32_t ou
 	, m_radius(radius)
 	, m_center(center)
 {
+	if (radius <= 0)
+	{
+		throw std::runtime_error("Circle must have not-zero radius");
+	}
 }
 
 void CCircle::Draw(ICanvas& canvas) const

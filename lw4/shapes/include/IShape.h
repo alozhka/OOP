@@ -3,6 +3,7 @@
 
 #include <string>
 
+// общий ToString в какой-то из классов
 class IShape : public ICanvasDrawable
 {
 public:
