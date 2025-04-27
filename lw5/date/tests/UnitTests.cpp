@@ -13,16 +13,19 @@ TEST_CASE("Date can be constructed differently", "[date][constructor]")
 	REQUIRE(1970 == defaultDate.GetYear());
 	REQUIRE(Month::JANUARY == defaultDate.GetMonth());
 	REQUIRE(1 == defaultDate.GetDay());
+	REQUIRE(WeekDay::THURSDAY == defaultDate.GetWeekDay());
 
 	auto timestampDate = CDate(1222);
 	REQUIRE(1973 == timestampDate.GetYear());
 	REQUIRE(Month::MAY == timestampDate.GetMonth());
 	REQUIRE(7 == timestampDate.GetDay());
+	REQUIRE(WeekDay::MONDAY == timestampDate.GetWeekDay());
 
-	auto specifiedDate = CDate(12, Month::AUGUST, 2005);
-	REQUIRE(2005 == specifiedDate.GetYear());
-	REQUIRE(Month::AUGUST == specifiedDate.GetMonth());
-	REQUIRE(12 == specifiedDate.GetDay());
+	auto specifiedDate = CDate(30, Month::JULY, 2010);
+	REQUIRE(2010 == specifiedDate.GetYear());
+	REQUIRE(Month::JULY == specifiedDate.GetMonth());
+	REQUIRE(30 == specifiedDate.GetDay());
+	REQUIRE(WeekDay::FRIDAY == specifiedDate.GetWeekDay());
 }
 
 TEST_CASE("Date can be increased", "[date][converter]")
