@@ -5,7 +5,6 @@
 
 namespace TestData
 {
-const auto defaultDate = CDate();
 }
 
 TEST_CASE("Date can be constructed differently", "[date][constructor]")
@@ -28,7 +27,7 @@ TEST_CASE("Date can be constructed differently", "[date][constructor]")
 
 TEST_CASE("Date can be increased", "[date][converter]")
 {
-	CDate date = TestData::defaultDate;
+	auto date = CDate();
 
 	date++;
 	REQUIRE(2 == date.GetDay());
@@ -38,6 +37,20 @@ TEST_CASE("Date can be increased", "[date][converter]")
 
 	date += 5;
 	REQUIRE(8 == date.GetDay());
+}
+
+TEST_CASE("Date can be decreased", "[date][converter]")
+{
+	auto date = CDate(15);
+
+	date--;
+	REQUIRE(15 == date.GetDay());
+
+	--date;
+	REQUIRE(14 == date.GetDay());
+
+	date -= 5;
+	REQUIRE(9 == date.GetDay());
 }
 
 // negative

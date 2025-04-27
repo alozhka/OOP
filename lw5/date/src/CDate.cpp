@@ -6,6 +6,7 @@ namespace
 {
 constexpr unsigned MIN_YEAR = 1970;
 constexpr unsigned MAX_YEAR = 9999;
+constexpr unsigned MAX_TIMESTAMP = 2932896;
 constexpr unsigned DAYS_IN_YEAR = 365;
 constexpr unsigned DAYS_IN_LEAP_YEAR = 366;
 constexpr unsigned DAYS_IN_FEBRUARY = 28;
@@ -135,21 +136,15 @@ WeekDay CDate::GetWeekDay() const
 	return static_cast<WeekDay>((m_timestamp + 4) % 7);
 }
 
-bool CDate::IsValid() const
-{
-	unsigned day, year;
-	Month month;
-
-	TimestampToDate(m_timestamp, day, month, year);
-	return IsValidDate(day, month, year);
-}
-
 CDate& CDate::operator++()
 {
-	if (IsValid())
+	if (m_timestamp >= MAX_TIMESTAMP)
 	{
-		++m_timestamp;
+		throw std::out_of_range("Date is going to be out of range");
 	}
+
+	++m_timestamp;
+
 	return *this;
 }
 
@@ -160,13 +155,52 @@ CDate CDate::operator++(int)
 	return temp;
 }
 
+CDate& CDate::operator--()
+{
+	if (m_timestamp <= 0)
+	{
+		throw std::out_of_range("Date is going to be out of range");
+	}
+
+	--m_timestamp;
+	return *this;
+}
+
+CDate CDate::operator--(int)
+{
+	CDate temp = *this;
+	--*this;
+	return temp;
+}
+
 CDate& CDate::operator+=(unsigned days)
 {
+	if (m_timestamp + days >= MAX_TIMESTAMP)
+	{
+		throw std::out_of_range("Date is going to be out of range");
+	}
+
 	m_timestamp += days;
+	return *this;
+}
+
+CDate& CDate::operator-=(unsigned days)
+{
+	if (m_timestamp <= 0)
+	{
+		throw std::out_of_range("Date is going to be out of range");
+	}
+
+	m_timestamp -= days;
 	return *this;
 }
 
 CDate CDate::operator+(unsigned days) const
 {
 	return CDate(m_timestamp + days);
+}
+
+CDate CDate::operator-(unsigned days) const
+{
+	return CDate(m_timestamp - days);
 }

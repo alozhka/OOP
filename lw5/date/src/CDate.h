@@ -39,14 +39,17 @@ public:
 	[[nodiscard]] Month GetMonth() const;
 	[[nodiscard]] unsigned GetYear() const;
 	[[nodiscard]] WeekDay GetWeekDay() const;
-	[[nodiscard]] bool IsValid() const;
 
 	CDate& operator++();
 	CDate operator++(int);
+	CDate& operator--();
+	CDate operator--(int);
 
 	CDate& operator+=(unsigned days);
+	CDate& operator-=(unsigned days);
 
 	CDate operator+(unsigned days) const;
+	CDate operator-(unsigned days) const;
 
 private:
 	unsigned m_timestamp;
