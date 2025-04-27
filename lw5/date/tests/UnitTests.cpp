@@ -1,8 +1,7 @@
-#include "catch2/matchers/catch_matchers_exception.hpp"
-
 #include <CDate.h>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
 
 namespace TestData
 {
@@ -41,7 +40,9 @@ TEST_CASE("Date can be increased", "[date][converter]")
 	REQUIRE(8 == date.GetDay());
 }
 
-TEST_CASE("Cannot construct invalid date", "[date][converter]")
+// negative
+
+TEST_CASE("Cannot construct invalid date", "[invalid][date]")
 {
 	std::function createInvalidDate = [] {
 		return CDate(30, Month::FEBRUARY, 2005);

@@ -8,7 +8,8 @@ constexpr unsigned MIN_YEAR = 1970;
 constexpr unsigned MAX_YEAR = 9999;
 constexpr unsigned DAYS_IN_YEAR = 365;
 constexpr unsigned DAYS_IN_LEAP_YEAR = 366;
-constexpr unsigned MAX_TIMESTAMP = 2932896;
+constexpr unsigned DAYS_IN_FEBRUARY = 28;
+constexpr unsigned DAYS_IN_LEAP_FEBRUARY = 29;
 
 bool IsLeapYear(unsigned year)
 {
@@ -20,7 +21,7 @@ unsigned GetDaysInMonth(Month month, unsigned year)
 	switch (month)
 	{
 	case Month::FEBRUARY:
-		return IsLeapYear(year) ? 29 : 28;
+		return IsLeapYear(year) ? DAYS_IN_LEAP_FEBRUARY : DAYS_IN_FEBRUARY;
 	case Month::APRIL:
 	case Month::JUNE:
 	case Month::SEPTEMBER:
@@ -33,8 +34,8 @@ unsigned GetDaysInMonth(Month month, unsigned year)
 
 bool IsValidDate(unsigned day, Month month, unsigned year)
 {
-	return (MIN_YEAR < year && year <= MAX_YEAR)
-		&& (1 < day && day < GetDaysInMonth(month, year));
+	return (MIN_YEAR <= year && year <= MAX_YEAR)
+		&& (1 <= day && day <= GetDaysInMonth(month, year));
 }
 
 void TimestampToDate(unsigned timestamp, unsigned& day, Month& month, unsigned& year)
@@ -91,18 +92,18 @@ unsigned DateToTimestamp(unsigned day, Month month, unsigned year)
 } // namespace
 
 CDate::CDate(unsigned day, Month month, unsigned year)
+	: m_timestamp(DateToTimestamp(day, month, year))
 {
-	m_timestamp = DateToTimestamp(day, month, year);
 }
 
 CDate::CDate(unsigned timestamp)
+	: m_timestamp(timestamp)
 {
-	m_timestamp = std::min(timestamp, MAX_TIMESTAMP);
 }
 
 CDate::CDate()
+	: m_timestamp(0)
 {
-	m_timestamp = 0;
 }
 
 unsigned CDate::GetDay() const
@@ -134,9 +135,21 @@ WeekDay CDate::GetWeekDay() const
 	return static_cast<WeekDay>((m_timestamp + 4) % 7);
 }
 
+bool CDate::IsValid() const
+{
+	unsigned day, year;
+	Month month;
+
+	TimestampToDate(m_timestamp, day, month, year);
+	return IsValidDate(day, month, year);
+}
+
 CDate& CDate::operator++()
 {
-	++m_timestamp;
+	if (IsValid())
+	{
+		++m_timestamp;
+	}
 	return *this;
 }
 
