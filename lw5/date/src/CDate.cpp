@@ -98,8 +98,13 @@ CDate::CDate(unsigned day, Month month, unsigned year)
 }
 
 CDate::CDate(unsigned timestamp)
-	: m_timestamp(timestamp)
 {
+	if (timestamp >= MAX_TIMESTAMP)
+	{
+		throw std::out_of_range("Date is out of range");
+	}
+
+	m_timestamp = timestamp;
 }
 
 CDate::CDate()
@@ -140,7 +145,7 @@ CDate& CDate::operator++()
 {
 	if (m_timestamp >= MAX_TIMESTAMP)
 	{
-		throw std::out_of_range("Date is going to be out of range");
+		throw std::out_of_range("Date is out of range");
 	}
 
 	++m_timestamp;
@@ -159,7 +164,7 @@ CDate& CDate::operator--()
 {
 	if (m_timestamp <= 0)
 	{
-		throw std::out_of_range("Date is going to be out of range");
+		throw std::out_of_range("Date is out of range");
 	}
 
 	--m_timestamp;
@@ -177,7 +182,7 @@ CDate& CDate::operator+=(unsigned days)
 {
 	if (m_timestamp + days >= MAX_TIMESTAMP)
 	{
-		throw std::out_of_range("Date is going to be out of range");
+		throw std::out_of_range("Date is out of range");
 	}
 
 	m_timestamp += days;
@@ -186,9 +191,9 @@ CDate& CDate::operator+=(unsigned days)
 
 CDate& CDate::operator-=(unsigned days)
 {
-	if (m_timestamp <= 0)
+	if (days > m_timestamp)
 	{
-		throw std::out_of_range("Date is going to be out of range");
+		throw std::out_of_range("Date is out of range");
 	}
 
 	m_timestamp -= days;
@@ -203,4 +208,34 @@ CDate CDate::operator+(unsigned days) const
 CDate CDate::operator-(unsigned days) const
 {
 	return CDate(m_timestamp - days);
+}
+
+bool CDate::operator==(const CDate& other) const
+{
+	return m_timestamp == other.m_timestamp;
+}
+
+bool CDate::operator!=(const CDate& other) const
+{
+	return !(*this == other);
+}
+
+bool CDate::operator<(const CDate& other) const
+{
+	return m_timestamp < other.m_timestamp;
+}
+
+bool CDate::operator>(const CDate& other) const
+{
+	return m_timestamp > other.m_timestamp;
+}
+
+bool CDate::operator<=(const CDate& other) const
+{
+	return !(*this > other);
+}
+
+bool CDate::operator>=(const CDate& other) const
+{
+	return !(*this < other);
 }

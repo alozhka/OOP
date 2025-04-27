@@ -51,6 +51,13 @@ public:
 	CDate operator+(unsigned days) const;
 	CDate operator-(unsigned days) const;
 
+	bool operator==(const CDate& other) const;
+	bool operator!=(const CDate& other) const;
+	bool operator<(const CDate& other) const;
+	bool operator>(const CDate& other) const;
+	bool operator<=(const CDate& other) const;
+	bool operator>=(const CDate& other) const;
+
 private:
 	unsigned m_timestamp;
 };

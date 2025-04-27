@@ -3,10 +3,6 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 
-namespace TestData
-{
-}
-
 TEST_CASE("Date can be constructed differently", "[date][constructor]")
 {
 	auto defaultDate = CDate();
@@ -40,6 +36,9 @@ TEST_CASE("Date can be increased", "[date][converter]")
 
 	date += 5;
 	REQUIRE(8 == date.GetDay());
+
+	CDate newDate = date + 7;
+	REQUIRE(15 == newDate.GetDay());
 }
 
 TEST_CASE("Date can be decreased", "[date][converter]")
@@ -54,6 +53,23 @@ TEST_CASE("Date can be decreased", "[date][converter]")
 
 	date -= 5;
 	REQUIRE(9 == date.GetDay());
+
+	CDate newDate = date - 7;
+	REQUIRE(2 == newDate.GetDay());
+}
+
+TEST_CASE("Can compare to dates", "[date][comparison]")
+{
+	auto date1 = CDate(40);
+	auto date2 = CDate(20);
+	auto date3 = CDate(20);
+
+	REQUIRE(date1 > date2);
+	REQUIRE(date2 < date1);
+	REQUIRE(date1 != date2);
+	REQUIRE(date2 == date3);
+	REQUIRE(date2 >= date3);
+	REQUIRE(date2 <= date3);
 }
 
 // negative
@@ -68,4 +84,39 @@ TEST_CASE("Cannot construct invalid date", "[invalid][date]")
 		createInvalidDate(),
 		std::invalid_argument,
 		Catch::Matchers::Message("Invalid date"));
+}
+
+TEST_CASE("Cannot overcome date limit", "[invalid][date]")
+{
+	auto earlyDate = CDate(1);
+
+	REQUIRE_THROWS_MATCHES(
+		earlyDate - 2,
+		std::out_of_range,
+		Catch::Matchers::Message("Date is out of range"));
+	REQUIRE_THROWS_MATCHES(
+		earlyDate -= 2,
+		std::out_of_range,
+		Catch::Matchers::Message("Date is out of range"));
+	--earlyDate;
+	REQUIRE_THROWS_MATCHES(
+		earlyDate--,
+		std::out_of_range,
+		Catch::Matchers::Message("Date is out of range"));
+
+	auto lateDate = CDate(30, Month::DECEMBER, 9999);
+
+	REQUIRE_THROWS_MATCHES(
+		lateDate + 2,
+		std::out_of_range,
+		Catch::Matchers::Message("Date is out of range"));
+	REQUIRE_THROWS_MATCHES(
+		lateDate += 2,
+		std::out_of_range,
+		Catch::Matchers::Message("Date is out of range"));
+	++lateDate;
+	REQUIRE_THROWS_MATCHES(
+		lateDate++,
+		std::out_of_range,
+		Catch::Matchers::Message("Date is out of range"));
 }
