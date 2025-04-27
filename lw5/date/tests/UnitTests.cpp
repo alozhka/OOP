@@ -106,6 +106,32 @@ TEST_CASE("Cannot construct invalid date", "[invalid][date]")
 		Catch::Matchers::Message("Invalid date"));
 }
 
+TEST_CASE("Cannot parse invalid date", "[invalid][date]")
+{
+	CDate date{};
+	CDate initialDate = date;
+
+	std::istringstream input("30.02.2005");
+	input >> date;
+	REQUIRE(input.fail());
+	REQUIRE(initialDate == date);
+
+	input = std::istringstream("15.121212");
+	input >> date;
+	REQUIRE(input.fail());
+	REQUIRE(initialDate == date);
+
+	input = std::istringstream("15.121212");
+	input >> date;
+	REQUIRE(input.fail());
+	REQUIRE(initialDate == date);
+
+	input = std::istringstream("15.12,1212");
+	input >> date;
+	REQUIRE(input.fail());
+	REQUIRE(initialDate == date);
+}
+
 TEST_CASE("Cannot overcome date limit", "[invalid][date]")
 {
 	auto earlyDate = CDate(1);
