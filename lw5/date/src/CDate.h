@@ -33,7 +33,7 @@ class CDate
 public:
 	// Инициализируем дату заданными днем, месяцем и годом.
 	// Примечание: год >= 1970
-	// CDate(unsigned day, Month month, unsigned year);
+	CDate(unsigned day, Month month, unsigned year);
 
 	// Инициализируем дату количеством дней, прошедших после 1 января 1970 года
 	// Например, 2 = 3 января 1970, 32 = 2 февраля 1970 года и т.д.
