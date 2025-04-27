@@ -1,4 +1,5 @@
 #pragma once
+#include <istream>
 
 enum class Month
 {
@@ -24,8 +25,7 @@ enum class WeekDay
 	THURSDAY,
 	FRIDAY,
 	SATURDAY,
-	SUNDAY,
-	INVALID
+	SUNDAY
 };
 
 class CDate
@@ -57,6 +57,9 @@ public:
 	bool operator>(const CDate& other) const;
 	bool operator<=(const CDate& other) const;
 	bool operator>=(const CDate& other) const;
+
+	friend std::istream& operator>>(std::istream& in, CDate& date);
+	friend std::ostream& operator<<(std::ostream& out, CDate& date);
 
 private:
 	unsigned m_timestamp;

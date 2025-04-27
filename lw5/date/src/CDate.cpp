@@ -239,3 +239,49 @@ bool CDate::operator>=(const CDate& other) const
 {
 	return !(*this < other);
 }
+
+std::istream& operator>>(std::istream& in, CDate& date)
+{
+	unsigned day, month, year;
+	char dot1, dot2;
+
+	in >> day >> dot1 >> month >> dot2 >> year;
+
+	if (in.fail())
+	{
+		return in;
+	}
+
+	if (dot1 != '.' || dot2 != '.')
+	{
+		in.setstate(std::ios_base::failbit);
+		return in;
+	}
+
+	try
+	{
+		date.m_timestamp = DateToTimestamp(day, static_cast<Month>(month), year);
+	}
+	catch (const std::invalid_argument&)
+	{
+		in.setstate(std::ios_base::failbit);
+	}
+
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& out, CDate& date)
+{
+	unsigned day, year;
+	Month month;
+	TimestampToDate(date.m_timestamp, day, month, year);
+	const auto monthNumber = static_cast<unsigned>(month);
+
+	out << (day < 10 ? "0" : "") << day
+		<< '.'
+		<< (monthNumber < 10 ? "0" : "") << monthNumber
+		<< '.'
+		<< year;
+
+	return out;
+}

@@ -58,7 +58,7 @@ TEST_CASE("Date can be decreased", "[date][converter]")
 	REQUIRE(2 == newDate.GetDay());
 }
 
-TEST_CASE("Can compare to dates", "[date][comparison]")
+TEST_CASE("Can compare dates together", "[date][comparison]")
 {
 	auto date1 = CDate(40);
 	auto date2 = CDate(20);
@@ -70,6 +70,26 @@ TEST_CASE("Can compare to dates", "[date][comparison]")
 	REQUIRE(date2 == date3);
 	REQUIRE(date2 >= date3);
 	REQUIRE(date2 <= date3);
+}
+
+TEST_CASE("Can parse date in `DD.MM.YYYY` format", "[date][parsing]")
+{
+	std::istringstream input("18.09.2024");
+	CDate date{};
+
+	input >> date;
+	REQUIRE(2024 == date.GetYear());
+	REQUIRE(Month::SEPTEMBER == date.GetMonth());
+	REQUIRE(18 == date.GetDay());
+}
+
+TEST_CASE("Can print date in stream", "[date][print]")
+{
+	std::ostringstream output{};
+	CDate date(31, Month::MARCH, 2002);
+
+	output << date;
+	REQUIRE(output.str() == "31.03.2002");
 }
 
 // negative
