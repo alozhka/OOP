@@ -14,7 +14,7 @@ public:
 
 	[[nodiscard]] size_t GetLength() const;
 	[[nodiscard]] const char* GetStringData() const;
-	CMyString SubString(size_t start, size_t length = SIZE_MAX) const;
+	[[nodiscard]] CMyString SubString(size_t start, size_t length = SIZE_MAX) const;
 	[[nodiscard]] size_t GetCapacity() const;
 
 	void Clear();

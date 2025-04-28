@@ -50,7 +50,7 @@ CMyString::CMyString(const CMyString& other)
 CMyString::CMyString(CMyString&& other) noexcept
 	: m_chars(std::exchange(other.m_chars, m_emptyString))
 	, m_size(std::exchange(other.m_size, 0))
-	, m_capacity(std::exchange(other.m_capacity, 0))
+	, m_capacity(std::exchange(other.m_capacity, 1))
 {
 }
 
@@ -79,9 +79,9 @@ const char* CMyString::GetStringData() const
 
 CMyString CMyString::SubString(size_t start, size_t length) const
 {
-	if (length + start > m_size)
+	if (start > length || length > m_size)
 	{
-		throw std::out_of_range("Invalid substring start position");
+		throw std::out_of_range("Invalid substring position");
 	}
 
 	return CMyString(m_chars + start, length);
