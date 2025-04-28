@@ -19,6 +19,25 @@ public:
 
 	void Clear();
 
+	bool operator==(const CMyString& other) const noexcept;
+	CMyString& operator=(const CMyString& other);
+	CMyString& operator=(CMyString&& other) noexcept;
+	std::strong_ordering operator<=>(const CMyString& other) const noexcept;
+
+	CMyString operator+(const CMyString& other) const;
+	CMyString operator+(const std::string& other) const;
+	CMyString operator+(const char* other) const;
+
+	/*
+	CMyString& operator+=(const CMyString& other);
+
+	const char& operator[](size_t index) const;
+	char& operator[](size_t index);
+
+	friend std::ostream& operator<<(std::ostream& os, const CMyString& str);
+	friend std::istream& operator>>(std::istream& is, CMyString& str);
+	*/
+
 private:
 	inline static char m_emptyString[] = { '\0' };
 

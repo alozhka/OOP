@@ -43,7 +43,7 @@ TEST_CASE("Can construct string", "[string][constructor]")
 	SECTION("Copy constructor")
 	{
 		CMyString initial("1234567");
-		CMyString copy = initial;
+		CMyString copy(initial);
 
 		CHECK(initial.GetCapacity() == initial.GetCapacity());
 		CHECK(initial.GetLength() == initial.GetLength());
@@ -53,7 +53,7 @@ TEST_CASE("Can construct string", "[string][constructor]")
 	SECTION("Move constructor")
 	{
 		CMyString initial("1234567");
-		CMyString copy = std::move(initial);
+		CMyString copy(std::move(initial));
 
 		CHECK(copy.GetCapacity() == 8);
 		CHECK(copy.GetLength() == 7);
@@ -93,4 +93,37 @@ TEST_CASE("Can perform operations")
 		CHECK(str.GetLength() == 0);
 		CHECK(std::strcmp(str.GetStringData(), "") == 0);
 	}
+}
+
+TEST_CASE("Compares all operators", "[string][comparison]")
+{
+	CMyString str1("123123");
+	CMyString str2("123412");
+	CMyString str3("123123");
+
+	CHECK(str1 == str1);
+	CHECK(str1 == str3);
+	CHECK_FALSE(str1 == str2);
+
+	CHECK(str1 != str2);
+	CHECK_FALSE(str1 != str3);
+	CHECK_FALSE(str2 != str2);
+
+	CHECK(str1 < str2);
+	CHECK_FALSE(str1 < str1);
+	CHECK_FALSE(str1 < str3);
+
+	CHECK(str1 <= str2);
+	CHECK(str1 <= str1);
+	CHECK(str1 <= str3);
+
+	CHECK_FALSE(str1 > str2);
+	CHECK_FALSE(str1 > str1);
+	CHECK_FALSE(str1 > str3);
+	CHECK(str2 > str1);
+
+	CHECK_FALSE(str1 >= str2);
+	CHECK(str1 >= str1);
+	CHECK(str1 >= str3);
+	CHECK(str2 >= str1);
 }
