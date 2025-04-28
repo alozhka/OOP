@@ -1,7 +1,7 @@
 #include <CMyString.h>
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("Can construct string", "[UnitTests]")
+TEST_CASE("Can construct string", "[string][constructor]")
 {
 	SECTION("Default constructor")
 	{
@@ -61,5 +61,36 @@ TEST_CASE("Can construct string", "[UnitTests]")
 		CHECK(initial.GetCapacity() == 0);
 		CHECK(initial.GetLength() == 0);
 		CHECK(std::strcmp(initial.GetStringData(), "") == 0);
+	}
+}
+
+TEST_CASE("Can perform operations")
+{
+	SECTION("Can compute substring", "[string][substring]")
+	{
+		CMyString initial("1234567");
+		CMyString substr = initial.SubString(2, 4);
+
+		CHECK(initial.GetCapacity() == 8);
+		CHECK(initial.GetLength() == 7);
+		CHECK(std::strcmp(initial.GetStringData(), "1234567") == 0);
+		CHECK(substr.GetCapacity() == 5);
+		CHECK(substr.GetLength() == 4);
+		CHECK(std::strcmp(substr.GetStringData(), "3456") == 0);
+	}
+
+	SECTION("Can clear string", "[string]")
+	{
+		CMyString str("1234567");
+
+		CHECK(str.GetCapacity() == 8);
+		CHECK(str.GetLength() == 7);
+		CHECK(std::strcmp(str.GetStringData(), "1234567") == 0);
+
+		str.Clear();
+
+		CHECK(str.GetCapacity() == 1);
+		CHECK(str.GetLength() == 0);
+		CHECK(std::strcmp(str.GetStringData(), "") == 0);
 	}
 }

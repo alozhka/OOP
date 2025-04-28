@@ -77,7 +77,29 @@ const char* CMyString::GetStringData() const
 	return m_chars;
 }
 
+CMyString CMyString::SubString(size_t start, size_t length) const
+{
+	if (length + start > m_size)
+	{
+		throw std::out_of_range("Invalid substring start position");
+	}
+
+
+	return CMyString(m_chars + start, length);
+}
+
 size_t CMyString::GetCapacity() const
 {
 	return m_capacity;
+}
+void CMyString::Clear()
+{
+	if (m_chars != m_emptyString)
+	{
+		ReleaseChars(m_chars);
+	}
+
+	m_capacity = 1;
+	m_size = 0;
+	m_chars = m_emptyString;
 }
