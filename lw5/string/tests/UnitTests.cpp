@@ -198,5 +198,29 @@ TEST_CASE("Performs operations")
 		CHECK(result.GetCapacity() == 8);
 		CHECK(result.GetLength() == 7);
 		CHECK(std::strcmp(result.GetStringData(), "123 456") == 0);
+
+		result = str1;
+		result += str2;
+
+		CHECK(result.GetCapacity() == 8);
+		CHECK(result.GetLength() == 7);
+		CHECK(std::strcmp(result.GetStringData(), "123 456") == 0);
+	}
+
+	SECTION("Access via number index")
+	{
+		CMyString str("123456");
+
+		CHECK(str[0] == '1');
+		str[0] = 'A';
+		CHECK(str[0] == 'A');
+		CHECK(std::strcmp(str.GetStringData(), "A23456") == 0);
+	}
+
+	SECTION("Cannot access via out of range index")
+	{
+		CMyString str("123456");
+
+		CHECK_THROWS_AS(str[7], std::out_of_range);
 	}
 }

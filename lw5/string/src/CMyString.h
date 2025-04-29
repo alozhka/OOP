@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <istream>
+#include <ostream>
 
 class CMyString
 {
@@ -28,15 +30,13 @@ public:
 	CMyString operator+(const std::string& other) const;
 	CMyString operator+(const char* other) const;
 
-	/*
 	CMyString& operator+=(const CMyString& other);
 
 	const char& operator[](size_t index) const;
 	char& operator[](size_t index);
 
-	friend std::ostream& operator<<(std::ostream& os, const CMyString& str);
-	friend std::istream& operator>>(std::istream& is, CMyString& str);
-	*/
+	friend std::ostream& operator<<(std::ostream& out, const CMyString& str);
+	friend std::istream& operator>>(std::istream& in, CMyString& str);
 
 private:
 	inline static char m_emptyString[] = { '\0' };

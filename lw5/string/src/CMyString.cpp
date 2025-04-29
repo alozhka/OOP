@@ -189,3 +189,50 @@ CMyString CMyString::operator+(const char* other) const
 {
 	return *this + CMyString(other);
 }
+
+CMyString& CMyString::operator+=(const CMyString& other)
+{
+	if (other.m_size + m_size >= m_capacity)
+	{
+		m_capacity = std::max(other.m_size + m_size + 1, m_capacity * 2);
+
+		const auto chars = AllocateChars(m_capacity);
+		std::memcpy(chars, m_chars, m_size);
+		m_chars = chars;
+	}
+
+	std::memcpy(m_chars + m_size, other.m_chars, other.m_size + 1);
+	m_size = m_size + other.m_size;
+
+	return *this;
+}
+
+const char& CMyString::operator[](size_t index) const
+{
+	if (index >= m_size)
+	{
+		throw std::out_of_range("Index is out of range");
+	}
+	return m_chars[index];
+}
+char& CMyString::operator[](size_t index)
+{
+	if (index >= m_size)
+	{
+		throw std::out_of_range("Index out of range");
+	}
+	return m_chars[index];
+}
+
+std::ostream& operator<<(std::ostream& out, const CMyString& str)
+{
+	return out << str.m_chars;
+}
+
+std::istream& operator>>(std::istream& in, CMyString& str)
+{
+	std::string word;
+	in >> word;
+	str = CMyString(word);
+	return in;
+}
