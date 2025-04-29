@@ -223,4 +223,21 @@ TEST_CASE("Performs operations")
 
 		CHECK_THROWS_AS(str[7], std::out_of_range);
 	}
+
+	SECTION("Work with streams")
+	{
+		std::ostringstream oss;
+		CMyString str("123 456");
+
+		oss << str;
+
+		CHECK(oss.str() == "123 456");
+
+		std::istringstream is("123test");
+		CMyString str2;
+
+		is >> str2;
+
+		CHECK(std::strcmp(str2.GetStringData(), "123test") == 0);
+	}
 }
