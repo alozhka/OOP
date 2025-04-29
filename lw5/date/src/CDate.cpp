@@ -44,6 +44,7 @@ void TimestampToDate(unsigned timestamp, unsigned& day, Month& month, unsigned& 
 	unsigned remainedTime = timestamp;
 
 	year = MIN_YEAR;
+	// сделать на формуле, убрать циклы
 	while (true)
 	{
 		unsigned daysInYear = IsLeapYear(year) ? DAYS_IN_LEAP_YEAR : DAYS_IN_YEAR;
@@ -203,6 +204,11 @@ CDate& CDate::operator-=(unsigned days)
 CDate CDate::operator+(unsigned days) const
 {
 	return CDate(m_timestamp + days);
+}
+
+CDate CDate::operator+(const CDate& date) const
+{
+	return *this + date.m_timestamp;
 }
 
 CDate CDate::operator-(unsigned days) const

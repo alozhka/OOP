@@ -79,7 +79,7 @@ const char* CMyString::GetStringData() const
 
 CMyString CMyString::SubString(size_t start, size_t length) const
 {
-	if (start > length || length > m_size)
+	if (length > m_size)
 	{
 		throw std::out_of_range("Invalid substring position");
 	}

@@ -49,6 +49,7 @@ public:
 	CDate& operator-=(unsigned days);
 
 	CDate operator+(unsigned days) const;
+	CDate operator+(const CDate& date) const;
 	CDate operator-(unsigned days) const;
 
 	bool operator==(const CDate& other) const;

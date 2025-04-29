@@ -125,7 +125,6 @@ TEST_CASE("Performs operations")
 	SECTION("Cannot compute out of range substring", "[string][substring][negative]")
 	{
 		CMyString initial("1234567");
-		CHECK_THROWS_AS(initial.SubString(3, 1), std::out_of_range);
 		CHECK_THROWS_AS(initial.SubString(5, 8), std::out_of_range);
 	}
 

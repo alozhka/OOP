@@ -97,7 +97,7 @@ TEST_CASE("Can print date in stream", "[date][print]")
 TEST_CASE("Cannot construct invalid date", "[invalid][date]")
 {
 	std::function createInvalidDate = [] {
-		return CDate(30, Month::FEBRUARY, 2005);
+		return CDate(29, Month::FEBRUARY, 2005);
 	};
 
 	REQUIRE_THROWS_MATCHES(
