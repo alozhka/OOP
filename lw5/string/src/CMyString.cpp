@@ -84,7 +84,7 @@ CMyString CMyString::SubString(size_t start, size_t length) const
 		throw std::out_of_range("Invalid substring position");
 	}
 
-	return CMyString(m_chars + start, length);
+	return { m_chars + start, length };
 }
 
 size_t CMyString::GetCapacity() const
@@ -222,6 +222,66 @@ char& CMyString::operator[](size_t index)
 		throw std::out_of_range("Index out of range");
 	}
 	return m_chars[index];
+}
+
+CMyString::Iterator CMyString::begin() noexcept
+{
+	return m_chars;
+}
+
+CMyString::Iterator CMyString::end() noexcept
+{
+	return m_chars + m_size;
+}
+
+CMyString::ConstIterator CMyString::begin() const noexcept
+{
+	return m_chars;
+}
+
+CMyString::ConstIterator CMyString::end() const noexcept
+{
+	return m_chars + m_size;
+}
+
+CMyString::ConstIterator CMyString::cbegin() const noexcept
+{
+	return begin();
+}
+
+CMyString::ConstIterator CMyString::cend() const noexcept
+{
+	return end();
+}
+
+CMyString::ReverseIterator CMyString::rbegin() noexcept
+{
+	return ReverseIterator(end());
+}
+
+CMyString::ReverseIterator CMyString::rend() noexcept
+{
+	return ReverseIterator(begin());
+}
+
+CMyString::ConstReverseIterator CMyString::rbegin() const noexcept
+{
+	return ConstReverseIterator(end());
+}
+
+CMyString::ConstReverseIterator CMyString::rend() const noexcept
+{
+	return ConstReverseIterator(begin());
+}
+
+CMyString::ConstReverseIterator CMyString::crbegin() const noexcept
+{
+	return ConstReverseIterator(end());
+}
+
+CMyString::ConstReverseIterator CMyString::crend() const noexcept
+{
+	return ConstReverseIterator(begin());
 }
 
 std::ostream& operator<<(std::ostream& out, const CMyString& str)

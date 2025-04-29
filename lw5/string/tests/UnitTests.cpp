@@ -1,5 +1,6 @@
 #include <CMyString.h>
 #include <catch2/catch_test_macros.hpp>
+#include <ranges>
 
 TEST_CASE("Constructs string", "[string][constructor]")
 {
@@ -239,5 +240,73 @@ TEST_CASE("Performs operations")
 		is >> str2;
 
 		CHECK(std::strcmp(str2.GetStringData(), "123test") == 0);
+	}
+}
+
+TEST_CASE("Supports_iterators")
+{
+	SECTION("Iterators point at the beginning and end")
+	{
+		CMyString str("123456");
+		CHECK(str.end() - str.begin() == 6);
+		CHECK(std::strcmp(str.begin(), "123456") == 0);
+	}
+
+	SECTION("Has range-based for")
+	{
+		CMyString str("123456");
+		std::string expectedResult = "123456";
+
+		int i = 0;
+		for (char ch : str)
+		{
+			CHECK(ch == expectedResult[i]);
+			i++;
+		}
+	}
+
+	SECTION("Iterators can be incremented and decremented")
+	{
+		CMyString str("123456");
+		auto it = str.begin();
+
+		CHECK(std::strcmp(it, "123456") == 0);
+		CHECK(*it == '1');
+
+		it++;
+
+		CHECK(std::strcmp(it, "23456") == 0);
+		CHECK(*it == '2');
+
+		it--;
+		CHECK(std::strcmp(it, "123456") == 0);
+		CHECK(*it == '1');
+	}
+
+	SECTION("Has reverse iterator")
+	{
+		CMyString str("123456");
+		std::string expectedResult = "654321";
+		std::string result;
+
+		for (char& i : std::ranges::reverse_view(str))
+		{
+			result += i;
+		}
+
+		CHECK(result == expectedResult);
+	}
+
+	SECTION("Has const iterators")
+	{
+		CMyString str("123456");
+		std::string result;
+
+		for (const char* i = str.cbegin(); i != str.cend(); ++i)
+		{
+			result += *i;
+		}
+
+		CHECK(result == "123456");
 	}
 }
