@@ -1,4 +1,5 @@
 #include "CHttpUrl.h"
+#include "СUrlParsingError.h"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/internal/catch_assertion_handler.hpp>
 #include <catch2/internal/catch_compiler_capabilities.hpp>
@@ -65,6 +66,17 @@ TEST_CASE("Constructs HTTP URL", "[url][ctor]")
 
 TEST_CASE("Cannot construct HTTP URL with invalid data", "[negative][url][ctor]")
 {
+	SECTION("Invalid url")
+	{
+		CHECK_THROWS_MATCHES(
+			CHttpUrl{"htt://ya.ru/images/image.webp"},
+			СUrlParsingError,
+			Catch::Matchers::Message("Invalid URL format"));
+		CHECK_THROWS_MATCHES(
+			CHttpUrl{"http://ya.ru:99999/images/image.webp"},
+			std::invalid_argument,
+			Catch::Matchers::Message("Port must be in [1, 65535]"));
+	}
 	SECTION("Invalid domain")
 	{
 		CHECK_THROWS_MATCHES(

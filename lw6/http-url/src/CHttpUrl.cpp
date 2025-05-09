@@ -8,11 +8,46 @@
 namespace
 {
 constexpr unsigned short MIN_PORT = 1;
+constexpr unsigned short MAX_PORT = 65535;
 const std::regex URL_REGEX(R"((http|https)://([^/:]+)(:(\d+))?(/.*)?)", std::regex_constants::icase);
 
 unsigned short GetDefaultPort(const Protocol& protocol)
 {
 	return protocol == Protocol::HTTPS ? 443 : 80;
+}
+
+Protocol ParseProtocol(std::string_view protocolStr)
+{
+	std::string str = protocolStr.data();
+	std::ranges::transform(str, str.begin(), tolower);
+
+	if (protocolStr == "http")
+	{
+		return Protocol::HTTP;
+	}
+	if (protocolStr == "https")
+	{
+		return Protocol::HTTPS;
+	}
+
+	throw std::invalid_argument("Invalid protocol");
+}
+
+unsigned short ParsePort(std::string_view portStr, const Protocol& protocol)
+{
+	if (portStr.empty())
+	{
+		return GetDefaultPort(protocol);
+	}
+
+	int port = std::stoi(portStr.data());
+
+	if (port < MIN_PORT || port > MAX_PORT)
+	{
+		throw std::invalid_argument("Port must be in [1, 65535]");
+	}
+
+	return port;
 }
 } // namespace
 
@@ -24,22 +59,10 @@ CHttpUrl::CHttpUrl(const std::string& url)
 		throw СUrlParsingError("Invalid URL format");
 	}
 
-	std::string protocolStr = match[1];
-	std::ranges::transform(protocolStr, protocolStr.begin(), tolower);
-
-	if (protocolStr == "http")
-	{
-		m_protocol = Protocol::HTTP;
-	}
-	else if (protocolStr == "https")
-	{
-		m_protocol = Protocol::HTTPS;
-	}
-
+	m_protocol = ParseProtocol(match[1].str());
 	m_domain = match[2];
 	m_document = match[5];
-	std::string portStr = match[4];
-	m_port = portStr.empty() ? GetDefaultPort(m_protocol) : std::stoi(portStr);
+	m_port = ParsePort(match[4].str(), m_protocol);
 }
 
 CHttpUrl::CHttpUrl(const std::string& domain, const std::string& document, Protocol protocol)
