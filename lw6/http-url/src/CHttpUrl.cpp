@@ -4,7 +4,9 @@
 
 namespace
 {
-unsigned short GetDefaultProtocolPort(const Protocol& protocol)
+constexpr unsigned short MIN_PORT = 1;
+
+unsigned short GetDefaultPort(const Protocol& protocol)
 {
 	return protocol == Protocol::HTTPS ? 443 : 80;
 }
@@ -16,10 +18,28 @@ CHttpUrl::CHttpUrl(const std::string& url)
 
 CHttpUrl::CHttpUrl(const std::string& domain, const std::string& document, Protocol protocol)
 {
+	if (domain.empty())
+	{
+		throw std::invalid_argument("Domain cannot be empty");
+	}
+
+	m_domain = domain;
+	m_document = document;
+	m_protocol = protocol;
+	m_port = GetDefaultPort(protocol);
 }
 
 CHttpUrl::CHttpUrl(const std::string& domain, const std::string& document, Protocol protocol, unsigned short port)
 {
+	if (domain.empty())
+	{
+		throw std::invalid_argument("Domain cannot be empty");
+	}
+	if (port < MIN_PORT)
+	{
+		throw std::invalid_argument("Port must be in [1, 65535]");
+	}
+
 	m_domain = domain;
 	m_document = document;
 	m_protocol = protocol;
@@ -31,7 +51,7 @@ std::string CHttpUrl::GetUrl() const
 	std::ostringstream url;
 	url << (m_protocol == Protocol::HTTP ? "http" : "https") << "://" << m_domain;
 
-	if (m_port != GetDefaultProtocolPort(m_protocol))
+	if (m_port != GetDefaultPort(m_protocol))
 	{
 		url << ":" << m_port;
 	}
