@@ -13,7 +13,7 @@
 
 TEST_CASE("Constructs HTTP URL", "[url][ctor]")
 {
-	SECTION("From all data specified")
+	SECTION("From specified components")
 	{
 		CHttpUrl url{ "ya.ru", "/images/image.webp", Protocol::HTTPS, 9884 };
 
@@ -22,6 +22,25 @@ TEST_CASE("Constructs HTTP URL", "[url][ctor]")
 		CHECK("/images/image.webp" == url.GetDocument());
 		CHECK(Protocol::HTTPS == url.GetProtocol());
 		CHECK(9884 == url.GetPort());
+	}
+
+	SECTION("Components with no port")
+	{
+		CHttpUrl http{ "ya.ru", "/images/image.webp" };
+
+		CHECK("http://ya.ru/images/image.webp" == http.GetUrl());
+		CHECK("ya.ru" == http.GetDomain());
+		CHECK("/images/image.webp" == http.GetDocument());
+		CHECK(Protocol::HTTP == http.GetProtocol());
+		CHECK(80 == http.GetPort());
+
+		CHttpUrl https{ "ya.ru", "/images/image.webp", Protocol::HTTPS };
+
+		CHECK("https://ya.ru/images/image.webp" == https.GetUrl());
+		CHECK("ya.ru" == https.GetDomain());
+		CHECK("/images/image.webp" == https.GetDocument());
+		CHECK(Protocol::HTTPS == https.GetProtocol());
+		CHECK(443 == https.GetPort());
 	}
 }
 
