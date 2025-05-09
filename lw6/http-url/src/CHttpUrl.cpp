@@ -1,10 +1,14 @@
 #include "CHttpUrl.h"
 
+#include "СUrlParsingError.h"
+
+#include <regex>
 #include <sstream>
 
 namespace
 {
 constexpr unsigned short MIN_PORT = 1;
+const std::regex URL_REGEX(R"((http|https)://([^/:]+)(:(\d+))?(/.*)?)", std::regex_constants::icase);
 
 unsigned short GetDefaultPort(const Protocol& protocol)
 {
@@ -14,6 +18,28 @@ unsigned short GetDefaultPort(const Protocol& protocol)
 
 CHttpUrl::CHttpUrl(const std::string& url)
 {
+	std::smatch match;
+	if (!std::regex_match(url, match, URL_REGEX))
+	{
+		throw СUrlParsingError("Invalid URL format");
+	}
+
+	std::string protocolStr = match[1];
+	std::ranges::transform(protocolStr, protocolStr.begin(), tolower);
+
+	if (protocolStr == "http")
+	{
+		m_protocol = Protocol::HTTP;
+	}
+	else if (protocolStr == "https")
+	{
+		m_protocol = Protocol::HTTPS;
+	}
+
+	m_domain = match[2];
+	m_document = match[5];
+	std::string portStr = match[4];
+	m_port = portStr.empty() ? GetDefaultPort(m_protocol) : std::stoi(portStr);
 }
 
 CHttpUrl::CHttpUrl(const std::string& domain, const std::string& document, Protocol protocol)
