@@ -12,7 +12,7 @@ void CheckList(const CStringList& list, const std::vector<std::string>& values)
 	}
 }
 
-TEST_CASE("Inserts values in beginning or end", "[list][insert]")
+TEST_CASE("Inserts values", "[list][insert]")
 {
 	CStringList list;
 
@@ -27,4 +27,12 @@ TEST_CASE("Inserts values in beginning or end", "[list][insert]")
 	list.PushFront("My");
 
 	CheckList(list, { "My", "hello", "world" });
+
+	auto it = list.begin();
+	list.Insert(it, "First");
+	++it;
+	++it;
+	list.Insert(it, "beautiful");
+
+	CheckList(list, { "First", "My", "hello", "beautiful", "world" });
 }

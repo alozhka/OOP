@@ -16,11 +16,12 @@ public:
 	class Iterator;
 	class ConstIterator;
 
-	Iterator begin() const noexcept { return Iterator(m_head); }
-	Iterator end() const noexcept { return Iterator(nullptr); }
+	Iterator Insert(Iterator it, const std::string& str);
 
+	Iterator begin() const noexcept { return Iterator(m_head); }
+	static Iterator end() noexcept { return Iterator(nullptr); }
 	ConstIterator cbegin() const noexcept { return ConstIterator(m_head); }
-	ConstIterator cend() const noexcept { return ConstIterator(nullptr); }
+	static ConstIterator cend() noexcept { return ConstIterator(nullptr); }
 
 	class Iterator
 	{
@@ -40,6 +41,7 @@ public:
 		bool operator!=(const Iterator& other) const noexcept { return m_node != other.m_node; }
 
 	private:
+		friend class CStringList;
 		Node* m_node;
 	};
 
