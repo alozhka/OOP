@@ -34,3 +34,21 @@ void CStringList::PushBack(const std::string& str) noexcept
 	m_tail = newNode;
 	++m_size;
 }
+
+void CStringList::PushFront(const std::string& str) noexcept
+{
+	auto newNode = new Node(str);
+	newNode->m_next = m_head;
+
+	if (m_head)
+	{
+		m_head->m_prev = newNode;
+	}
+	else
+	{
+		m_tail = newNode;
+	}
+
+	m_head = newNode;
+	++m_size;
+}
