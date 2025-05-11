@@ -53,6 +53,20 @@ void CStringList::PushFront(const std::string& str) noexcept
 	++m_size;
 }
 
+void CStringList::Clear() noexcept
+{
+	while (m_head)
+	{
+		Node* temp = m_head;
+		m_head = m_head->m_next;
+		delete temp;
+	}
+
+	m_head = nullptr;
+	m_tail = nullptr;
+	m_size = 0;
+}
+
 CStringList::Iterator CStringList::Insert(Iterator it, const std::string& str)
 {
 	if (!it.m_node)

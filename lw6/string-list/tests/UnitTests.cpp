@@ -35,4 +35,21 @@ TEST_CASE("Inserts values", "[list][insert]")
 	list.Insert(it, "beautiful");
 
 	CheckList(list, { "First", "My", "hello", "beautiful", "world" });
+	CHECK(!list.IsEmpty());
+	CHECK(5 == list.GetSize());
+}
+
+TEST_CASE("Can clear list", "[list][clear]")
+{
+	CStringList list;
+	list.PushBack("world");
+	list.PushFront("hello");
+
+	CHECK(!list.IsEmpty());
+	CHECK(2 == list.GetSize());
+
+	list.Clear();
+
+	CHECK(list.IsEmpty());
+	CheckList(list, {});
 }

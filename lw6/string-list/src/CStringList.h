@@ -11,6 +11,7 @@ public:
 
 	void PushBack(const std::string& str) noexcept;
 	void PushFront(const std::string& str) noexcept;
+	void Clear() noexcept;
 
 	struct Node;
 	class Iterator;
