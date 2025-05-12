@@ -5,6 +5,11 @@ class CStringList
 {
 public:
 	CStringList() noexcept;
+	CStringList(const CStringList& list);
+	CStringList(CStringList&& list) noexcept;
+
+	CStringList& operator=(const CStringList& list);
+	CStringList& operator=(CStringList&& list) noexcept;
 
 	bool IsEmpty() const noexcept;
 	size_t GetSize() const noexcept;
@@ -73,6 +78,9 @@ public:
 	};
 
 private:
+	void Copy(const CStringList& list);
+	void Move(CStringList&& list);
+
 	Node* m_head;
 	Node* m_tail;
 	size_t m_size;

@@ -1,10 +1,52 @@
 #include "CStringList.h"
 
+namespace
+{
+
+}
+
 CStringList::CStringList() noexcept
 	: m_head(nullptr)
 	, m_tail(nullptr)
 	, m_size(0)
 {
+}
+
+CStringList::CStringList(const CStringList& list)
+	: m_head(nullptr)
+	, m_tail(nullptr)
+	, m_size(0)
+{
+	Copy(list);
+}
+
+CStringList::CStringList(CStringList&& list) noexcept
+	: m_head(nullptr)
+	, m_tail(nullptr)
+	, m_size(0)
+{
+	Move(std::move(list));
+}
+
+CStringList& CStringList::operator=(const CStringList& list)
+{
+	if (this != &list)
+	{
+		Copy(list);
+	}
+
+	return *this;
+}
+
+CStringList& CStringList::operator=(CStringList&& list) noexcept
+{
+	if (this != &list)
+	{
+		Clear();
+		Move(std::move(list));
+	}
+
+	return *this;
 }
 
 bool CStringList::IsEmpty() const noexcept
@@ -92,4 +134,23 @@ CStringList::Iterator CStringList::Insert(Iterator it, const std::string& str)
 
 	++m_size;
 	return Iterator(newNode);
+}
+
+void CStringList::Copy(const CStringList& list)
+{
+	for (const std::string& value : list)
+	{
+		PushBack(value);
+	}
+}
+
+void CStringList::Move(CStringList&& list)
+{
+	m_head = list.m_head;
+	m_tail = list.m_tail;
+	m_size = list.m_size;
+
+	list.m_head = nullptr;
+	list.m_tail = nullptr;
+	list.m_size = 0;
 }

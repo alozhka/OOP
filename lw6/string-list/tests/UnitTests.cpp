@@ -12,6 +12,18 @@ void CheckList(const CStringList& list, const std::vector<std::string>& values)
 	}
 }
 
+void CheckEquality(const CStringList& left, const CStringList& right)
+{
+	CHECK(left.GetSize() == right.GetSize());
+
+	auto it = left.begin();
+	for (std::string value : right)
+	{
+		CHECK(*it == value);
+		++it;
+	}
+}
+
 TEST_CASE("Inserts values", "[list][insert]")
 {
 	CStringList list;
@@ -51,5 +63,61 @@ TEST_CASE("Can clear list", "[list][clear]")
 	list.Clear();
 
 	CHECK(list.IsEmpty());
+	CHECK(0 == list.GetSize());
 	CheckList(list, {});
+}
+
+TEST_CASE("Can be created differently", "[list][ctor][assign]")
+{
+	SECTION("Copying constructor")
+	{
+		CStringList list;
+		list.PushBack("hello");
+		list.PushBack("world");
+
+		CStringList copy(list);
+
+		CheckEquality(list, copy);
+	}
+
+	SECTION("Moving constructor")
+	{
+		CStringList initial;
+		initial.PushBack("hello");
+		initial.PushBack("world");
+
+		CStringList moved(std::move(initial));
+
+		CHECK(!moved.IsEmpty());
+		CheckList(moved, { "hello", "world" });
+		CHECK(initial.IsEmpty());
+		CheckList(initial, {});
+	}
+
+	SECTION("Copying assignment")
+	{
+		CStringList initial;
+		initial.PushBack("hello");
+		initial.PushBack("world");
+		CStringList copy;
+
+		copy = initial;
+
+		CheckEquality(copy, initial);
+	}
+
+	SECTION("Moving assignment")
+	{
+		CStringList initial;
+		initial.PushBack("hello");
+		initial.PushBack("world");
+		CStringList moved;
+
+		moved = std::move(initial);
+
+		CHECK(!moved.IsEmpty());
+		CheckList(moved, { "hello", "world" });
+		CHECK(initial.IsEmpty());
+		CheckList(initial, {});
+	}
 }
