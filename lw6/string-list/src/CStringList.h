@@ -7,6 +7,7 @@ public:
 	CStringList() noexcept;
 	CStringList(const CStringList& list);
 	CStringList(CStringList&& list) noexcept;
+	~CStringList() noexcept;
 
 	CStringList& operator=(const CStringList& list);
 	CStringList& operator=(CStringList&& list) noexcept;

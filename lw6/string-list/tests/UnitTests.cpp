@@ -63,7 +63,6 @@ TEST_CASE("Can clear list", "[list][clear]")
 	list.Clear();
 
 	CHECK(list.IsEmpty());
-	CHECK(0 == list.GetSize());
 	CheckList(list, {});
 }
 

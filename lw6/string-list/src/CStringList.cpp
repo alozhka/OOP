@@ -28,6 +28,17 @@ CStringList::CStringList(CStringList&& list) noexcept
 	Move(std::move(list));
 }
 
+CStringList::~CStringList() noexcept
+{
+	try
+	{
+		Clear();
+	}
+	catch (...)
+	{
+	}
+}
+
 CStringList& CStringList::operator=(const CStringList& list)
 {
 	if (this != &list)
