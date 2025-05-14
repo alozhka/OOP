@@ -66,6 +66,20 @@ TEST_CASE("Can clear list", "[list][clear]")
 	CheckList(list, {});
 }
 
+TEST_CASE("Clears specified element", "[list][clear]")
+{
+	CStringList list;
+	list.PushBack("hello");
+	list.PushBack("this");
+	list.PushBack("beautiful");
+	list.PushBack("world");
+
+	auto it = list.begin();
+	list.Erase(++it);
+
+	CheckList(list, { "hello", "beautiful", "world" });
+}
+
 TEST_CASE("Can be created differently", "[list][ctor][assign]")
 {
 	SECTION("Copying constructor")

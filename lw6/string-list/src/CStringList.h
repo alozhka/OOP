@@ -24,11 +24,12 @@ public:
 	class ConstIterator;
 
 	Iterator Insert(Iterator it, const std::string& str);
+	Iterator Erase(Iterator it);
 
 	Iterator begin() const noexcept { return Iterator(m_head); }
-	static Iterator end() noexcept { return Iterator(nullptr); }
+	Iterator end() const noexcept { return Iterator(nullptr); }
 	ConstIterator cbegin() const noexcept { return ConstIterator(m_head); }
-	static ConstIterator cend() noexcept { return ConstIterator(nullptr); }
+	ConstIterator cend() const noexcept { return ConstIterator(nullptr); }
 
 	class Iterator
 	{
@@ -41,6 +42,10 @@ public:
 		std::string operator*() const noexcept { return m_node->m_value; }
 		const Iterator& operator++() noexcept
 		{
+			if (m_node == nullptr)
+			{
+				throw std::out_of_range("Iterator is out of range");
+			}
 			m_node = m_node->m_next;
 			return *this;
 		}

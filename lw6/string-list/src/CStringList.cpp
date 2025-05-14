@@ -1,10 +1,5 @@
 #include "CStringList.h"
 
-namespace
-{
-
-}
-
 CStringList::CStringList() noexcept
 	: m_head(nullptr)
 	, m_tail(nullptr)
@@ -145,6 +140,36 @@ CStringList::Iterator CStringList::Insert(Iterator it, const std::string& str)
 
 	++m_size;
 	return Iterator(newNode);
+}
+
+CStringList::Iterator CStringList::Erase(Iterator it)
+{
+	if (!it.m_node)
+	{
+		throw std::out_of_range("Iterator is out of range");
+	}
+
+	if (it.m_node->m_prev)
+	{
+		it.m_node->m_prev->m_next = it.m_node->m_next;
+	}
+	else
+	{
+		m_head = it.m_node->m_next;
+	}
+	if (it.m_node->m_next)
+	{
+		it.m_node->m_next->m_prev = it.m_node->m_prev;
+	}
+	else
+	{
+		m_tail = it.m_node->m_prev;
+	}
+	--m_size;
+
+	Node* next = it.m_node->m_next;
+	delete it.m_node;
+	return Iterator(next);
 }
 
 void CStringList::Copy(const CStringList& list)
