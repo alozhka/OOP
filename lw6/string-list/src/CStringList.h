@@ -22,6 +22,8 @@ public:
 	struct Node;
 	class Iterator;
 	class ConstIterator;
+	class ReverseIterator;
+	class ConstReverseIterator;
 
 	Iterator Insert(Iterator it, const std::string& str);
 	Iterator Erase(Iterator it);
@@ -30,6 +32,11 @@ public:
 	Iterator end() const noexcept { return Iterator(nullptr); }
 	ConstIterator cbegin() const noexcept { return ConstIterator(m_head); }
 	ConstIterator cend() const noexcept { return ConstIterator(nullptr); }
+
+	ReverseIterator rbegin() const noexcept { return ReverseIterator(m_tail); }
+	ReverseIterator rend() const noexcept { return ReverseIterator(nullptr); }
+	ConstReverseIterator crbegin() const noexcept { return ConstReverseIterator(m_tail); }
+	ConstReverseIterator crend() const noexcept { return ConstReverseIterator(nullptr); }
 
 	class Iterator
 	{
@@ -65,8 +72,82 @@ public:
 		{
 		}
 
+		std::string operator*() const noexcept { return m_node->m_value; }
+		const ConstIterator& operator++() noexcept
+		{
+			if (m_node == nullptr)
+			{
+				throw std::out_of_range("Iterator is out of range");
+			}
+			m_node = m_node->m_next;
+			return *this;
+		}
+		ConstIterator& operator--()
+		{
+			if (m_node == nullptr)
+			{
+				throw std::out_of_range("Iterator is out of range");
+			}
+			m_node = m_node->m_prev;
+			return *this;
+		}
+		bool operator==(const ConstIterator& other) const noexcept { return m_node == other.m_node; }
+		bool operator!=(const ConstIterator& other) const noexcept { return m_node != other.m_node; }
+
 	private:
 		const Node* m_node;
+	};
+
+	class ReverseIterator
+	{
+	public:
+		explicit ReverseIterator(Node* node)
+			: m_node(node)
+		{
+		}
+
+		std::string operator*() const noexcept { return m_node->m_value; }
+		const ReverseIterator& operator++() noexcept
+		{
+			if (m_node == nullptr)
+			{
+				throw std::out_of_range("Iterator is out of range");
+			}
+			m_node = m_node->m_prev;
+			return *this;
+		}
+		bool operator==(const ReverseIterator& other) const noexcept { return m_node == other.m_node; }
+		bool operator!=(const ReverseIterator& other) const noexcept { return m_node != other.m_node; }
+
+	private:
+		friend class CStringList;
+		Node* m_node;
+	};
+
+	class ConstReverseIterator
+	{
+	public:
+		explicit ConstReverseIterator(Node* node)
+			: m_node(node)
+		{
+		}
+
+		std::string operator*() const noexcept { return m_node->m_value; }
+		const ConstReverseIterator& operator++() noexcept
+		{
+			if (m_node == nullptr)
+			{
+				throw std::out_of_range("Iterator is out of range");
+			}
+			m_node = m_node->m_prev;
+			return *this;
+		}
+		bool operator==(const ConstReverseIterator& other) const noexcept { return m_node == other.m_node; }
+		bool operator!=(const ConstReverseIterator& other) const noexcept { return m_node != other.m_node; }
+
+	private:
+		friend class CStringList;
+		Node* m_node;
 	};
 
 	struct Node

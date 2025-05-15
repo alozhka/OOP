@@ -1,5 +1,6 @@
 #include "CStringList.h"
-#include "catch2/catch_test_macros.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
 
 void CheckList(const CStringList& list, const std::vector<std::string>& values)
 {
@@ -80,6 +81,20 @@ TEST_CASE("Clears specified element", "[list][clear]")
 	CheckList(list, { "hello", "beautiful", "world" });
 }
 
+// negative
+TEST_CASE("Cannot clear element out of range", "[list][clear]")
+{
+	CStringList list;
+	list.PushBack("hello");
+	list.PushBack("beautiful");
+
+	auto it = list.begin();
+	++it;
+	++it;
+
+	CHECK_THROWS_AS(list.Erase(it), std::out_of_range);
+}
+
 TEST_CASE("Can be created differently", "[list][ctor][assign]")
 {
 	SECTION("Copying constructor")
@@ -133,4 +148,20 @@ TEST_CASE("Can be created differently", "[list][ctor][assign]")
 		CHECK(initial.IsEmpty());
 		CheckList(initial, {});
 	}
+}
+
+TEST_CASE("Can be iterated", "[list][iterators]")
+{
+	CStringList list;
+	list.PushBack("Hello");
+	list.PushBack("Beautiful");
+	list.PushBack("World");
+
+	std::string result;
+	for (auto it = list.rbegin(); it != list.rend(); ++it)
+	{
+		result += *it;
+	}
+
+	CHECK("WorldBeautifulHello" == result);
 }
