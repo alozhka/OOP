@@ -41,21 +41,10 @@ public:
 	class Iterator
 	{
 	public:
-		explicit Iterator(Node* node)
-			: m_node(node)
-		{
-		}
+		explicit Iterator(Node* node);
 
-		std::string operator*() const noexcept { return m_node->m_value; }
-		const Iterator& operator++() noexcept
-		{
-			if (m_node == nullptr)
-			{
-				throw std::out_of_range("Iterator is out of range");
-			}
-			m_node = m_node->m_next;
-			return *this;
-		}
+		std::string operator*() const noexcept;
+		Iterator& operator++() noexcept;
 		bool operator==(const Iterator& other) const noexcept { return m_node == other.m_node; }
 		bool operator!=(const Iterator& other) const noexcept { return m_node != other.m_node; }
 
