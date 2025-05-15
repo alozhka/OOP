@@ -69,11 +69,11 @@ TEST_CASE("Cannot construct HTTP URL with invalid data", "[negative][url][ctor]"
 	SECTION("Invalid url")
 	{
 		CHECK_THROWS_MATCHES(
-			CHttpUrl{"htt://ya.ru/images/image.webp"},
+			CHttpUrl{ "htt://ya.ru/images/image.webp" },
 			СUrlParsingError,
 			Catch::Matchers::Message("Invalid URL format"));
 		CHECK_THROWS_MATCHES(
-			CHttpUrl{"http://ya.ru:99999/images/image.webp"},
+			CHttpUrl{ "http://ya.ru:99999/images/image.webp" },
 			std::invalid_argument,
 			Catch::Matchers::Message("Port must be in [1, 65535]"));
 	}
@@ -91,6 +91,16 @@ TEST_CASE("Cannot construct HTTP URL with invalid data", "[negative][url][ctor]"
 			std::invalid_argument,
 			Catch::Matchers::Message("Port must be in [1, 65535]"));
 	}
+}
+
+TEST_CASE("Protocol case does not matter")
+{
+	CHttpUrl http{ "hTtP://ya.ru/images/image.webp" };
+
+	CHECK(Protocol::HTTP == http.GetProtocol());
+	CHttpUrl https{ "hTtPS://ya.ru/images/image.webp" };
+
+	CHECK(Protocol::HTTPS == https.GetProtocol());
 }
 
 // проверка на разные регистры протокола

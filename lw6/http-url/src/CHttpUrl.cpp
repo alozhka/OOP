@@ -22,11 +22,11 @@ Protocol ParseProtocol(std::string_view protocolStr)
 	std::string str = protocolStr.data();
 	std::ranges::transform(str, str.begin(), tolower);
 
-	if (protocolStr == "http")
+	if (str == "http")
 	{
 		return Protocol::HTTP;
 	}
-	if (protocolStr == "https")
+	if (str == "https")
 	{
 		return Protocol::HTTPS;
 	}
@@ -42,7 +42,15 @@ unsigned short ParsePort(std::string_view portStr, const Protocol& protocol)
 	}
 
 	// может быть исключение
-	int port = std::stoi(portStr.data());
+	int port = 0;
+	try
+	{
+		port = std::stoi(portStr.data());
+	}
+	catch (std::exception& e)
+	{
+		throw std::invalid_argument("Invalid port");
+	}
 
 	if (port < MIN_PORT || port > MAX_PORT)
 	{
