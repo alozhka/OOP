@@ -90,23 +90,12 @@ public:
 	class ReverseIterator
 	{
 	public:
-		explicit ReverseIterator(Node* node)
-			: m_node(node)
-		{
-		}
+		explicit ReverseIterator(Node* node);
 
-		std::string operator*() const noexcept { return m_node->m_value; }
-		const ReverseIterator& operator++() noexcept
-		{
-			if (m_node == nullptr)
-			{
-				throw std::out_of_range("Iterator is out of range");
-			}
-			m_node = m_node->m_prev;
-			return *this;
-		}
-		bool operator==(const ReverseIterator& other) const noexcept { return m_node == other.m_node; }
-		bool operator!=(const ReverseIterator& other) const noexcept { return m_node != other.m_node; }
+		std::string operator*() const noexcept;
+		const ReverseIterator& operator++() noexcept;
+		bool operator==(const ReverseIterator& other) const noexcept;
+		bool operator!=(const ReverseIterator& other) const noexcept;
 
 	private:
 		friend class CStringList;
