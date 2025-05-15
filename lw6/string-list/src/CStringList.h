@@ -45,8 +45,8 @@ public:
 
 		std::string operator*() const noexcept;
 		Iterator& operator++() noexcept;
-		bool operator==(const Iterator& other) const noexcept { return m_node == other.m_node; }
-		bool operator!=(const Iterator& other) const noexcept { return m_node != other.m_node; }
+		bool operator==(const Iterator& other) const noexcept;
+		bool operator!=(const Iterator& other) const noexcept;
 
 	private:
 		friend class CStringList;

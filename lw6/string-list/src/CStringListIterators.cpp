@@ -19,3 +19,13 @@ CStringList::Iterator& CStringList::Iterator::operator++() noexcept
 	m_node = m_node->m_next;
 	return *this;
 }
+
+bool CStringList::Iterator::operator==(const Iterator& other) const noexcept
+{
+	return m_node == other.m_node;
+}
+
+bool CStringList::Iterator::operator!=(const Iterator& other) const noexcept
+{
+	return m_node != other.m_node;
+}
