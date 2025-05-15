@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
 
+// CompareListAndVector
 void CheckList(const CStringList& list, const std::vector<std::string>& values)
 {
 	CHECK(list.GetSize() == values.size());
@@ -13,6 +14,7 @@ void CheckList(const CStringList& list, const std::vector<std::string>& values)
 	}
 }
 
+// CompareLists
 void CheckEquality(const CStringList& left, const CStringList& right)
 {
 	CHECK(left.GetSize() == right.GetSize());
@@ -94,6 +96,7 @@ TEST_CASE("Cannot clear element out of range", "[list][clear]")
 
 	CHECK_THROWS_AS(list.Erase(it), std::out_of_range);
 }
+// протестировать итераторы
 
 TEST_CASE("Can be created differently", "[list][ctor][assign]")
 {
@@ -148,6 +151,8 @@ TEST_CASE("Can be created differently", "[list][ctor][assign]")
 		CHECK(initial.IsEmpty());
 		CheckList(initial, {});
 	}
+	// self copy, self movement
+	// self copy, self movement пустых списков
 }
 
 TEST_CASE("Can be iterated", "[list][iterators]")
@@ -158,10 +163,13 @@ TEST_CASE("Can be iterated", "[list][iterators]")
 	list.PushBack("World");
 
 	std::string result;
-	for (auto it = list.rbegin(); it != list.rend(); ++it)
+	for (std::string element : list)
 	{
-		result += *it;
+		result += element;
 	}
 
-	CHECK("WorldBeautifulHello" == result);
+
+	CHECK("HelloBeautifulWorld" == result);
 }
+
+// тесты на другие алгоритмы stl

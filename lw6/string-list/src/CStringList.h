@@ -38,6 +38,7 @@ public:
 	ConstReverseIterator crbegin() const noexcept { return ConstReverseIterator(m_tail); }
 	ConstReverseIterator crend() const noexcept { return ConstReverseIterator(nullptr); }
 
+	// избавить от дублирования в итераторах
 	class Iterator
 	{
 	public:
@@ -78,7 +79,6 @@ public:
 		bool operator!=(const ReverseIterator& other) const noexcept;
 
 	private:
-		friend class CStringList;
 		Node* m_node;
 	};
 
@@ -104,7 +104,6 @@ public:
 		bool operator!=(const ConstReverseIterator& other) const noexcept { return m_node != other.m_node; }
 
 	private:
-		friend class CStringList;
 		const Node* m_node;
 	};
 
@@ -126,6 +125,7 @@ private:
 	void Copy(const CStringList& list);
 	void Move(CStringList&& list);
 
+	// перенести создание сюда
 	Node* m_head;
 	Node* m_tail;
 	size_t m_size;

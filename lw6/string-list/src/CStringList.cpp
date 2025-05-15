@@ -180,6 +180,7 @@ void CStringList::Copy(const CStringList& list)
 	}
 }
 
+// убрать rvalue
 void CStringList::Move(CStringList&& list)
 {
 	m_head = list.m_head;

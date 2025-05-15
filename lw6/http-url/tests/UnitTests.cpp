@@ -92,3 +92,7 @@ TEST_CASE("Cannot construct HTTP URL with invalid data", "[negative][url][ctor]"
 			Catch::Matchers::Message("Port must be in [1, 65535]"));
 	}
 }
+
+// проверка на разные регистры протокола
+// добавление / в конец
+// разные символы в документе в домене (@, #)
