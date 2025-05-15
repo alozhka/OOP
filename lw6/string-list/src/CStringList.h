@@ -125,7 +125,7 @@ public:
 
 	private:
 		friend class CStringList;
-		Node* m_node;
+		const Node* m_node;
 	};
 
 	struct Node
