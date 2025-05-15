@@ -9,8 +9,7 @@ namespace
 {
 constexpr unsigned short MIN_PORT = 1;
 constexpr unsigned short MAX_PORT = 65535;
-const std::regex URL_REGEX(R"((http|https)://([^/:]+)(:(\d+))?(/.*)?)", std::regex_constants::icase);
-// может будут косяки в регулярке
+const std::regex URL_REGEX(R"((http|https)://([^/:@#]+)(:(\d+))?(/[^@#]*)?)", std::regex_constants::icase);
 
 unsigned short GetDefaultPort(const Protocol& protocol)
 {
@@ -70,8 +69,21 @@ CHttpUrl::CHttpUrl(const std::string& url)
 	}
 
 	m_protocol = ParseProtocol(match[1].str());
-	m_domain = match[2];
-	m_document = match[5];
+
+	std::string domain = match[2].str();
+	if (domain.empty())
+	{
+		throw std::invalid_argument("Domain cannot be empty");
+	}
+	m_domain = domain;
+
+	std::string doc = match[5];
+	if (doc.empty())
+	{
+		doc += "/";
+	}
+	m_document = doc;
+
 	m_port = ParsePort(match[4].str(), m_protocol);
 }
 
@@ -84,7 +96,13 @@ CHttpUrl::CHttpUrl(const std::string& domain, const std::string& document, Proto
 
 	// проверка на документ и домен
 	m_domain = domain;
-	m_document = document;
+
+	std::string doc = document;
+	if (doc.empty())
+	{
+		doc += "/";
+	}
+	m_document = doc;
 	m_protocol = protocol;
 	m_port = GetDefaultPort(protocol);
 }

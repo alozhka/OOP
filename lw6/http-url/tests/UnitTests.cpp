@@ -103,6 +103,23 @@ TEST_CASE("Protocol case does not matter")
 	CHECK(Protocol::HTTPS == https.GetProtocol());
 }
 
+TEST_CASE("Adds / if document is empty")
+{
+	CHttpUrl url{ "http://ya.ru" };
+	CHECK("http://ya.ru/" == url.GetUrl());
+
+	url = CHttpUrl{ "ya.ru", "" };
+	CHECK("http://ya.ru/" == url.GetUrl());
+
+	url = CHttpUrl{ "ya.ru", "", Protocol::HTTPS, 9943 };
+	CHECK("http://ya.ru:9943/" == url.GetUrl());
+}
+
+TEST_CASE("Cannot contain forbidden chars")
+{
+	CHECK_THROWS_AS(CHttpUrl("http://y#a.ru"), СUrlParsingError);
+	CHECK_THROWS_AS(CHttpUrl("http://ya.ru/aa#"), СUrlParsingError);
+}
 // проверка на разные регистры протокола
 // добавление / в конец
 // разные символы в документе в домене (@, #)
