@@ -59,3 +59,33 @@ bool CStringList::ReverseIterator::operator!=(const ReverseIterator& other) cons
 {
 	return m_node != other.m_node;
 }
+
+CStringList::ConstIterator::ConstIterator(const Node* node)
+	: m_node(node)
+{
+}
+
+std::string CStringList::ConstIterator::operator*() const noexcept
+{
+	return m_node->m_value;
+}
+
+const CStringList::ConstIterator& CStringList::ConstIterator::operator++() noexcept
+{
+	if (m_node == nullptr)
+	{
+		throw std::out_of_range("Iterator is out of range");
+	}
+	m_node = m_node->m_next;
+	return *this;
+}
+
+bool CStringList::ConstIterator::operator==(const ConstIterator& other) const noexcept
+{
+	return m_node == other.m_node;
+}
+
+bool CStringList::ConstIterator::operator!=(const ConstIterator& other) const noexcept
+{
+	return m_node != other.m_node;
+}

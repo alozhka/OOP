@@ -56,32 +56,12 @@ public:
 	class ConstIterator
 	{
 	public:
-		explicit ConstIterator(const Node* node)
-			: m_node(node)
-		{
-		}
+		explicit ConstIterator(const Node* node);
 
-		std::string operator*() const noexcept { return m_node->m_value; }
-		const ConstIterator& operator++() noexcept
-		{
-			if (m_node == nullptr)
-			{
-				throw std::out_of_range("Iterator is out of range");
-			}
-			m_node = m_node->m_next;
-			return *this;
-		}
-		ConstIterator& operator--()
-		{
-			if (m_node == nullptr)
-			{
-				throw std::out_of_range("Iterator is out of range");
-			}
-			m_node = m_node->m_prev;
-			return *this;
-		}
-		bool operator==(const ConstIterator& other) const noexcept { return m_node == other.m_node; }
-		bool operator!=(const ConstIterator& other) const noexcept { return m_node != other.m_node; }
+		std::string operator*() const noexcept;
+		const ConstIterator& operator++() noexcept;
+		bool operator==(const ConstIterator& other) const noexcept;
+		bool operator!=(const ConstIterator& other) const noexcept;
 
 	private:
 		const Node* m_node;
