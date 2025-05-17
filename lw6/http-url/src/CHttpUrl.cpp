@@ -46,7 +46,7 @@ unsigned short ParsePort(std::string_view portStr, const Protocol& protocol)
 	{
 		port = std::stoi(portStr.data());
 	}
-	catch (std::exception& e)
+	catch (std::exception&)
 	{
 		throw std::invalid_argument("Invalid port");
 	}
