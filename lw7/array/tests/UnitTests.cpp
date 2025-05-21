@@ -52,6 +52,18 @@ TEST_CASE("Constructs array", "[array][ctor]")
 		CompareArrays(copy, array);
 	}
 
+	SECTION("Copy assignment")
+	{
+		CMyArray<int> array{}, copy{};
+		array.PushBack(5);
+		array.PushBack(3);
+		array.PushBack(-99);
+
+		copy = array;
+
+		CompareArrays(copy, array);
+	}
+
 	SECTION("Moving constructor")
 	{
 		CMyArray<int> array{};

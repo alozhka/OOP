@@ -7,11 +7,11 @@ class CMyArray
 {
 public:
 	CMyArray() = default;
-	//~CMyArray() noexcept;
+	~CMyArray() noexcept;
 
 	CMyArray(const CMyArray& other);
 	CMyArray(CMyArray&& other) noexcept;
-	// CMyArray& operator=(const CMyArray& other);
+	CMyArray& operator=(const CMyArray& other);
 	// CMyArray& operator=(CMyArray&& other) noexcept;
 
 	void PushBack(const T& item);
@@ -44,6 +44,12 @@ private:
 //-----------------Implementation-----------------
 
 template <typename T>
+CMyArray<T>::~CMyArray() noexcept
+{
+	Clear();
+}
+
+template <typename T>
 CMyArray<T>::CMyArray(const CMyArray& other)
 	: m_size(other.m_size)
 	, m_capacity(other.m_capacity)
@@ -67,6 +73,18 @@ template <typename T>
 CMyArray<T>::CMyArray(CMyArray&& other) noexcept
 {
 	Swap(other);
+}
+
+template <typename T>
+CMyArray<T>& CMyArray<T>::operator=(const CMyArray& other)
+{
+	if (this != &other)
+	{
+		CMyArray temp{ other };
+		Swap(temp);
+	}
+
+	return *this;
 }
 
 template <typename T>
