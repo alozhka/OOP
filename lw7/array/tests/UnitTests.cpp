@@ -1,6 +1,7 @@
 #include "../src/CMyArray.h"
 
 #include <catch2/catch_test_macros.hpp>
+#include <ranges>
 
 constexpr size_t DEFAULT_CAPACITY = 10;
 
@@ -165,4 +166,29 @@ TEST_CASE("Can be resized", "[array][clear]")
 	array.Resize(2);
 	CompareArrayAndVector(array, { "first", "second" });
 	CHECK(2 == array.Capacity());
+}
+
+TEST_CASE("Can be iterated", "[array][iterations]")
+{
+	CMyArray<std::string> array{};
+	array.PushBack("first");
+	array.PushBack("second");
+	array.PushBack("last");
+	std::string result;
+
+	for (const std::string& str : array)
+	{
+		result += str + " ";
+	}
+
+	CHECK("first second last " == result);
+
+	result.clear();
+
+	for (const std::string& str : std::ranges::reverse_view(array))
+	{
+		result += str + " ";
+	}
+
+	CHECK("last second first " == result);
 }
