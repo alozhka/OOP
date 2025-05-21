@@ -71,7 +71,7 @@ TEST_CASE("Constructs array", "[array][ctor]")
 		array.PushBack(3);
 		array.PushBack(-99);
 
-		CMyArray moved{std::move(array)};
+		CMyArray moved{ std::move(array) };
 
 		CompareArrayAndVector(moved, { 5, 3, -99 });
 		CompareArrayAndVector(array, {});
@@ -91,4 +91,28 @@ TEST_CASE("Constructs array", "[array][ctor]")
 		CompareArrayAndVector(array, {});
 		CHECK(0 == array.Capacity());
 	}
+}
+
+TEST_CASE("Increases size if reached limit", "[array][alloc]")
+{
+	CMyArray<int> array{};
+
+	CHECK(0 == array.Size());
+	CHECK(0 == array.Capacity());
+
+	array.PushBack(5);
+
+	CHECK(1 == array.Size());
+	CHECK(1 == array.Capacity());
+
+	array.PushBack(4);
+
+	CHECK(2 == array.Size());
+	CHECK(2 == array.Capacity());
+
+	array.PushBack(111);
+
+	CHECK(3 == array.Size());
+	CHECK(4 == array.Capacity());
+	CompareArrayAndVector(array, { 5, 4, 111 });
 }
