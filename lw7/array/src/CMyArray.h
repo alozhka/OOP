@@ -120,13 +120,20 @@ size_t CMyArray<T>::Capacity() const noexcept
 template <typename T>
 void CMyArray<T>::Resize(size_t size)
 {
-	T* newData = new T[size];
 	const size_t newSize = std::min(size, m_size);
+	T* temp = new T[size];
 
-	std::copy(m_data, m_data + newSize, newData);
-
+	try
+	{
+		std::copy(m_data, m_data + newSize, temp);
+	}
+	catch (...)
+	{
+		delete[] temp;
+		throw;
+	}
 	delete[] m_data;
-	m_data = newData;
+	m_data = temp;
 	m_size = newSize;
 	m_capacity = size;
 }
