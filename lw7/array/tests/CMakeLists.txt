@@ -9,7 +9,7 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(tests UnitTests.cpp)
 
 target_link_libraries(
-        tests PRIVATE lib_array Catch2::Catch2WithMain
+        tests PRIVATE Catch2::Catch2WithMain
 )
 
 include(CTest)
