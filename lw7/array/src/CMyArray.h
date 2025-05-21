@@ -12,7 +12,7 @@ public:
 	CMyArray(const CMyArray& other);
 	CMyArray(CMyArray&& other) noexcept;
 	CMyArray& operator=(const CMyArray& other);
-	// CMyArray& operator=(CMyArray&& other) noexcept;
+	CMyArray& operator=(CMyArray&& other) noexcept;
 
 	void PushBack(const T& item);
 	[[nodiscard]] size_t Size() const noexcept;
@@ -81,6 +81,18 @@ CMyArray<T>& CMyArray<T>::operator=(const CMyArray& other)
 	if (this != &other)
 	{
 		CMyArray temp{ other };
+		Swap(temp);
+	}
+
+	return *this;
+}
+
+template <typename T>
+CMyArray<T>& CMyArray<T>::operator=(CMyArray&& other) noexcept
+{
+	if (this != &other)
+	{
+		CMyArray temp{ std::move(other) };
 		Swap(temp);
 	}
 
