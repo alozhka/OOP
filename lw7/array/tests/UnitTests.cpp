@@ -129,3 +129,19 @@ TEST_CASE("Can access items by index", "[array][index]")
 	CHECK("last" == array[2]);
 	CHECK_THROWS_AS(array[3], std::out_of_range);
 }
+
+TEST_CASE("Can be cleared", "[array][clear]")
+{
+	CMyArray<std::string> array{};
+
+	array.PushBack("first");
+	array.PushBack("second");
+	array.PushBack("last");
+
+	CompareArrayAndVector(array, { "first", "second", "last" });
+
+	array.Clear();
+
+	CompareArrayAndVector(array, {});
+	CHECK(0 == array.Capacity());
+}
