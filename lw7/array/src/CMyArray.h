@@ -20,8 +20,8 @@ public:
 	// void Resize();
 	void Clear();
 
-	// T& operator[](size_t index);
-	// const T& operator[](size_t index) const;
+	T& operator[](size_t index);
+	const T& operator[](size_t index) const;
 
 	using Iterator = T*;
 	using ReverseIterator = std::reverse_iterator<Iterator>;
@@ -125,6 +125,23 @@ void CMyArray<T>::Clear()
 	m_data = nullptr;
 	m_size = 0;
 	m_capacity = 0;
+}
+
+template <typename T>
+T& CMyArray<T>::operator[](size_t index)
+{
+	if (index >= m_size)
+	{
+		throw std::out_of_range("Index out of range");
+	}
+
+	return m_data[index];
+}
+
+template <typename T>
+const T& CMyArray<T>::operator[](size_t index) const
+{
+	return const_cast<CMyArray*>(this)->operator[](index);
 }
 
 template <typename T>

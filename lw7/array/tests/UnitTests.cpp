@@ -22,11 +22,10 @@ void CompareArrays(const CMyArray<T>& left, const CMyArray<T>& right)
 	CHECK(left.Size() == right.Size());
 	CHECK(left.Capacity() == right.Capacity());
 
-	auto leftIt = left.begin();
-	for (T value : right)
+	size_t i = 0;
+	for (T value : left)
 	{
-		CHECK(*leftIt == value);
-		++leftIt;
+		CHECK(value == right[i++]);
 	}
 }
 
@@ -115,4 +114,18 @@ TEST_CASE("Increases size if reached limit", "[array][alloc]")
 	CHECK(3 == array.Size());
 	CHECK(4 == array.Capacity());
 	CompareArrayAndVector(array, { 5, 4, 111 });
+}
+
+TEST_CASE("Can access items by index", "[array][index]")
+{
+
+	CMyArray<std::string> array{};
+	array.PushBack("first");
+	array.PushBack("second");
+	array.PushBack("last");
+
+	CHECK("first" == array[0]);
+	CHECK("second" == array[1]);
+	CHECK("last" == array[2]);
+	CHECK_THROWS_AS(array[3], std::out_of_range);
 }
