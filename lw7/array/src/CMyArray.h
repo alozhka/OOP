@@ -33,7 +33,6 @@ public:
 
 private:
 	void EnsureCapacity(size_t size);
-	void ChangeCapacity(size_t capacity);
 	void Swap(CMyArray& other) noexcept;
 
 	T* m_data = nullptr;
@@ -119,9 +118,17 @@ size_t CMyArray<T>::Capacity() const noexcept
 }
 
 template <typename T>
-void CMyArray<T>::Resize(size_t newSize)
+void CMyArray<T>::Resize(size_t size)
 {
-	ChangeCapacity(newSize);
+	T* newData = new T[size];
+	const size_t newSize = std::min(size, m_size);
+
+	std::copy(m_data, m_data + newSize, newData);
+
+	delete[] m_data;
+	m_data = newData;
+	m_size = newSize;
+	m_capacity = size;
 }
 
 template <typename T>
@@ -158,21 +165,7 @@ void CMyArray<T>::EnsureCapacity(size_t size)
 		return;
 	}
 
-	ChangeCapacity(m_capacity ? m_capacity * 2 : 1);
-}
-
-template <typename T>
-void CMyArray<T>::ChangeCapacity(size_t capacity)
-{
-	T* newData = new T[capacity];
-	const size_t newSize = std::min(capacity, m_size);
-
-	std::copy(m_data, m_data + newSize, newData);
-
-	delete[] m_data;
-	m_data = newData;
-	m_size = newSize;
-	m_capacity = capacity;
+	Resize(m_capacity ? m_capacity * 2 : 1);
 }
 
 template <typename T>
