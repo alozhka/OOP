@@ -46,7 +46,7 @@ TEST_CASE("Constructs array", "[array][ctor]")
 		array.PushBack(3);
 		array.PushBack(-99);
 
-		CMyArray copy(array);
+		CMyArray copy{ array };
 
 		CompareArrays(copy, array);
 	}
@@ -144,4 +144,25 @@ TEST_CASE("Can be cleared", "[array][clear]")
 
 	CompareArrayAndVector(array, {});
 	CHECK(0 == array.Capacity());
+}
+
+TEST_CASE("Can be resized", "[array][clear]")
+{
+	CMyArray<std::string> array{};
+
+	array.PushBack("first");
+	array.PushBack("second");
+	array.PushBack("last");
+
+	CompareArrayAndVector(array, { "first", "second", "last" });
+	CHECK(4 == array.Capacity());
+
+	array.Resize(6);
+
+	CompareArrayAndVector(array, { "first", "second", "last" });
+	CHECK(6 == array.Capacity());
+
+	array.Resize(2);
+	CompareArrayAndVector(array, { "first", "second" });
+	CHECK(2 == array.Capacity());
 }

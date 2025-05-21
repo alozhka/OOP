@@ -17,7 +17,7 @@ public:
 	void PushBack(const T& item);
 	[[nodiscard]] size_t Size() const noexcept;
 	[[nodiscard]] size_t Capacity() const noexcept;
-	// void Resize();
+	void Resize(size_t newSize);
 	void Clear();
 
 	T& operator[](size_t index);
@@ -33,7 +33,7 @@ public:
 
 private:
 	void EnsureCapacity(size_t size);
-	void IncreaseCapacity(size_t size);
+	void ChangeCapacity(size_t capacity);
 	void Swap(CMyArray& other) noexcept;
 
 	T* m_data = nullptr;
@@ -119,6 +119,12 @@ size_t CMyArray<T>::Capacity() const noexcept
 }
 
 template <typename T>
+void CMyArray<T>::Resize(size_t newSize)
+{
+	ChangeCapacity(newSize);
+}
+
+template <typename T>
 void CMyArray<T>::Clear()
 {
 	delete[] m_data;
@@ -152,23 +158,21 @@ void CMyArray<T>::EnsureCapacity(size_t size)
 		return;
 	}
 
-	IncreaseCapacity(size);
+	ChangeCapacity(m_capacity ? m_capacity * 2 : 1);
 }
 
 template <typename T>
-void CMyArray<T>::IncreaseCapacity(size_t size)
+void CMyArray<T>::ChangeCapacity(size_t capacity)
 {
-	const size_t newCapacity = std::max(size, m_capacity ? m_capacity * 2 : 1);
-	T* newData = new T[newCapacity];
+	T* newData = new T[capacity];
+	const size_t newSize = std::min(capacity, m_size);
 
-	for (size_t i = 0; i < m_size; ++i)
-	{
-		newData[i] = std::move(m_data[i]);
-	}
+	std::copy(m_data, m_data + newSize, newData);
 
 	delete[] m_data;
 	m_data = newData;
-	m_capacity = newCapacity;
+	m_size = newSize;
+	m_capacity = capacity;
 }
 
 template <typename T>
