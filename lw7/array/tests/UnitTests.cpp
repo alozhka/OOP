@@ -59,9 +59,10 @@ TEST_CASE("Constructs array", "[array][ctor]")
 		array.PushBack(3);
 		array.PushBack(-99);
 
-		CMyArray moved(std::move(array));
+		CMyArray moved{std::move(array)};
 
 		CompareArrayAndVector(moved, { 5, 3, -99 });
 		CompareArrayAndVector(array, {});
+		CHECK(0 == array.Capacity());
 	}
 }
