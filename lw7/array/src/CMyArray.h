@@ -23,14 +23,12 @@ public:
 	// const T& operator[](size_t index) const;
 
 	using Iterator = T*;
-	using ConstIterator = const T*;
 	using ReverseIterator = std::reverse_iterator<Iterator>;
-	using ConstReverseIterator = const std::reverse_iterator<Iterator>;
 
-	Iterator begin() const noexcept;
-	Iterator end() const noexcept;
-	// ReverseIterator rbegin() noexcept;
-	// ReverseIterator rend() noexcept;
+	Iterator begin() const noexcept { return m_data; }
+	Iterator end() const noexcept { return m_data + m_size; }
+	ReverseIterator rbegin() const noexcept { return ReverseIterator(end()); }
+	ReverseIterator rend() const noexcept { return ReverseIterator(begin()); }
 
 private:
 	void EnsureCapacity(size_t size);
@@ -89,18 +87,6 @@ void CMyArray<T>::Clear()
 	m_data = nullptr;
 	m_size = 0;
 	m_capacity = 0;
-}
-
-template <typename T>
-typename CMyArray<T>::Iterator CMyArray<T>::begin() const noexcept
-{
-	return m_data;
-}
-
-template <typename T>
-typename CMyArray<T>::Iterator CMyArray<T>::end() const noexcept
-{
-	return m_data + m_size;
 }
 
 template <typename T>
