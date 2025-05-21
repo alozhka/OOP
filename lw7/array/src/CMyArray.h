@@ -1,5 +1,6 @@
 #pragma once
 #include <iterator>
+#include <utility>
 
 template <typename T>
 class CMyArray
@@ -9,7 +10,7 @@ public:
 	//~CMyArray() noexcept;
 
 	CMyArray(const CMyArray& other);
-	// CMyArray(CMyArray&& other) noexcept;
+	CMyArray(CMyArray&& other) noexcept;
 	// CMyArray& operator=(const CMyArray& other);
 	// CMyArray& operator=(CMyArray&& other) noexcept;
 
@@ -59,6 +60,16 @@ CMyArray<T>::CMyArray(const CMyArray& other)
 
 	delete[] m_data;
 	m_data = temp;
+}
+
+template <typename T>
+CMyArray<T>::CMyArray(CMyArray&& other) noexcept
+	: m_size(std::exchange(other.m_size, 0))
+	, m_capacity(std::exchange(other.m_size, 0))
+{
+	delete[] m_data;
+	m_data = other.m_data;
+	other.m_data = nullptr;
 }
 
 template <typename T>

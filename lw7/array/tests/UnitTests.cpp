@@ -51,4 +51,17 @@ TEST_CASE("Constructs array", "[array][ctor]")
 
 		CompareArrays(copy, array);
 	}
+
+	SECTION("Moving constructor")
+	{
+		CMyArray<int> array{};
+		array.PushBack(5);
+		array.PushBack(3);
+		array.PushBack(-99);
+
+		CMyArray moved(std::move(array));
+
+		CompareArrayAndVector(moved, { 5, 3, -99 });
+		CompareArrayAndVector(array, {});
+	}
 }
