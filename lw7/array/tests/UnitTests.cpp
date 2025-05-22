@@ -192,3 +192,16 @@ TEST_CASE("Can be iterated", "[array][iterations]")
 
 	CHECK("last second first " == result);
 }
+
+TEST_CASE("Can cast items", "[array][cast]")
+{
+	CMyArray<int> array{};
+	CMyArray<uint> casted;
+	array.PushBack(1);
+	array.PushBack(2);
+	array.PushBack(3);
+
+	casted = array;
+
+	CompareArrayAndVector(casted, { 1, 2, 3 });
+}

@@ -5,6 +5,7 @@
 template <typename T>
 class CMyArray
 {
+	template <typename> friend class CMyArray;
 public:
 	CMyArray() = default;
 	~CMyArray() noexcept;
@@ -37,6 +38,9 @@ public:
 	ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator(end()); }
 	ConstReverseIterator rend() const noexcept { return ConstReverseIterator(begin()); }
 
+	template <typename U>
+	CMyArray& operator=(const CMyArray<U>& other);
+
 private:
 	void EnsureCapacity(size_t size);
 	void Swap(CMyArray& other) noexcept;
@@ -51,7 +55,13 @@ private:
 template <typename T>
 CMyArray<T>::~CMyArray() noexcept
 {
-	Clear();
+	try
+	{
+		Clear();
+	}
+	catch (...)
+	{
+	}
 }
 
 template <typename T>
@@ -101,6 +111,31 @@ CMyArray<T>& CMyArray<T>::operator=(CMyArray&& other) noexcept
 		Swap(temp);
 	}
 
+	return *this;
+}
+
+template <typename T>
+template <typename U>
+CMyArray<T>& CMyArray<T>::operator=(const CMyArray<U>& other)
+{
+	CMyArray temp;
+	temp.Resize(other.Size());
+
+	try
+	{
+		for (size_t i = 0; i < other.Size(); ++i)
+		{
+			temp.m_data[i] = static_cast<T>(other.m_data[i]);
+		}
+	}
+	catch (...)
+	{
+		temp.Clear();
+		throw;
+	}
+
+	Swap(temp);
+	m_size = other.m_size;
 	return *this;
 }
 
