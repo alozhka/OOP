@@ -195,13 +195,13 @@ TEST_CASE("Can be iterated", "[array][iterations]")
 
 TEST_CASE("Can cast items", "[array][cast]")
 {
-	CMyArray<int> array{};
-	CMyArray<uint> casted;
-	array.PushBack(1);
-	array.PushBack(2);
+	CMyArray<double> array{};
+	CMyArray<int> casted;
+	array.PushBack(1.2);
+	array.PushBack(-2.5);
 	array.PushBack(3);
 
 	casted = array;
 
-	CompareArrayAndVector(casted, { 1, 2, 3 });
+	CompareArrayAndVector(casted, { 1, -2, 3 });
 }
