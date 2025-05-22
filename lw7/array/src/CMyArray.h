@@ -5,7 +5,6 @@
 template <typename T>
 class CMyArray
 {
-	template <typename> friend class CMyArray;
 public:
 	CMyArray() = default;
 	~CMyArray() noexcept;
@@ -44,6 +43,8 @@ public:
 private:
 	void EnsureCapacity(size_t size);
 	void Swap(CMyArray& other) noexcept;
+
+	template <typename> friend class CMyArray;
 
 	T* m_data = nullptr;
 	size_t m_size = 0;
