@@ -205,3 +205,5 @@ TEST_CASE("Can cast items", "[array][cast]")
 
 	CompareArrayAndVector(casted, { 1, -2, 3 });
 }
+
+// каст выкидывает исключение если нельзя кастить

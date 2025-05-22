@@ -73,6 +73,7 @@ CMyArray<T>::CMyArray(const CMyArray& other)
 	T* temp = new T[other.m_size];
 	try
 	{
+		// сделать проще через memcpy
 		std::copy(other.m_data, other.m_data + other.m_size, temp);
 	}
 	catch (...)
@@ -128,6 +129,7 @@ CMyArray<T>& CMyArray<T>::operator=(const CMyArray<U>& other)
 		{
 			temp.m_data[i] = static_cast<T>(other.m_data[i]);
 		}
+		// поменять на итераторы и вставить через push back
 	}
 	catch (...)
 	{
@@ -167,6 +169,7 @@ void CMyArray<T>::Resize(size_t size)
 
 	try
 	{
+		// memcpy
 		std::copy(m_data, m_data + newSize, temp);
 	}
 	catch (...)
@@ -183,6 +186,7 @@ void CMyArray<T>::Resize(size_t size)
 template <typename T>
 void CMyArray<T>::Clear()
 {
+	// std::destroy_n
 	delete[] m_data;
 	m_data = nullptr;
 	m_size = 0;
@@ -203,6 +207,7 @@ T& CMyArray<T>::operator[](size_t index)
 template <typename T>
 const T& CMyArray<T>::operator[](size_t index) const
 {
+	// 	return (*this)[index];
 	return const_cast<CMyArray*>(this)->operator[](index);
 }
 
