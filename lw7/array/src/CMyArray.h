@@ -1,6 +1,6 @@
 #pragma once
+#include <algorithm>
 #include <iterator>
-#include <utility>
 
 template <typename T>
 class CMyArray
@@ -24,12 +24,18 @@ public:
 	const T& operator[](size_t index) const;
 
 	using Iterator = T*;
+	using ConstIterator = const T*;
 	using ReverseIterator = std::reverse_iterator<Iterator>;
+	using ConstReverseIterator = std::reverse_iterator<ConstIterator>;
 
-	Iterator begin() const noexcept { return m_data; }
-	Iterator end() const noexcept { return m_data + m_size; }
-	ReverseIterator rbegin() const noexcept { return ReverseIterator(end()); }
-	ReverseIterator rend() const noexcept { return ReverseIterator(begin()); }
+	Iterator begin() noexcept { return m_data; }
+	Iterator end() noexcept { return m_data + m_size; }
+	ConstIterator begin() const noexcept { return const_cast<const T*>(m_data); }
+	ConstIterator end() const noexcept { return const_cast<const T*>(m_data + m_size); }
+	ReverseIterator rbegin() noexcept { return ReverseIterator(end()); }
+	ReverseIterator rend() noexcept { return ReverseIterator(begin()); }
+	ConstReverseIterator rbegin() const noexcept { return ConstReverseIterator(end()); }
+	ConstReverseIterator rend() const noexcept { return ConstReverseIterator(begin()); }
 
 private:
 	void EnsureCapacity(size_t size);
